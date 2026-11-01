@@ -6,92 +6,72 @@
 <title>Kingdom Rider: Realms of Valor</title>
 
 <style>
-* {
-    box-sizing: border-box;
+*{box-sizing:border-box}
+body{
+ margin:0;background:#101827;color:white;
+ font-family:Arial,sans-serif;text-align:center;
+ user-select:none;overflow-x:hidden
 }
-
-body {
-    margin: 0;
-    background: #101827;
-    color: white;
-    font-family: Arial, sans-serif;
-    text-align: center;
+header{
+ background:#172b45;padding:12px;
+ border-bottom:3px solid #d6a943
 }
-
-header {
-    padding: 15px;
-    background: #172b45;
-    border-bottom: 3px solid #d6a943;
+h1{color:#f4c75e;margin:5px}
+#stats{
+ display:flex;justify-content:space-around;
+ flex-wrap:wrap;gap:8px;padding:10px;
+ font-size:14px;font-weight:bold
 }
-
-h1 {
-    color: #f4c75e;
-    margin: 5px;
+canvas{
+ display:block;width:100%;max-width:1000px;
+ margin:auto;border:3px solid #d6a943;
+ border-radius:10px;background:#34533b;
+ touch-action:none
 }
-
-button {
-    background: #d6a943;
-    border: none;
-    padding: 12px 18px;
-    margin: 5px;
-    border-radius: 8px;
-    font-weight: bold;
-    cursor: pointer;
+#menu{padding:10px}
+button{
+ border:0;border-radius:12px;padding:12px;
+ margin:4px;background:#d6a943;
+ color:#172033;font-weight:bold;cursor:pointer;
+ touch-action:none
 }
-
-button:hover {
-    background: #f4d47b;
+button:active{background:#fff0a8}
+#message{color:#f4c75e;min-height:25px}
+#upgrades{
+ background:#172b45;padding:10px;
+ margin:10px auto;border-radius:12px
 }
-
-#gameArea {
-    max-width: 1000px;
-    margin: auto;
-    padding: 10px;
+#mobileControls{
+ position:relative;display:flex;
+ justify-content:space-between;align-items:center;
+ max-width:950px;margin:12px auto;
+ padding:10px;min-height:170px;
 }
-
-canvas {
-    display: block;
-    width: 100%;
-    background: #263d36;
-    border: 3px solid #d6a943;
-    border-radius: 10px;
-    touch-action: none;
+#joystickArea{
+ width:145px;height:145px;border-radius:50%;
+ background:rgba(255,255,255,.12);
+ border:3px solid rgba(255,255,255,.4);
+ position:relative;touch-action:none;
 }
-
-#status {
-    display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin: 10px;
-    font-weight: bold;
+#stick{
+ width:62px;height:62px;border-radius:50%;
+ background:linear-gradient(#e7e7e7,#777);
+ border:3px solid white;
+ position:absolute;left:39px;top:39px;
+ pointer-events:none;
 }
-
-#controls {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    margin-top: 10px;
+#actions{
+ display:grid;grid-template-columns:repeat(2,75px);
+ gap:10px;align-items:center;
 }
-
-#upgrades {
-    background: #172b45;
-    padding: 12px;
-    margin-top: 12px;
-    border-radius: 10px;
+.action{
+ width:75px;height:75px;border-radius:50%;
+ background:linear-gradient(#f1d47c,#a87920);
+ border:3px solid white;font-size:12px;
 }
-
-#message {
-    color: #f4c75e;
-    font-weight: bold;
-    min-height: 25px;
-}
-
-@media(max-width:600px) {
-    button {
-        padding: 10px;
-        font-size: 12px;
-    }
+#sprint{grid-column:span 2;width:155px;height:55px;border-radius:25px}
+@media(min-width:750px){
+ #mobileControls{max-width:850px}
 }
 </style>
 </head>
@@ -99,92 +79,651 @@ canvas {
 <body>
 
 <header>
-    <h1>🏰 KINGDOM RIDER</h1>
-    <p>REALMS OF VALOR</p>
+<h1>🏰 KINGDOM RIDER</h1>
+<p>REALMS OF VALOR</p>
 </header>
 
-<div id="gameArea">
+<div id="stats">
+<span id="realm">Realm: 1</span>
+<span id="coins">Coins: 0</span>
+<span id="health">Horse Health: 100</span>
+<span id="score">Score: 0</span>
+</div>
 
-    <div id="status">
-        <span id="realm">Realm: 1</span>
-        <span id="coins">Coins: 0</span>
-        <span id="health">Horse Health: 100</span>
-        <span id="score">Score: 0</span>
+<canvas id="game" width="900" height="500"></canvas>
+
+<p id="message">Welcome, brave rider! Press START to begin.</p>
+
+<div id="menu">
+<button onclick="startGame()">START GAME</button>
+<button onclick="toggleCamera()">CHANGE VIEW</button>
+<button onclick="pauseGame()">PAUSE</button>
+<button onclick="nextRealm()">NEXT REALM</button>
+</div>
+
+<!-- MOBILE CONTROLS -->
+<div id="mobileControls">
+
+    <div id="joystickArea">
+        <div id="stick"></div>
     </div>
 
-    <canvas id="game" width="900" height="500"></canvas>
-
-    <p id="message">Choose your adventure and begin!</p>
-
-    <div id="controls">
-        <button onclick="startGame()">START GAME</button>
-        <button onclick="toggleCamera()">CHANGE VIEW</button>
-        <button onclick="attack()">⚔ ATTACK</button>
-        <button onclick="shield()">🛡 SHIELD</button>
-        <button onclick="pauseGame()">PAUSE</button>
-    </div>
-
-    <div id="upgrades">
-        <h2>🐎 HORSE UPGRADES</h2>
-        <button onclick="upgrade('speed')">Swift Hooves - 30 coins</button>
-        <button onclick="upgrade('health')">Horse Heart - 40 coins</button>
-        <button onclick="upgrade('armour')">Royal Armour - 50 coins</button>
+    <div id="actions">
+        <button class="action" id="actionBtn">ACTION</button>
+        <button class="action" id="guardBtn">GUARD</button>
+        <button class="action" id="jumpBtn">JUMP</button>
+        <button class="action" id="sprint">⚡ SPRINT</button>
     </div>
 
 </div>
 
+<div id="upgrades">
+<h3>🐎 HORSE UPGRADES</h3>
+<button onclick="upgrade('speed')">Swift Hooves — 30 coins</button>
+<button onclick="upgrade('health')">Horse Heart — 40 coins</button>
+<button onclick="upgrade('armour')">Royal Armour — 50 coins</button>
+</div>
+
 <script>
-const canvas = document.getElementById("game");
-const ctx = canvas.getContext("2d");
+const canvas=document.getElementById("game");
+const ctx=canvas.getContext("2d");
 
-let running = false;
-let paused = false;
-let camera = "side";
-
-let coins = 0;
-let score = 0;
-let realm = 1;
-
-let horse = {
-    x: 150,
-    y: 350,
-    health: 100,
-    speed: 4,
-    armour: 0,
-    stamina: 100
-};
-
-let enemies = [];
-let boss = null;
-let keys = {};
-
-const realms = [
-    "Green Valley",
-    "Dark Forest",
-    "Golden Desert",
-    "Frozen Mountains",
-    "Dragon Kingdom",
-    "Crystal Cave",
-    "Shadow Lands",
-    "Royal Plains",
-    "Storm Fortress",
-    "Realm of the Final King"
+const realms=[
+"Green Valley","Dark Forest","Golden Desert",
+"Frozen Mountains","Dragon Kingdom","Crystal Cave",
+"Shadow Lands","Royal Plains","Storm Fortress",
+"Realm of the Final King"
 ];
 
-function updateStatus() {
-    document.getElementById("realm").textContent =
-        "Realm: " + realm + " - " + realms[realm - 1];
+let realm=1,coins=0,score=0,frame=0;
+let running=false,paused=false;
+let camera="side";
+let enemies=[],boss=null,particles=[];
+let attackCooldown=0;
+let guarding=false,sprinting=false;
+let joystick={x:0,y:0};
 
-    document.getElementById("coins").textContent =
-        "Coins: " + coins;
+let horse={
+ x:140,y:350,
+ health:100,
+ speed:3.5,
+ armour:0,
+ stamina:100
+};
 
-    document.getElementById("health").textContent =
-        "Horse Health: " + horse.health;
+let keys={};
 
-    document.getElementById("score").textContent =
-        "Score: " + score;
+function message(t){
+ document.getElementById("message").textContent=t;
 }
 
-function message(text) {
-    document.getElementById("message").textContent = text;
+function updateStats(){
+ document.getElementById("realm").textContent=
+ "Realm: "+realm+" — "+realms[realm-1];
+
+ document.getElementById("coins").textContent=
+ "Coins: "+coins;
+
+ document.getElementById("health").textContent=
+ "Horse Health: "+horse.health;
+
+ document.getElementById("score").textContent=
+ "Score: "+score;
 }
+
+function startGame(){
+ if(horse.health<=0){
+  horse.health=100;
+  coins=0;score=0;realm=1;
+ }
+ running=true;
+ paused=false;
+ createEnemies();
+ message("Your journey begins!");
+ updateStats();
+}
+
+function pauseGame(){
+ paused=!paused;
+ message(paused?"Game paused.":"Game resumed.");
+}
+
+function toggleCamera(){
+ camera=camera==="side"?"top":"side";
+ message("Camera changed to "+camera+" view.");
+}
+
+function createEnemies(){
+ enemies=[];
+ boss=null;
+
+ for(let i=0;i<4+realm;i++){
+  enemies.push({
+   x:420+Math.random()*400,
+   y:250+Math.random()*160,
+   health:2,
+   alive:true,
+   speed:.5+Math.random()*.4
+  });
+ }
+
+ if(realm===5||realm===10){
+  boss={
+   x:750,y:320,
+   health:realm===10?30:18,
+   maxHealth:realm===10?30:18,
+   alive:true
+  };
+  message("A powerful guardian appears!");
+ }
+}
+
+function upgrade(type){
+ if(type==="speed"&&coins>=30){
+  coins-=30;
+  horse.speed+=.5;
+  message("Swift Hooves upgraded!");
+ }
+ else if(type==="health"&&coins>=40){
+  coins-=40;
+  horse.health=Math.min(100,horse.health+35);
+  message("Horse health restored!");
+ }
+ else if(type==="armour"&&coins>=50){
+  coins-=50;
+  horse.armour++;
+  message("Royal Armour upgraded!");
+ }
+ else{
+  message("You need more coins!");
+ }
+ updateStats();
+}
+
+// LEFT JOYSTICK
+const area=document.getElementById("joystickArea");
+const stick=document.getElementById("stick");
+
+let joystickPointer=null;
+
+function moveJoystick(e){
+ const rect=area.getBoundingClientRect();
+ const centerX=rect.left+rect.width/2;
+ const centerY=rect.top+rect.height/2;
+
+ let dx=e.clientX-centerX;
+ let dy=e.clientY-centerY;
+
+ const max=42;
+ const distance=Math.hypot(dx,dy);
+
+ if(distance>max){
+  dx=dx/distance*max;
+  dy=dy/distance*max;
+ }
+
+ joystick.x=dx/max;
+ joystick.y=dy/max;
+
+ stick.style.left=(39+dx)+"px";
+ stick.style.top=(39+dy)+"px";
+}
+
+area.addEventListener("pointerdown",e=>{
+ joystickPointer=e.pointerId;
+ area.setPointerCapture(e.pointerId);
+ moveJoystick(e);
+});
+
+area.addEventListener("pointermove",e=>{
+ if(e.pointerId===joystickPointer)moveJoystick(e);
+});
+
+function resetJoystick(){
+ joystickPointer=null;
+ joystick.x=0;
+ joystick.y=0;
+ stick.style.left="39px";
+ stick.style.top="39px";
+}
+
+area.addEventListener("pointerup",resetJoystick);
+area.addEventListener("pointercancel",resetJoystick);
+
+// ACTION BUTTONS
+document.getElementById("actionBtn").addEventListener(
+ "pointerdown",e=>{e.preventDefault();fantasyAction()}
+);
+
+document.getElementById("guardBtn").addEventListener(
+ "pointerdown",e=>{e.preventDefault();activateGuard()}
+);
+
+document.getElementById("guardBtn").addEventListener(
+ "pointerup",()=>guarding=false
+);
+
+document.getElementById("guardBtn").addEventListener(
+ "pointercancel",()=>guarding=false
+);
+
+document.getElementById("jumpBtn").addEventListener(
+ "pointerdown",e=>{e.preventDefault();jump()}
+);
+
+document.getElementById("sprint").addEventListener(
+ "pointerdown",e=>{e.preventDefault();sprinting=true}
+);
+
+document.getElementById("sprint").addEventListener(
+ "pointerup",()=>sprinting=false
+);
+
+document.getElementById("sprint").addEventListener(
+ "pointercancel",()=>sprinting=false
+);
+
+function fantasyAction(){
+ if(!running||paused||attackCooldown>0)return;
+
+ attackCooldown=35;
+
+ // A colourful fantasy energy pulse
+ for(let i=0;i<18;i++){
+  particles.push({
+   x:horse.x,y:horse.y,
+   dx:(Math.random()-.5)*7,
+   dy:(Math.random()-.5)*7,
+   life:25,size:Math.random()*7+3
+  });
+ }
+
+ enemies.forEach(e=>{
+  if(e.alive&&Math.hypot(e.x-horse.x,e.y-horse.y)<145){
+   e.health--;
+
+   if(e.health<=0){
+    e.alive=false;
+    coins+=5;
+    score+=10;
+    message("Guardian defeated! +5 coins");
+   }
+  }
+ });
+
+ if(boss&&boss.alive&&
+ Math.hypot(boss.x-horse.x,boss.y-horse.y)<170){
+  boss.health-=2;
+
+  if(boss.health<=0){
+   boss.alive=false;
+   coins+=50;
+   score+=100;
+   message("🏆 Realm guardian defeated! +50 coins");
+  }
+ }
+
+ updateStats();
+}
+
+function activateGuard(){
+ guarding=true;
+ message("Protective shield activated!");
+}
+
+function jump(){
+ if(!running||paused)return;
+ horse.y-=35;
+ setTimeout(()=>horse.y+=35,250);
+}
+
+function nextRealm(){
+ if(!running)return;
+
+ if(enemies.some(e=>e.alive)||(boss&&boss.alive)){
+  message("Complete this realm first!");
+  return;
+ }
+
+ if(realm>=10){
+  running=false;
+  message("🏆 Congratulations! You completed all 10 realms!");
+  return;
+ }
+
+ realm++;
+ horse.x=140;
+ horse.y=350;
+ horse.health=Math.min(100,horse.health+15);
+ createEnemies();
+ updateStats();
+ message("Welcome to "+realms[realm-1]);
+}
+
+// KEYBOARD CONTROLS
+document.addEventListener("keydown",e=>{
+ const k=e.key.toLowerCase();
+ keys[k]=true;
+
+ if(k==="j")fantasyAction();
+ if(k==="k")guarding=true;
+ if(k==="shift")sprinting=true;
+ if(k===" ")jump();
+ if(k==="p")pauseGame();
+});
+
+document.addEventListener("keyup",e=>{
+ const k=e.key.toLowerCase();
+ keys[k]=false;
+
+ if(k==="k")guarding=false;
+ if(k==="shift")sprinting=false;
+});
+
+// BACKGROUND
+function drawBackground(){
+ const colors=[
+ ["#477c42","#b4d58a"],
+ ["#193d2d","#46714c"],
+ ["#bd8c3c","#e8c57b"],
+ ["#8cc9e5","#e7f5fa"],
+ ["#492e3c","#a95d4e"],
+ ["#243e5a","#6b91ae"],
+ ["#191d3b","#51568a"],
+ ["#4e884d","#b5d88d"],
+ ["#354b67","#9ab0c8"],
+ ["#291e38","#79548d"]
+ ];
+
+ ctx.fillStyle=colors[realm-1][0];
+ ctx.fillRect(0,0,900,500);
+
+ ctx.fillStyle=colors[realm-1][1];
+
+ if(camera==="side"){
+  ctx.fillRect(0,420,900,80);
+
+  for(let i=0;i<8;i++){
+   ctx.beginPath();
+   ctx.arc(i*140+30,420,45,Math.PI,0);
+   ctx.fill();
+  }
+ }else{
+  ctx.fillRect(0,0,900,500);
+  ctx.strokeStyle="rgba(255,255,255,.15)";
+
+  for(let x=0;x<900;x+=60){
+   ctx.beginPath();
+   ctx.moveTo(x,0);
+   ctx.lineTo(x,500);
+   ctx.stroke();
+  }
+
+  for(let y=0;y<500;y+=60){
+   ctx.beginPath();
+   ctx.moveTo(0,y);
+   ctx.lineTo(900,y);
+   ctx.stroke();
+  }
+ }
+}
+
+// HORSE AND KNIGHT
+function drawHorse(){
+ const x=horse.x,y=horse.y;
+
+ ctx.save();
+ ctx.translate(x,y);
+
+ if(camera==="side"){
+  // Horse body
+  ctx.fillStyle="#754326";
+  ctx.beginPath();
+  ctx.ellipse(0,0,48,25,0,0,Math.PI*2);
+  ctx.fill();
+
+  // Neck
+  ctx.fillStyle="#9a6038";
+  ctx.beginPath();
+  ctx.moveTo(28,-8);
+  ctx.lineTo(48,-43);
+  ctx.lineTo(60,-39);
+  ctx.lineTo(45,5);
+  ctx.fill();
+
+  // Head
+  ctx.beginPath();
+  ctx.ellipse(55,-42,16,12,0,0,Math.PI*2);
+  ctx.fill();
+
+  // Mane
+  ctx.fillStyle="#211813";
+  ctx.beginPath();
+  ctx.moveTo(35,-38);
+  ctx.lineTo(25,-55);
+  ctx.lineTo(45,-47);
+  ctx.lineTo(50,-60);
+  ctx.lineTo(55,-39);
+  ctx.fill();
+
+  // Legs
+  ctx.strokeStyle="#4b2a1a";
+  ctx.lineWidth=7;
+
+  for(let i of [-28,-12,20,35]){
+   ctx.beginPath();
+   ctx.moveTo(i,12);
+   ctx.lineTo(i+(frame%20<10?3:-3),43);
+   ctx.stroke();
+  }
+
+  // Saddle
+  ctx.fillStyle="#d6a943";
+  ctx.fillRect(-18,-22,35,12);
+
+  // Knight
+  ctx.fillStyle="#b8c3d2";
+  ctx.fillRect(-13,-58,25,32);
+
+  // Helmet
+  ctx.fillStyle="#e0e5ed";
+  ctx.beginPath();
+  ctx.arc(0,-70,14,0,Math.PI*2);
+  ctx.fill();
+
+  ctx.fillStyle="#222";
+  ctx.fillRect(7,-72,9,5);
+
+  // Helmet decoration
+  ctx.fillStyle="#d6a943";
+  ctx.fillRect(-4,-88,8,12);
+
+ }else{
+  ctx.fillStyle="#754326";
+  ctx.beginPath();
+  ctx.ellipse(0,0,24,45,0,0,Math.PI*2);
+  ctx.fill();
+
+  ctx.fillStyle="#a16b3c";
+  ctx.beginPath();
+  ctx.ellipse(0,-43,16,18,0,0,Math.PI*2);
+  ctx.fill();
+
+  ctx.fillStyle="#b8c3d2";
+  ctx.beginPath();
+  ctx.arc(0,0,13,0,Math.PI*2);
+  ctx.fill();
+
+  ctx.fillStyle="#d6a943";
+  ctx.fillRect(-12,-15,24,10);
+ }
+
+ ctx.restore();
+}
+
+// ENEMIES
+function drawEnemies(){
+ enemies.forEach(e=>{
+  if(!e.alive)return;
+
+  ctx.fillStyle="#b82f37";
+  ctx.beginPath();
+  ctx.arc(e.x,e.y,19,0,Math.PI*2);
+  ctx.fill();
+
+  ctx.fillStyle="white";
+  ctx.fillRect(e.x-13,e.y-25,26,5);
+
+  ctx.fillStyle="#39c45c";
+  ctx.fillRect(e.x-13,e.y-25,26*(e.health/2),5);
+ });
+}
+
+// BOSS
+function drawBoss(){
+ if(!boss||!boss.alive)return;
+
+ ctx.fillStyle="#6324a3";
+ ctx.beginPath();
+ ctx.arc(boss.x,boss.y,45,0,Math.PI*2);
+ ctx.fill();
+
+ ctx.fillStyle="#f5d34e";
+ ctx.fillRect(boss.x-35,boss.y-58,70,8);
+
+ ctx.fillStyle="#ef3030";
+ ctx.fillRect(
+  boss.x-35,boss.y-58,
+  70*(boss.health/boss.maxHealth),8
+ );
+
+ ctx.fillStyle="white";
+ ctx.font="bold 16px Arial";
+ ctx.fillText("REALM BOSS",boss.x-43,boss.y-68);
+}
+
+// ENERGY PARTICLES
+function drawParticles(){
+ particles.forEach(p=>{
+  ctx.fillStyle="#ffd34e";
+  ctx.beginPath();
+  ctx.arc(p.x,p.y,p.size,0,Math.PI*2);
+  ctx.fill();
+
+  p.x+=p.dx;
+  p.y+=p.dy;
+  p.life--;
+ });
+
+ particles=particles.filter(p=>p.life>0);
+}
+
+// MOVEMENT AND GAME LOGIC
+function update(){
+ if(!running||paused)return;
+
+ frame++;
+
+ let dx=joystick.x;
+ let dy=joystick.y;
+
+ if(keys["arrowleft"]||keys["a"])dx=-1;
+ if(keys["arrowright"]||keys["d"])dx=1;
+ if(keys["arrowup"]||keys["w"])dy=-1;
+ if(keys["arrowdown"]||keys["s"])dy=1;
+
+ let speed=horse.speed;
+
+ if(sprinting&&horse.stamina>0){
+  speed*=1.8;
+  horse.stamina-=.25;
+ }else{
+  horse.stamina=Math.min(100,horse.stamina+.12);
+ }
+
+ horse.x+=dx*speed;
+ horse.y+=dy*speed;
+
+ horse.x=Math.max(45,Math.min(855,horse.x));
+ horse.y=Math.max(85,Math.min(425,horse.y));
+
+ if(camera==="side"){
+  horse.y=350+dy*25;
+ }
+
+ if(attackCooldown>0)attackCooldown--;
+
+ enemies.forEach(e=>{
+  if(!e.alive)return;
+
+  let distance=Math.hypot(horse.x-e.x,horse.y-e.y);
+
+  if(distance>48){
+   e.x+=(horse.x-e.x)/distance*e.speed;
+   e.y+=(horse.y-e.y)/distance*e.speed;
+  }else if(frame%50===0&&!guarding){
+   horse.health-=Math.max(1,3-horse.armour);
+  }
+ });
+
+ if(boss&&boss.alive){
+  let distance=Math.hypot(horse.x-boss.x,horse.y-boss.y);
+
+  if(distance>65){
+   boss.x+=(horse.x-boss.x)/distance*.65;
+   boss.y+=(horse.y-boss.y)/distance*.65;
+  }else if(frame%40===0&&!guarding){
+   horse.health-=Math.max(1,7-horse.armour);
+  }
+ }
+
+ if(frame%500===0){
+  coins++;
+ }
+
+ if(horse.health<=0){
+  horse.health=0;
+  running=false;
+  message("Your adventure has ended. Press START GAME to restart.");
+ }
+
+ updateStats();
+}
+
+// DRAW EVERYTHING
+function draw(){
+ drawBackground();
+ drawEnemies();
+ drawBoss();
+ drawHorse();
+ drawParticles();
+
+ if(guarding){
+  ctx.strokeStyle="#68d9ff";
+  ctx.lineWidth=5;
+  ctx.beginPath();
+  ctx.arc(horse.x,horse.y,65,0,Math.PI*2);
+  ctx.stroke();
+ }
+
+ if(paused){
+  ctx.fillStyle="rgba(0,0,0,.6)";
+  ctx.fillRect(0,0,900,500);
+  ctx.fillStyle="white";
+  ctx.font="bold 45px Arial";
+  ctx.fillText("PAUSED",370,250);
+ }
+}
+
+function gameLoop(){
+ update();
+ draw();
+ requestAnimationFrame(gameLoop);
+}
+
+updateStats();
+gameLoop();
+
+</script>
+</body>
+</html>
