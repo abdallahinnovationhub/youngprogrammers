@@ -1,1 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kingdom Rider: Realms of Valor</title>
 
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: #101827;
+    color: white;
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
+
+header {
+    padding: 15px;
+    background: #172b45;
+    border-bottom: 3px solid #d6a943;
+}
+
+h1 {
+    color: #f4c75e;
+    margin: 5px;
+}
+
+button {
+    background: #d6a943;
+    border: none;
+    padding: 12px 18px;
+    margin: 5px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #f4d47b;
+}
+
+#gameArea {
+    max-width: 1000px;
+    margin: auto;
+    padding: 10px;
+}
+
+canvas {
+    display: block;
+    width: 100%;
+    background: #263d36;
+    border: 3px solid #d6a943;
+    border-radius: 10px;
+    touch-action: none;
+}
+
+#status {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 10px;
+    font-weight: bold;
+}
+
+#controls {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+
+#upgrades {
+    background: #172b45;
+    padding: 12px;
+    margin-top: 12px;
+    border-radius: 10px;
+}
+
+#message {
+    color: #f4c75e;
+    font-weight: bold;
+    min-height: 25px;
+}
+
+@media(max-width:600px) {
+    button {
+        padding: 10px;
+        font-size: 12px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>🏰 KINGDOM RIDER</h1>
+    <p>REALMS OF VALOR</p>
+</header>
+
+<div id="gameArea">
+
+    <div id="status">
+        <span id="realm">Realm: 1</span>
+        <span id="coins">Coins: 0</span>
+        <span id="health">Horse Health: 100</span>
+        <span id="score">Score: 0</span>
+    </div>
+
+    <canvas id="game" width="900" height="500"></canvas>
+
+    <p id="message">Choose your adventure and begin!</p>
+
+    <div id="controls">
+        <button onclick="startGame()">START GAME</button>
+        <button onclick="toggleCamera()">CHANGE VIEW</button>
+        <button onclick="attack()">⚔ ATTACK</button>
+        <button onclick="shield()">🛡 SHIELD</button>
+        <button onclick="pauseGame()">PAUSE</button>
+    </div>
+
+    <div id="upgrades">
+        <h2>🐎 HORSE UPGRADES</h2>
+        <button onclick="upgrade('speed')">Swift Hooves - 30 coins</button>
+        <button onclick="upgrade('health')">Horse Heart - 40 coins</button>
+        <button onclick="upgrade('armour')">Royal Armour - 50 coins</button>
+    </div>
+
+</div>
+
+<script>
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
+
+let running = false;
+let paused = false;
+let camera = "side";
+
+let coins = 0;
+let score = 0;
+let realm = 1;
+
+let horse = {
+    x: 150,
+    y: 350,
+    health: 100,
+    speed: 4,
+    armour: 0,
+    stamina: 100
+};
+
+let enemies = [];
+let boss = null;
+let keys = {};
+
+const realms = [
+    "Green Valley",
+    "Dark Forest",
+    "Golden Desert",
+    "Frozen Mountains",
+    "Dragon Kingdom",
+    "Crystal Cave",
+    "Shadow Lands",
+    "Royal Plains",
+    "Storm Fortress",
+    "Realm of the Final King"
+];
+
+function updateStatus() {
+    document.getElementById("realm").textContent =
+        "Realm: " + realm + " - " + realms[realm - 1];
+
+    document.getElementById("coins").textContent =
+        "Coins: " + coins;
+
+    document.getElementById("health").textContent =
+        "Horse Health: " + horse.health;
+
+    document.getElementById("score").textContent =
+        "Score: " + score;
+}
+
+function message(text) {
+    document.getElementById("message").textContent = text;
+}
