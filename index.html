@@ -3,126 +3,86 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
-<title>Rider Nike Horse Fight</title>
+<title>Rider Nike Horse Fight - Pro</title>
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; -webkit-user-select: none; touch-action: none; }
-  body {
-    background: #0a0a0a;
-    overflow: hidden;
-    font-family: Arial, Helvetica, sans-serif;
-    color: #fff;
-  }
-  #gameContainer {
-    position: relative;
-    width: 100vw;
-    height: 100vh;
-    background: linear-gradient(#5ba3d9 0%, #87CEEB 45%, #4a7c23 45%, #2d4a08 100%);
-  }
-  canvas { display: block; width: 100%; height: 100%; }
-  #ui { position: absolute; inset: 0; pointer-events: none; }
+  *{margin:0;padding:0;box-sizing:border-box;user-select:none;-webkit-user-select:none;touch-action:none;}
+  body{background:#050505;overflow:hidden;font-family:Arial,Helvetica,sans-serif;color:#fff;}
+  #gameContainer{position:relative;width:100vw;height:100vh;background:linear-gradient(#4a90c2 0%,#87b8d9 42%,#3d6b1e 42%,#1e330a 100%);}
+  canvas{display:block;width:100%;height:100%;}
+  #ui{position:absolute;inset:0;pointer-events:none;}
 
-  /* TITLE SCREEN */
-  #titleScreen {
-    position: absolute; inset: 0;
-    background: rgba(0,0,0,0.88);
-    display: flex; flex-direction: column;
-    justify-content: center; align-items: center;
-    text-align: center; z-index: 30; pointer-events: auto;
+  /* PASSWORD + TITLE */
+  #titleScreen{
+    position:absolute;inset:0;background:rgba(0,0,0,0.92);
+    display:flex;flex-direction:column;justify-content:center;align-items:center;
+    text-align:center;z-index:40;pointer-events:auto;
   }
-  #titleScreen h1 {
-    font-size: clamp(26px, 7.5vw, 48px);
-    color: #ffd700;
-    text-shadow: 0 0 18px #ff9900;
-    line-height: 1.2; margin-bottom: 10px;
+  #titleScreen h1{font-size:clamp(24px,6.5vw,44px);color:#ffd700;text-shadow:0 0 20px #ff9900;line-height:1.15;margin-bottom:8px;}
+  #titleScreen p{font-size:clamp(12px,3.5vw,16px);color:#bbb;margin:3px 0;}
+  #passBox{margin-top:18px;display:flex;flex-direction:column;align-items:center;gap:10px;}
+  #passInput{
+    padding:12px 18px;font-size:18px;border:2px solid #ffd700;border-radius:8px;
+    background:#111;color:#fff;text-align:center;width:220px;outline:none;
   }
-  #titleScreen p { font-size: clamp(13px, 3.8vw, 18px); color: #ccc; margin: 4px 0; }
-  #startBtn {
-    margin-top: 28px; padding: 14px 42px;
-    font-size: 20px; font-weight: bold;
-    background: linear-gradient(#c00, #900);
-    border: none; border-radius: 10px; color: white; cursor: pointer;
+  #startBtn{
+    padding:13px 38px;font-size:18px;font-weight:bold;
+    background:linear-gradient(#c00,#800);border:none;border-radius:10px;color:#fff;cursor:pointer;
   }
-  #startBtn:active { transform: scale(0.94); }
+  #startBtn:active{transform:scale(0.95);}
+  #passError{color:#f55;font-size:14px;height:18px;}
 
   /* HUD */
-  #hud {
-    position: absolute; top: 8px; left: 8px; right: 8px;
-    display: none; justify-content: space-between; align-items: flex-start; z-index: 5;
-  }
-  .bar-box {
-    background: rgba(0,0,0,0.6); padding: 5px 9px; border-radius: 6px; min-width: 130px;
-  }
-  .bar-label { font-size: 12px; margin-bottom: 2px; }
-  .bar { height: 13px; background: #222; border-radius: 4px; overflow: hidden; }
-  .bar-fill { height: 100%; transition: width 0.15s; }
-  #playerHealthFill { background: linear-gradient(#0d0, #080); }
-  #enemyHealthFill { background: linear-gradient(#f33, #a00); }
+  #hud{position:absolute;top:6px;left:6px;right:6px;display:none;justify-content:space-between;z-index:5;}
+  .bar-box{background:rgba(0,0,0,0.65);padding:5px 9px;border-radius:6px;min-width:125px;}
+  .bar-label{font-size:11px;margin-bottom:2px;}
+  .bar{height:12px;background:#222;border-radius:3px;overflow:hidden;}
+  .bar-fill{height:100%;transition:width 0.15s;}
+  #playerHealthFill{background:linear-gradient(#0c0,#060);}
+  #enemyHealthFill{background:linear-gradient(#e22,#800);}
 
-  #levelInfo {
-    position: absolute; top: 8px; left: 50%; transform: translateX(-50%);
-    background: rgba(0,0,0,0.6); padding: 4px 14px; border-radius: 20px;
-    font-size: 14px; display: none; z-index: 5;
-  }
-  #weaponInfo {
-    position: absolute; top: 42px; left: 50%; transform: translateX(-50%);
-    background: rgba(0,0,0,0.55); padding: 3px 12px; border-radius: 12px;
-    font-size: 13px; display: none; z-index: 5; color: #ffd700;
-  }
-  #message {
-    position: absolute; top: 42%; left: 50%; transform: translate(-50%,-50%);
-    font-size: clamp(22px, 6.5vw, 40px); font-weight: bold;
-    text-shadow: 0 0 12px #000; opacity: 0; transition: opacity 0.35s;
-    z-index: 15; text-align: center; pointer-events: none; white-space: pre-line;
-  }
+  #levelInfo{position:absolute;top:6px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.65);padding:3px 12px;border-radius:16px;font-size:13px;display:none;z-index:5;}
+  #weaponInfo{position:absolute;top:36px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.6);padding:3px 11px;border-radius:12px;font-size:12px;display:none;z-index:5;color:#ffd700;}
+  #scoreInfo{position:absolute;top:62px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.55);padding:2px 10px;border-radius:10px;font-size:12px;display:none;z-index:5;}
+  #message{position:absolute;top:40%;left:50%;transform:translate(-50%,-50%);font-size:clamp(20px,5.8vw,36px);font-weight:bold;text-shadow:0 0 14px #000;opacity:0;transition:opacity 0.3s;z-index:20;text-align:center;pointer-events:none;white-space:pre-line;}
 
   /* CONTROLS */
-  #controls {
-    position: absolute; bottom: 18px; left: 0; right: 0;
-    display: none; justify-content: space-between; padding: 0 12px; z-index: 10;
+  #controls{position:absolute;bottom:14px;left:0;right:0;display:none;justify-content:space-between;padding:0 10px;z-index:10;}
+  .btn-group{display:flex;gap:9px;pointer-events:auto;}
+  .ctrl-btn{
+    width:64px;height:64px;border-radius:50%;
+    background:rgba(255,255,255,0.2);border:3px solid rgba(255,255,255,0.5);
+    display:flex;justify-content:center;align-items:center;font-size:20px;font-weight:bold;color:#fff;
   }
-  .btn-group { display: flex; gap: 10px; pointer-events: auto; }
-  .ctrl-btn {
-    width: 68px; height: 68px; border-radius: 50%;
-    background: rgba(255,255,255,0.22);
-    border: 3px solid rgba(255,255,255,0.55);
-    display: flex; justify-content: center; align-items: center;
-    font-size: 22px; font-weight: bold; color: #fff;
-  }
-  .ctrl-btn:active, .ctrl-btn.active {
-    background: rgba(255,190,0,0.55); transform: scale(0.92);
-  }
+  .ctrl-btn:active,.ctrl-btn.active{background:rgba(255,180,0,0.55);transform:scale(0.92);}
 
-  #btnSizePanel {
-    position: absolute; top: 78px; right: 8px;
-    background: rgba(0,0,0,0.6); padding: 5px 9px; border-radius: 8px;
-    z-index: 15; pointer-events: auto; display: none;
-    align-items: center; gap: 7px; font-size: 13px;
+  #btnSizePanel{
+    position:absolute;top:90px;right:6px;background:rgba(0,0,0,0.65);padding:4px 8px;border-radius:8px;
+    z-index:15;pointer-events:auto;display:none;align-items:center;gap:6px;font-size:12px;
   }
-  #btnSizePanel button {
-    width: 30px; height: 30px; border: none; border-radius: 6px;
-    background: #444; color: white; font-size: 18px; cursor: pointer;
-  }
+  #btnSizePanel button{width:28px;height:28px;border:none;border-radius:5px;background:#444;color:#fff;font-size:16px;cursor:pointer;}
 
-  #weaponBtn {
-    position: absolute; bottom: 100px; right: 14px;
-    width: 56px; height: 56px; border-radius: 50%;
-    background: rgba(0,0,0,0.55); border: 2px solid #ffd700;
-    color: #ffd700; font-size: 13px; font-weight: bold;
-    display: none; justify-content: center; align-items: center;
-    pointer-events: auto; z-index: 12; text-align: center; line-height: 1.1;
+  #weaponBtn,#upgradeBtn{
+    position:absolute;border-radius:50%;background:rgba(0,0,0,0.6);border:2px solid #ffd700;
+    color:#ffd700;font-size:11px;font-weight:bold;display:none;justify-content:center;align-items:center;
+    pointer-events:auto;z-index:12;text-align:center;line-height:1.15;
   }
+  #weaponBtn{bottom:95px;right:12px;width:54px;height:54px;}
+  #upgradeBtn{bottom:95px;left:12px;width:54px;height:54px;border-color:#0f0;color:#0f0;}
 </style>
 </head>
 <body>
 <div id="gameContainer">
   <canvas id="gameCanvas"></canvas>
-
   <div id="ui">
     <div id="titleScreen">
       <h1>RIDER NIKE<br>HORSE FIGHT</h1>
       <p>Designed by Ahmed bin Muhammad Yusuf<br>(young programmers)</p>
-      <p style="margin-top:14px; font-size:14px; color:#aaa;">Move • Jump • Attack • Change Weapon</p>
-      <button id="startBtn">START GAME</button>
+      <p style="margin-top:10px;color:#aaa;font-size:13px;">Knife • Sword • Bow • Gun</p>
+      <div id="passBox">
+        <input id="passInput" type="password" placeholder="Enter Password" maxlength="12">
+        <div id="passError"></div>
+        <button id="startBtn">ENTER GAME</button>
+      </div>
     </div>
 
     <div id="hud">
@@ -137,17 +97,18 @@
     </div>
 
     <div id="levelInfo">Level 1</div>
-    <div id="weaponInfo">Weapon: Sword</div>
+    <div id="weaponInfo">Weapon: Knife</div>
+    <div id="scoreInfo">Score: 0</div>
     <div id="message"></div>
 
     <div id="btnSizePanel">
-      Size
-      <button id="sizeDown">−</button>
-      <span id="sizeValue">68</span>
+      Size <button id="sizeDown">−</button>
+      <span id="sizeValue">64</span>
       <button id="sizeUp">+</button>
     </div>
 
     <div id="weaponBtn">WEAPON<br>CHANGE</div>
+    <div id="upgradeBtn">UPGRADE<br>WEAPON</div>
 
     <div id="controls">
       <div class="btn-group">
@@ -166,42 +127,34 @@
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 let W, H;
+function resize(){ W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+window.addEventListener('resize', resize); resize();
 
-function resize() {
-  W = canvas.width = window.innerWidth;
-  H = canvas.height = window.innerHeight;
-}
-window.addEventListener('resize', resize);
-resize();
+// ========== PASSWORD ==========
+const CORRECT_PASS = "AHMED2026";   // Change this if you want
 
-// ================== WEAPONS ==================
+// ========== WEAPONS ==========
 const WEAPONS = [
-  { name: "Sword",   damage: 18, range: 95,  cooldown: 26, color: "#ccc", unlock: 1 },
-  { name: "Spear",   damage: 22, range: 130, cooldown: 32, color: "#aaf", unlock: 3 },
-  { name: "Axe",     damage: 28, range: 85,  cooldown: 38, color: "#fa4", unlock: 6 },
-  { name: "Lance",   damage: 32, range: 155, cooldown: 40, color: "#4af", unlock: 10 },
-  { name: "Warhammer", damage: 40, range: 100, cooldown: 48, color: "#f84", unlock: 15 }
+  { name:"Knife",   type:"melee", damage:14, range:70,  cooldown:18, color:"#ddd", unlock:1,  level:1 },
+  { name:"Sword",   type:"melee", damage:22, range:100, cooldown:26, color:"#ccc", unlock:1,  level:1 },
+  { name:"Bow",     type:"ranged",damage:18, range:280, cooldown:32, color:"#8b5", unlock:4,  level:1 },
+  { name:"Gun",     type:"ranged",damage:26, range:340, cooldown:22, color:"#555", unlock:8,  level:1 }
 ];
-
 let currentWeaponIndex = 0;
-function getWeapon() { return WEAPONS[currentWeaponIndex]; }
+function getWeapon(){ return WEAPONS[currentWeaponIndex]; }
 
-// ================== GAME STATE ==================
+// ========== STATE ==========
 let gameState = 'title';
 let level = 1;
 let score = 0;
-let btnSize = 68;
+let btnSize = 64;
 
 const player = {
-  x: 130, y: 0, w: 92, h: 72,
-  vx: 0, vy: 0,
-  speed: 5.8,
-  jumpPower: -14.5,
-  onGround: false,
-  health: 100, maxHealth: 100,
-  attackCooldown: 0,
-  facing: 1,
-  invincible: 0
+  x:140, y:0, w:100, h:78,
+  vx:0, vy:0, speed:6.0, jumpPower:-15,
+  onGround:false, health:100, maxHealth:100,
+  attackCooldown:0, facing:1, invincible:0,
+  frame:0
 };
 
 let enemies = [];
@@ -209,79 +162,493 @@ let particles = [];
 let projectiles = [];
 let keys = {};
 let cameraX = 0;
-const groundY = () => H * 0.70;
+const groundY = () => H * 0.68;
 
-// ================== INPUT ==================
-const btnLeft   = document.getElementById('btnLeft');
-const btnRight  = document.getElementById('btnRight');
-const btnJump   = document.getElementById('btnJump');
-const btnAttack = document.getElementById('btnAttack');
-const weaponBtn = document.getElementById('weaponBtn');
+// ========== INPUT ==========
+const btnLeft=document.getElementById('btnLeft');
+const btnRight=document.getElementById('btnRight');
+const btnJump=document.getElementById('btnJump');
+const btnAttack=document.getElementById('btnAttack');
 
-function addBtnEvents(el, key) {
-  el.addEventListener('touchstart', e => { e.preventDefault(); keys[key] = true; el.classList.add('active'); }, {passive:false});
-  el.addEventListener('touchend',   e => { e.preventDefault(); keys[key] = false; el.classList.remove('active'); }, {passive:false});
-  el.addEventListener('mousedown',  () => { keys[key] = true; el.classList.add('active'); });
-  el.addEventListener('mouseup',    () => { keys[key] = false; el.classList.remove('active'); });
-  el.addEventListener('mouseleave', () => { keys[key] = false; el.classList.remove('active'); });
+function addBtn(el, key){
+  el.addEventListener('touchstart', e=>{e.preventDefault();keys[key]=true;el.classList.add('active');},{passive:false});
+  el.addEventListener('touchend', e=>{e.preventDefault();keys[key]=false;el.classList.remove('active');},{passive:false});
+  el.addEventListener('mousedown', ()=>{keys[key]=true;el.classList.add('active');});
+  el.addEventListener('mouseup', ()=>{keys[key]=false;el.classList.remove('active');});
+  el.addEventListener('mouseleave', ()=>{keys[key]=false;el.classList.remove('active');});
 }
-addBtnEvents(btnLeft, 'left');
-addBtnEvents(btnRight, 'right');
-addBtnEvents(btnJump, 'jump');
-addBtnEvents(btnAttack, 'attack');
+addBtn(btnLeft,'left'); addBtn(btnRight,'right'); addBtn(btnJump,'jump'); addBtn(btnAttack,'attack');
 
-weaponBtn.addEventListener('touchstart', e => { e.preventDefault(); cycleWeapon(); }, {passive:false});
-weaponBtn.addEventListener('mousedown', () => cycleWeapon());
+document.getElementById('weaponBtn').addEventListener('touchstart', e=>{e.preventDefault();cycleWeapon();},{passive:false});
+document.getElementById('weaponBtn').addEventListener('mousedown', cycleWeapon);
+document.getElementById('upgradeBtn').addEventListener('touchstart', e=>{e.preventDefault();upgradeWeapon();},{passive:false});
+document.getElementById('upgradeBtn').addEventListener('mousedown', upgradeWeapon);
 
-function cycleWeapon() {
-  // only cycle through unlocked weapons
+document.getElementById('sizeUp').onclick = ()=>{ btnSize=Math.min(100,btnSize+6); applySize(); };
+document.getElementById('sizeDown').onclick = ()=>{ btnSize=Math.max(48,btnSize-6); applySize(); };
+function applySize(){
+  document.querySelectorAll('.ctrl-btn').forEach(b=>{
+    b.style.width=b.style.height=btnSize+'px';
+    b.style.fontSize=(btnSize*0.31)+'px';
+  });
+  document.getElementById('sizeValue').textContent=btnSize;
+}
+
+window.addEventListener('keydown', e=>{
+  if(['ArrowLeft','a','A'].includes(e.key)) keys.left=true;
+  if(['ArrowRight','d','D'].includes(e.key)) keys.right=true;
+  if(['ArrowUp','w','W',' '].includes(e.key)) keys.jump=true;
+  if(['x','X','j','J'].includes(e.key)) keys.attack=true;
+  if(e.key==='q'||e.key==='Q') cycleWeapon();
+  if(e.key==='e'||e.key==='E') upgradeWeapon();
+});
+window.addEventListener('keyup', e=>{
+  if(['ArrowLeft','a','A'].includes(e.key)) keys.left=false;
+  if(['ArrowRight','d','D'].includes(e.key)) keys.right=false;
+  if(['ArrowUp','w','W',' '].includes(e.key)) keys.jump=false;
+  if(['x','X','j','J'].includes(e.key)) keys.attack=false;
+});
+
+// ========== WEAPON FUNCTIONS ==========
+function cycleWeapon(){
   let next = currentWeaponIndex;
-  do {
-    next = (next + 1) % WEAPONS.length;
-  } while (WEAPONS[next].unlock > level && next !== currentWeaponIndex);
+  do{ next = (next+1)%WEAPONS.length; } while(WEAPONS[next].unlock > level && next !== currentWeaponIndex);
   currentWeaponIndex = next;
   updateWeaponUI();
 }
-
-document.getElementById('sizeUp').onclick = () => {
-  btnSize = Math.min(105, btnSize + 7);
-  applyBtnSize();
-};
-document.getElementById('sizeDown').onclick = () => {
-  btnSize = Math.max(50, btnSize - 7);
-  applyBtnSize();
-};
-function applyBtnSize() {
-  document.querySelectorAll('.ctrl-btn').forEach(b => {
-    b.style.width = b.style.height = btnSize + 'px';
-    b.style.fontSize = (btnSize * 0.32) + 'px';
-  });
-  document.getElementById('sizeValue').textContent = btnSize;
+function upgradeWeapon(){
+  const w = getWeapon();
+  const cost = 180 + w.level * 120;
+  if(score >= cost){
+    score -= cost;
+    w.level++;
+    w.damage = Math.floor(w.damage * 1.18);
+    showMessage(w.name + " UPGRADED!", 70);
+    updateWeaponUI();
+    updateHUD();
+  } else {
+    showMessage("Need " + cost + " score", 60);
+  }
 }
 
-// Keyboard
-window.addEventListener('keydown', e => {
-  if (['ArrowLeft','a','A'].includes(e.key)) keys.left = true;
-  if (['ArrowRight','d','D'].includes(e.key)) keys.right = true;
-  if (['ArrowUp','w','W',' '].includes(e.key)) keys.jump = true;
-  if (['x','X','j','J'].includes(e.key)) keys.attack = true;
-  if (e.key === 'q' || e.key === 'Q') cycleWeapon();
-});
-window.addEventListener('keyup', e => {
-  if (['ArrowLeft','a','A'].includes(e.key)) keys.left = false;
-  if (['ArrowRight','d','D'].includes(e.key)) keys.right = false;
-  if (['ArrowUp','w','W',' '].includes(e.key)) keys.jump = false;
-  if (['x','X','j','J'].includes(e.key)) keys.attack = false;
-});
-
-// ================== DRAWING ==================
-function drawHorseRider(x, y, facing, isPlayer, attacking, weaponColor) {
+// ========== DRAWING (more realistic style) ==========
+function drawHorseRider(x, y, facing, isPlayer, attacking, animFrame, weapon){
   ctx.save();
-  ctx.translate(x + (facing === -1 ? 92 : 0), y);
+  ctx.translate(x + (facing===-1 ? 100 : 0), y);
   ctx.scale(facing, 1);
 
-  // Horse body
-  ctx.fillStyle = isPlayer ? '#3d2208' : '#2a1505';
+  const legPhase = Math.sin(animFrame * 0.35) * 0.4;
+
+  // ===== HORSE =====
+  // Body
+  ctx.fillStyle = isPlayer ? '#3a2510' : '#2c1a0a';
+  ctx.beginPath();
+  ctx.ellipse(50, 48, 42, 24, 0, 0, Math.PI*2);
+  ctx.fill();
+
+  // Muscle shading
+  ctx.fillStyle = isPlayer ? '#2a1a08' : '#1e1206';
+  ctx.beginPath();
+  ctx.ellipse(48, 52, 30, 12, 0, 0, Math.PI*2);
+  ctx.fill();
+
+  // Neck
+  ctx.fillStyle = isPlayer ? '#3a2510' : '#2c1a0a';
+  ctx.beginPath();
+  ctx.moveTo(78, 38);
+  ctx.quadraticCurveTo(102, 12, 96, 2);
+  ctx.lineTo(86, 5);
+  ctx.quadraticCurveTo(88, 28, 72, 42);
+  ctx.fill();
+
+  // Head
+  ctx.beginPath();
+  ctx.ellipse(98, 5, 16, 11, -0.2, 0, Math.PI*2);
+  ctx.fill();
+
+  // Eye
+  ctx.fillStyle = '#111';
+  ctx.beginPath(); ctx.arc(104, 3, 2.2, 0, Math.PI*2); ctx.fill();
+
+  // Mane
+  ctx.fillStyle = '#1a1005';
+  ctx.beginPath();
+  ctx.moveTo(78, 20);
+  ctx.quadraticCurveTo(70, 0, 90, -6);
+  ctx.quadraticCurveTo(100, 0, 95, 12);
+  ctx.fill();
+
+  // Legs with animation
+  ctx.strokeStyle = '#2a1a08';
+  ctx.lineWidth = 8;
+  ctx.lineCap = 'round';
+
+  // Front legs
+  ctx.beginPath();
+  ctx.moveTo(68, 62); ctx.lineTo(62 + legPhase*12, 86);
+  ctx.moveTo(78, 62); ctx.lineTo(86 - legPhase*12, 86);
+  // Back legs
+  ctx.moveTo(28, 62); ctx.lineTo(20 - legPhase*10, 86);
+  ctx.moveTo(40, 62); ctx.lineTo(48 + legPhase*10, 86);
+  ctx.stroke();
+
+  // Hooves
+  ctx.fillStyle = '#0d0d0d';
+  [[62+legPhase*12,88],[86-legPhase*12,88],[20-legPhase*10,88],[48+legPhase*10,88]].forEach(p=>{
+    ctx.beginPath(); ctx.ellipse(p[0], p[1], 6, 3.5, 0, 0, Math.PI*2); ctx.fill();
+  });
+
+  // Tail
+  ctx.strokeStyle = '#1a1005';
+  ctx.lineWidth = 6;
+  ctx.beginPath();
+  ctx.moveTo(10, 44);
+  ctx.quadraticCurveTo(-12, 55, -16, 78);
+  ctx.stroke();
+
+  // ===== RIDER (more human proportions) =====
+  // Torso
+  ctx.fillStyle = isPlayer ? '#1a355e' : '#4a1515';
+  ctx.fillRect(40, 16, 22, 28);
+
+  // Head
+  ctx.fillStyle = '#e0b090';
+  ctx.beginPath(); ctx.arc(51, 10, 11, 0, Math.PI*2); ctx.fill();
+
+  // Hair / Helmet
+  ctx.fillStyle = '#1a1a1a';
+  ctx.beginPath(); ctx.arc(51, 6, 11, Math.PI*1.1, -0.1); ctx.fill();
+
+  // Arms + Weapon
+  ctx.strokeStyle = '#e0b090';
+  ctx.lineWidth = 5;
+  ctx.lineCap = 'round';
+
+  if(attacking && weapon){
+    if(weapon.type === 'melee'){
+      ctx.beginPath();
+      ctx.moveTo(60, 28);
+      ctx.lineTo(60 + weapon.range*0.48, 8);
+      ctx.stroke();
+      // blade
+      ctx.strokeStyle = weapon.color;
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.moveTo(60 + weapon.range*0.48, 8);
+      ctx.lineTo(60 + weapon.range*0.48 + 18, 2);
+      ctx.stroke();
+    } else {
+      // ranged pose
+      ctx.beginPath();
+      ctx.moveTo(42, 28); ctx.lineTo(32, 42);
+      ctx.moveTo(60, 26); ctx.lineTo(78, 20);
+      ctx.stroke();
+    }
+  } else {
+    ctx.beginPath();
+    ctx.moveTo(42, 28); ctx.lineTo(32, 44);
+    ctx.moveTo(60, 28); ctx.lineTo(70, 40);
+    ctx.stroke();
+  }
+
+  ctx.restore();
+}
+
+// ========== SPAWN ==========
+function spawnEnemy(isBoss=false){
+  const hp = isBoss ? 170 + level*32 : 40 + level*13;
+  enemies.push({
+    x: cameraX + W + 70 + Math.random()*100,
+    y: groundY() - 78,
+    w:100, h:78,
+    health: hp, maxHealth: hp,
+    facing: -1, attackCooldown: 50,
+    attacking:0, speed: isBoss ? 2.5 : 1.9 + Math.min(level*0.11, 2.4),
+    isBoss, hitTimer:0,
+    damage: isBoss ? 14+Math.floor(level*0.7) : 8+Math.floor(level*0.4),
+    frame: Math.random()*20
+  });
+}
+
+function startLevel(){
+  enemies = [];
+  projectiles = [];
+  player.health = Math.min(player.maxHealth, player.health + 28); // health regen
+  player.x = 150; player.y = groundY()-player.h;
+  player.vx=0; player.vy=0; cameraX=0; player.invincible=45;
+
+  // auto select best unlocked
+  for(let i=WEAPONS.length-1;i>=0;i--){
+    if(WEAPONS[i].unlock <= level){ currentWeaponIndex=i; break; }
+  }
+  updateWeaponUI();
+
+  const isBoss = level % 5 === 0;
+  if(isBoss){
+    spawnEnemy(true);
+    if(level >= 10) setTimeout(()=>spawnEnemy(false), 900);
+    if(level >= 20) setTimeout(()=>spawnEnemy(false), 1600);
+    showMessage(`BOSS LEVEL ${level}`, 140);
+  } else {
+    const count = Math.min(1 + Math.floor(level/2), 6);
+    for(let i=0;i<count;i++) setTimeout(()=>spawnEnemy(false), i*650);
+    showMessage(`LEVEL ${level}`, 70);
+  }
+  updateHUD();
+}
+
+function showMessage(txt, frames){
+  const el = document.getElementById('message');
+  el.textContent = txt;
+  el.style.opacity = 1;
+  clearTimeout(el._t);
+  el._t = setTimeout(()=>el.style.opacity=0, frames*16);
+}
+
+function updateHUD(){
+  document.getElementById('playerHealthFill').style.width = Math.max(0, player.health/player.maxHealth*100)+'%';
+  document.getElementById('levelInfo').textContent = `Level ${level}` + (level%5===0 ? ' • BOSS' : '');
+  document.getElementById('scoreInfo').textContent = `Score: ${score}`;
+  if(enemies.length){
+    const e = enemies[0];
+    document.getElementById('enemyBox').style.display = 'block';
+    document.getElementById('enemyLabel').textContent = e.isBoss ? 'BOSS' : 'ENEMY';
+    document.getElementById('enemyHealthFill').style.width = Math.max(0, e.health/e.maxHealth*100)+'%';
+  } else document.getElementById('enemyBox').style.display = 'none';
+}
+function updateWeaponUI(){
+  const w = getWeapon();
+  document.getElementById('weaponInfo').textContent = `Weapon: \( {w.name}  Lv. \){w.level}`;
+}
+
+// ========== UPDATE ==========
+function update(){
+  if(gameState !== 'playing') return;
+
+  player.frame += (Math.abs(player.vx)>0.5 || !player.onGround) ? 1 : 0.15;
+
+  // Move
+  player.vx = 0;
+  if(keys.left){ player.vx = -player.speed; player.facing = -1; }
+  if(keys.right){ player.vx = player.speed; player.facing = 1; }
+  if(keys.jump && player.onGround){ player.vy = player.jumpPower; player.onGround=false; }
+
+  player.vy += 0.70;
+  player.x += player.vx;
+  player.y += player.vy;
+
+  const gy = groundY() - player.h;
+  if(player.y >= gy){ player.y=gy; player.vy=0; player.onGround=true; }
+  if(player.x < cameraX+50) player.x = cameraX+50;
+
+  cameraX += ((player.x - W*0.33) - cameraX)*0.1;
+  if(cameraX<0) cameraX=0;
+
+  // Attack
+  const weapon = getWeapon();
+  if(keys.attack && player.attackCooldown<=0){
+    player.attackCooldown = weapon.cooldown;
+
+    if(weapon.type === 'melee'){
+      enemies.forEach(e=>{
+        const dist = Math.abs((player.x+50)-(e.x+50));
+        if(dist < weapon.range && Math.abs(player.y-e.y)<60){
+          e.health -= weapon.damage;
+          e.hitTimer = 12;
+          e.vx = player.facing * 8;
+          createHit(e.x+50, e.y+35);
+        }
+      });
+    } else {
+      // ranged projectile
+      projectiles.push({
+        x: player.x + (player.facing===1 ? 90 : 10),
+        y: player.y + 28,
+        vx: player.facing * (weapon.name==='Gun' ? 14 : 11),
+        damage: weapon.damage,
+        life: 70,
+        color: weapon.color
+      });
+    }
+  }
+  if(player.attackCooldown>0) player.attackCooldown--;
+  if(player.invincible>0) player.invincible--;
+
+  // Projectiles
+  projectiles = projectiles.filter(p=>{
+    p.x += p.vx; p.life--;
+    let hit = false;
+    enemies.forEach(e=>{
+      if(!hit && Math.abs(p.x-(e.x+50))<40 && Math.abs(p.y-(e.y+35))<40){
+        e.health -= p.damage;
+        e.hitTimer = 10;
+        createHit(e.x+50, e.y+35);
+        hit = true;
+      }
+    });
+    return p.life>0 && !hit;
+  });
+
+  // Enemies
+  enemies.forEach(e=>{
+    e.frame += 0.8;
+    if(e.hitTimer>0){ e.hitTimer--; e.x+=e.vx; e.vx*=0.8; return; }
+
+    const dx = player.x - e.x;
+    e.facing = dx>0 ? 1 : -1;
+    if(Math.abs(dx)>100) e.x += Math.sign(dx)*e.speed;
+    else{
+      if(e.attackCooldown<=0){
+        e.attacking = 18;
+        e.attackCooldown = e.isBoss ? 38 : 52+Math.random()*20;
+        if(Math.abs(dx)<115 && player.invincible<=0){
+          player.health -= e.damage;
+          player.invincible = 36;
+          createHit(player.x+50, player.y+35);
+        }
+      }
+    }
+    if(e.attackCooldown>0) e.attackCooldown--;
+    if(e.attacking>0) e.attacking--;
+  });
+
+  enemies = enemies.filter(e=>{
+    if(e.health<=0){
+      score += e.isBoss ? 700 : 130;
+      createHit(e.x+50, e.y+35, 16);
+      return false;
+    }
+    return true;
+  });
+
+  if(enemies.length===0 && gameState==='playing'){
+    gameState = 'levelClear';
+    showMessage('LEVEL CLEAR!', 80);
+    setTimeout(()=>{
+      level++;
+      if(level%5===0) player.maxHealth += 10;
+      gameState = 'playing';
+      startLevel();
+    }, 1300);
+  }
+
+  if(player.health<=0){
+    player.health=0;
+    gameState='gameOver';
+    showMessage('DEFEATED\nTap to Restart', 9999);
+  }
+
+  updateHUD();
+
+  particles = particles.filter(p=>{
+    p.x+=p.vx; p.y+=p.vy; p.life--;
+    return p.life>0;
+  });
+}
+
+function createHit(x,y,n=9){
+  for(let i=0;i<n;i++){
+    particles.push({
+      x,y,
+      vx:(Math.random()-0.5)*10,
+      vy:(Math.random()-0.5)*10-2,
+      life:16+Math.random()*14,
+      color:`hsl(${10+Math.random()*25},80%,55%)`
+    });
+  }
+}
+
+// ========== DRAW ==========
+function draw(){
+  ctx.clearRect(0,0,W,H);
+
+  // Ground
+  ctx.fillStyle = '#243a0a';
+  ctx.fillRect(0, groundY(), W, H-groundY());
+
+  // Distant hills
+  ctx.fillStyle = '#2e4a14';
+  for(let i=0;i<8;i++){
+    const hx = ((i*240)-cameraX*0.22)%(W+260)-70;
+    ctx.beginPath();
+    ctx.moveTo(hx, groundY());
+    ctx.quadraticCurveTo(hx+65, groundY()-45-(i%3)*15, hx+130, groundY());
+    ctx.fill();
+  }
+
+  // Player
+  if(player.invincible<=0 || Math.floor(player.invincible/3)%2===0){
+    drawHorseRider(player.x-cameraX, player.y, player.facing, true,
+      player.attackCooldown > getWeapon().cooldown*0.5,
+      player.frame, getWeapon());
+  }
+
+  // Enemies
+  enemies.forEach(e=>{
+    drawHorseRider(e.x-cameraX, e.y, e.facing, false, e.attacking>0, e.frame, null);
+  });
+
+  // Projectiles
+  projectiles.forEach(p=>{
+    ctx.fillStyle = p.color;
+    ctx.beginPath();
+    ctx.arc(p.x-cameraX, p.y, p.color==='#555'?5:4, 0, Math.PI*2);
+    ctx.fill();
+  });
+
+  // Particles
+  particles.forEach(p=>{
+    ctx.globalAlpha = p.life/22;
+    ctx.fillStyle = p.color;
+    ctx.beginPath(); ctx.arc(p.x-cameraX, p.y, 3.5, 0, Math.PI*2); ctx.fill();
+    ctx.globalAlpha = 1;
+  });
+}
+
+function loop(){ update(); draw(); requestAnimationFrame(loop); }
+loop();
+
+// ========== START ==========
+document.getElementById('startBtn').onclick = ()=>{
+  const pass = document.getElementById('passInput').value.trim();
+  if(pass !== CORRECT_PASS){
+    document.getElementById('passError').textContent = 'Wrong password!';
+    return;
+  }
+  document.getElementById('passError').textContent = '';
+  document.getElementById('titleScreen').style.display = 'none';
+  document.getElementById('hud').style.display = 'flex';
+  document.getElementById('controls').style.display = 'flex';
+  document.getElementById('btnSizePanel').style.display = 'flex';
+  document.getElementById('levelInfo').style.display = 'block';
+  document.getElementById('weaponInfo').style.display = 'block';
+  document.getElementById('scoreInfo').style.display = 'block';
+  document.getElementById('weaponBtn').style.display = 'flex';
+  document.getElementById('upgradeBtn').style.display = 'flex';
+  gameState = 'playing';
+  level = 1; score = 0;
+  player.health = 100; player.maxHealth = 100;
+  currentWeaponIndex = 0;
+  // reset weapon levels
+  WEAPONS.forEach(w=>{ w.level=1; if(w.name==='Knife')w.damage=14; if(w.name==='Sword')w.damage=22; if(w.name==='Bow')w.damage=18; if(w.name==='Gun')w.damage=26; });
+  startLevel();
+};
+
+function restart(){
+  if(gameState!=='gameOver') return;
+  level=1; score=0;
+  player.health=100; player.maxHealth=100;
+  currentWeaponIndex=0;
+  WEAPONS.forEach(w=>{ w.level=1; if(w.name==='Knife')w.damage=14; if(w.name==='Sword')w.damage=22; if(w.name==='Bow')w.damage=18; if(w.name==='Gun')w.damage=26; });
+  gameState='playing';
+  document.getElementById('message').style.opacity=0;
+  startLevel();
+}
+canvas.addEventListener('click', restart);
+document.getElementById('message').addEventListener('click', restart);
+</script>
+</body>
+</html>tx.fillStyle = isPlayer ? '#3d2208' : '#2a1505';
   ctx.beginPath();
   ctx.ellipse(46, 46, 40, 23, 0, 0, Math.PI*2);
   ctx.fill();
