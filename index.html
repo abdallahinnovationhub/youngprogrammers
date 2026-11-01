@@ -687,6 +687,305 @@ document.getElementById('message').addEventListener('click', () => {
 });
 </script>
 </body>
+ </html>.strokeStyle = '#e0b090';
+  ctx.lineWidth = 4;
+  if (attacking) {
+    // Sword arm extended
+    ctx.beginPath();
+    ctx.moveTo(55, 25);
+    ctx.lineTo(95, 15);
+    ctx.stroke();
+    // Sword
+    ctx.strokeStyle = '#ccc';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(95, 15);
+    ctx.lineTo(115, 5);
+    ctx.stroke();
+    ctx.fillStyle = '#888';
+    ctx.fillRect(112, 2, 6, 8);
+  } else {
+    ctx.beginPath();
+    ctx.moveTo(40, 25); ctx.lineTo(30, 38);
+    ctx.moveTo(54, 25); ctx.lineTo(62, 35);
+    ctx.stroke();
+  }
+
+  ctx.restore();
+}
+
+function drawEnemy(e) {
+  drawHorseAndRider(e.x - cameraX, e.y, e.facing, false, e.attacking > 0);
+}
+
+function spawnEnemy(isBoss = false) {
+  const baseHealth = isBoss ? 180 + level * 25 : 40 + level * 12;
+  enemies.push({
+    x: cameraX + W + 80 + Math.random() * 100,
+    y: groundY() - 70,
+    w: 90,
+    h: 70,
+    vx: 0,
+    health: baseHealth,
+    maxHealth: baseHealth,
+    facing: -1,
+    attackCooldown: 0,
+    attacking: 0,
+    speed: isBoss ? 2.8 : 2.2 + Math.random(),
+    isBoss: isBoss,
+    hitTimer: 0
+  });
+}
+
+function startLevel() {
+  enemies = [];
+  player.health = Math.min(player.maxHealth, player.health + 25);
+  player.x = 120;
+  player.y = groundY() - player.h;
+  player.vx = 0;
+  player.vy = 0;
+  cameraX = 0;
+  player.invincible = 60;
+
+  const isBossLevel = level % 5 === 0;
+  if (isBossLevel) {
+    spawnEnemy(true);
+    showMessage(`BOSS LEVEL ${level}!`, 180);
+  } else {
+    const count = 1 + Math.floor(level / 2);
+    for (let i = 0; i < count; i++) {
+      setTimeout(() => spawnEnemy(false), i * 800);
+    }
+    showMessage(`LEVEL ${level}`, 90);
+  }
+  updateHUD();
+}
+
+function showMessage(txt, frames) {
+  const el = document.getElementById('message');
+  el.textContent = txt;
+  el.style.opacity = 1;
+  setTimeout(() => el.style.opacity = 0, frames * 16);
+}
+
+function updateHUD() {
+  document.getElementById('playerHealthFill').style.width = (player.health / player.maxHealth * 100) + '%';
+  document.getElementById('levelInfo').textContent = `Level ${level}` + (level % 5 === 0 ? '  • BOSS' : '');
+
+  if (enemies.length > 0) {
+    const e = enemies[0];
+    document.getElementById('enemyBox').style.display = 'block';
+    document.getElementById('enemyLabel').textContent = e.isBoss ? 'BOSS' : 'ENEMY';
+    document.getElementById('enemyHealthFill').style.width = (e.health / e.maxHealth * 100) + '%';
+  } else {
+    document.getElementById('enemyBox').style.display = 'none';
+  }
+}
+
+// ========== GAME LOOP ==========
+function update() {
+  if (gameState !== 'playing') return;
+
+  // Player movement
+  player.vx = 0;
+  if (keys.left) { player.vx = -player.speed; player.facing = -1; }
+  if (keys.right) { player.vx = player.speed; player.facing = 1; }
+
+  if (keys.jump && player.onGround) {
+    player.vy = player.jumpPower;
+    player.onGround = false;
+  }
+
+  player.vy += 0.65; // gravity
+  player.x += player.vx;
+  player.y += player.vy;
+
+  // Ground collision
+  const gy = groundY() - player.h;
+  if (player.y >= gy) {
+    player.y = gy;
+    player.vy = 0;
+    player.onGround = true;
+  }
+
+  // Keep player in world
+  if (player.x < cameraX + 30) player.x = cameraX + 30;
+
+  // Camera follow
+  const targetCam = player.x - W * 0.35;
+  cameraX += (targetCam - cameraX) * 0.08;
+  if (cameraX < 0) cameraX = 0;
+
+  // Attack
+  if (keys.attack && player.attackCooldown <= 0) {
+    player.attackCooldown = 28;
+    // Check hit
+    enemies.forEach(e => {
+      const dist = Math.abs((player.x + player.w/2) - (e.x + e.w/2));
+      if (dist < 110 && Math.abs(player.y - e.y) < 50) {
+        e.health -= 18 + Math.floor(level * 1.5);
+        e.hitTimer = 10;
+        e.vx = player.facing * 6;
+        createHitParticles(e.x + e.w/2, e.y + 30);
+      }
+    });
+  }
+  if (player.attackCooldown > 0) player.attackCooldown--;
+  if (player.invincible > 0) player.invincible--;
+
+  // Enemies AI
+  enemies.forEach(e => {
+    if (e.hitTimer > 0) { e.hitTimer--; e.x += e.vx; e.vx *= 0.85; return; }
+
+    const dx = player.x - e.x;
+    e.facing = dx > 0 ? 1 : -1;
+
+    if (Math.abs(dx) > 90) {
+      e.x += Math.sign(dx) * e.speed;
+    } else {
+      // Attack
+      if (e.attackCooldown <= 0) {
+        e.attacking = 18;
+        e.attackCooldown = 50 + Math.random() * 30;
+        // Damage player
+        if (Math.abs(dx) < 100 && player.invincible <= 0) {
+          player.health -= e.isBoss ? 14 : 8;
+          player.invincible = 40;
+          createHitParticles(player.x + player.w/2, player.y + 30);
+        }
+      }
+    }
+    if (e.attackCooldown > 0) e.attackCooldown--;
+    if (e.attacking > 0) e.attacking--;
+  });
+
+  // Remove dead enemies
+  enemies = enemies.filter(e => {
+    if (e.health <= 0) {
+      score += e.isBoss ? 500 : 100;
+      createHitParticles(e.x + 40, e.y + 30, 12);
+      return false;
+    }
+    return true;
+  });
+
+  // Level clear
+  if (enemies.length === 0 && gameState === 'playing') {
+    gameState = 'levelClear';
+    showMessage('LEVEL CLEAR!', 100);
+    setTimeout(() => {
+      level++;
+      gameState = 'playing';
+      startLevel();
+    }, 1600);
+  }
+
+  // Player death
+  if (player.health <= 0) {
+    player.health = 0;
+    gameState = 'gameOver';
+    showMessage('YOU FELL...\nTap to Restart', 9999);
+  }
+
+  updateHUD();
+
+  // Particles
+  particles = particles.filter(p => {
+    p.x += p.vx; p.y += p.vy; p.life--;
+    return p.life > 0;
+  });
+}
+
+function createHitParticles(x, y, count = 7) {
+  for (let i = 0; i < count; i++) {
+    particles.push({
+      x, y,
+      vx: (Math.random() - 0.5) * 8,
+      vy: (Math.random() - 0.5) * 8 - 2,
+      life: 20 + Math.random() * 15,
+      color: `hsl(${Math.random()*40}, 80%, 55%)`
+    });
+  }
+}
+
+function draw() {
+  // Sky already set by CSS, clear only the canvas area needed
+  ctx.clearRect(0, 0, W, H);
+
+  // Simple ground decoration
+  ctx.fillStyle = '#2a4508';
+  ctx.fillRect(0, groundY(), W, H - groundY());
+
+  // Distant hills (parallax)
+  ctx.fillStyle = '#3d5c1a';
+  for (let i = 0; i < 6; i++) {
+    const hx = ((i * 280) - cameraX * 0.3) % (W + 300) - 100;
+    ctx.beginPath();
+    ctx.moveTo(hx, groundY());
+    ctx.quadraticCurveTo(hx + 80, groundY() - 60 - (i%3)*20, hx + 160, groundY());
+    ctx.fill();
+  }
+
+  // Player
+  if (player.invincible <= 0 || Math.floor(player.invincible / 4) % 2 === 0) {
+    drawHorseAndRider(player.x - cameraX, player.y, player.facing, true, player.attackCooldown > 18);
+  }
+
+  // Enemies
+  enemies.forEach(drawEnemy);
+
+  // Particles
+  particles.forEach(p => {
+    ctx.fillStyle = p.color;
+    ctx.globalAlpha = p.life / 30;
+    ctx.beginPath();
+    ctx.arc(p.x - cameraX, p.y, 4, 0, Math.PI*2);
+    ctx.fill();
+    ctx.globalAlpha = 1;
+  });
+}
+
+function loop() {
+  update();
+  draw();
+  requestAnimationFrame(loop);
+}
+loop();
+
+// ========== START ==========
+document.getElementById('startBtn').onclick = () => {
+  document.getElementById('titleScreen').style.display = 'none';
+  document.getElementById('hud').style.display = 'flex';
+  document.getElementById('controls').style.display = 'flex';
+  document.getElementById('btnSizePanel').style.display = 'flex';
+  document.getElementById('levelInfo').style.display = 'block';
+  gameState = 'playing';
+  level = 1;
+  player.health = 100;
+  startLevel();
+};
+
+// Restart on game over
+canvas.addEventListener('click', () => {
+  if (gameState === 'gameOver') {
+    level = 1;
+    player.health = 100;
+    gameState = 'playing';
+    document.getElementById('message').style.opacity = 0;
+    startLevel();
+  }
+});
+document.getElementById('message').addEventListener('click', () => {
+  if (gameState === 'gameOver') {
+    level = 1;
+    player.health = 100;
+    gameState = 'playing';
+    document.getElementById('message').style.opacity = 0;
+    startLevel();
+  }
+});
+</script>
+</body>
 </html>("Model could not be loaded:", url, error);
   });
 }
