@@ -2,473 +2,692 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>KNIGHT RIDER 3D — Horse Adventure</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Rider Nike Horse Fight</title>
 <style>
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  user-select: none;
-  -webkit-user-select: none;
-}
-
-body {
-  overflow: hidden;
-  background: #07121c;
-  font-family: Arial, sans-serif;
-  color: white;
-  touch-action: none;
-}
-
-#game {
-  position: fixed;
-  inset: 0;
-}
-
-canvas {
-  display: block;
-}
-
-.screen {
-  position: fixed;
-  inset: 0;
-  z-index: 10;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  background:
-    linear-gradient(180deg, rgba(3,10,20,.65), rgba(3,10,20,.95));
-  padding: 20px;
-}
-
-h1 {
-  font-size: clamp(30px, 7vw, 65px);
-  color: #f5c45b;
-  text-shadow: 0 4px 15px #000;
-  letter-spacing: 3px;
-}
-
-.subtitle {
-  margin-top: 12px;
-  font-size: clamp(13px, 2.5vw, 20px);
-  color: #e8e8e8;
-}
-
-button {
-  border: 2px solid #f3c45b;
-  background: linear-gradient(#b77a22, #68400e);
-  color: white;
-  font-weight: bold;
-  border-radius: 12px;
-  padding: 13px 22px;
-  font-size: 17px;
-  cursor: pointer;
-  box-shadow: 0 4px 12px #0008;
-}
-
-button:active {
-  transform: scale(.94);
-}
-
-#startButton {
-  margin-top: 28px;
-  font-size: 22px;
-  padding: 16px 45px;
-}
-
-#credit {
-  margin-top: 30px;
-  color: #e8c77a;
-  font-size: 14px;
-}
-
-#trailerText {
-  margin-top: 16px;
-  font-size: 15px;
-  color: #ddd;
-}
-
-#hud {
-  position: fixed;
-  top: 12px;
-  left: 12px;
-  z-index: 5;
-  display: none;
-  background: #07121ccc;
-  border: 1px solid #e8bd55;
-  padding: 10px 14px;
-  border-radius: 12px;
-  line-height: 1.7;
-  min-width: 150px;
-}
-
-#pauseButton {
-  position: fixed;
-  right: 12px;
-  top: 12px;
-  z-index: 6;
-  display: none;
-  padding: 10px 16px;
-}
-
-#controls {
-  position: fixed;
-  bottom: 15px;
-  left: 0;
-  right: 0;
-  z-index: 6;
-  display: none;
-  justify-content: space-between;
-  align-items: end;
-  padding: 0 18px;
-  pointer-events: none;
-}
-
-.controlGroup {
-  display: flex;
-  gap: 9px;
-  pointer-events: auto;
-  align-items: end;
-}
-
-.control {
-  width: clamp(55px, 10vw, 85px);
-  height: clamp(55px, 10vw, 85px);
-  border-radius: 50%;
-  background: #102b42dd;
-  border: 2px solid #e8bd55;
-  color: white;
-  font-size: clamp(19px, 4vw, 30px);
-  font-weight: bold;
-  touch-action: none;
-}
-
-.control.action {
-  background: #744c14e8;
-}
-
-#message {
-  position: fixed;
-  top: 23%;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 8;
-  background: #061522e8;
-  border: 2px solid #e8bd55;
-  border-radius: 12px;
-  padding: 13px 22px;
-  font-size: 18px;
-  text-align: center;
-  display: none;
-}
-
-#rotateNotice {
-  display: none;
-  position: fixed;
-  inset: 0;
-  z-index: 20;
-  background: #07121c;
-  color: white;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 25px;
-  font-size: 20px;
-}
-
-#pauseScreen {
-  display: none;
-}
-
-#upgradePanel {
-  position: fixed;
-  z-index: 7;
-  right: 12px;
-  top: 65px;
-  display: none;
-  background: #07121cdd;
-  padding: 10px;
-  border: 1px solid #e8bd55;
-  border-radius: 12px;
-}
-
-#upgradePanel button {
-  margin: 3px;
-  font-size: 12px;
-  padding: 8px;
-}
-
-@media (orientation: portrait) {
-  #rotateNotice {
-    display: flex;
+  * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; -webkit-user-select: none; }
+  body {
+    background: #111;
+    overflow: hidden;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #fff;
   }
-}
+  #gameContainer {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(#87CEEB 0%, #87CEEB 55%, #3a5f0b 55%, #2d4a08 100%);
+  }
+  canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+  #ui {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none;
+  }
+  #titleScreen {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    z-index: 20;
+    pointer-events: auto;
+  }
+  #titleScreen h1 {
+    font-size: clamp(28px, 8vw, 52px);
+    margin-bottom: 12px;
+    color: #ffd700;
+    text-shadow: 0 0 15px #ffaa00;
+  }
+  #titleScreen p {
+    font-size: clamp(14px, 4vw, 20px);
+    margin: 6px 0;
+    color: #ccc;
+  }
+  #startBtn {
+    margin-top: 30px;
+    padding: 14px 40px;
+    font-size: 20px;
+    background: #c00;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  #startBtn:active { transform: scale(0.95); }
+
+  /* HUD */
+  #hud {
+    position: absolute;
+    top: 10px; left: 10px; right: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    z-index: 5;
+    pointer-events: none;
+  }
+  .bar-box {
+    background: rgba(0,0,0,0.55);
+    padding: 6px 10px;
+    border-radius: 6px;
+    min-width: 140px;
+  }
+  .bar-label { font-size: 13px; margin-bottom: 3px; }
+  .bar {
+    height: 14px;
+    background: #333;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%;
+    transition: width 0.2s;
+  }
+  #playerHealthFill { background: #0c0; }
+  #enemyHealthFill { background: #c00; }
+
+  /* Virtual Controls */
+  #controls {
+    position: absolute;
+    bottom: 20px;
+    left: 0; right: 0;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 15px;
+    z-index: 10;
+    pointer-events: none;
+  }
+  .btn-group {
+    display: flex;
+    gap: 12px;
+    pointer-events: auto;
+  }
+  .ctrl-btn {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.25);
+    border: 3px solid rgba(255,255,255,0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 22px;
+    font-weight: bold;
+    color: #fff;
+    touch-action: none;
+  }
+  .ctrl-btn:active, .ctrl-btn.active {
+    background: rgba(255,200,0,0.55);
+    transform: scale(0.92);
+  }
+  #btnSizePanel {
+    position: absolute;
+    top: 70px;
+    right: 10px;
+    background: rgba(0,0,0,0.6);
+    padding: 6px 10px;
+    border-radius: 8px;
+    z-index: 15;
+    pointer-events: auto;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+  }
+  #btnSizePanel button {
+    width: 32px; height: 32px;
+    border: none;
+    border-radius: 6px;
+    background: #444;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+  }
+  #levelInfo {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.55);
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 15px;
+    z-index: 5;
+  }
+  #message {
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: clamp(24px, 7vw, 42px);
+    font-weight: bold;
+    text-shadow: 0 0 10px #000;
+    opacity: 0;
+    transition: opacity 0.4s;
+    z-index: 12;
+    pointer-events: none;
+    text-align: center;
+  }
 </style>
 </head>
-
 <body>
+<div id="gameContainer">
+  <canvas id="gameCanvas"></canvas>
 
-<div id="game"></div>
+  <div id="ui">
+    <div id="titleScreen">
+      <h1>RIDER NIKE<br>HORSE FIGHT</h1>
+      <p>Designed by Ahmed bin Muhammad Yusuf<br>(young programmers)</p>
+      <p style="margin-top:18px; font-size:15px; color:#aaa;">Tap / Click to fight</p>
+      <button id="startBtn">START GAME</button>
+    </div>
 
-<div id="intro" class="screen">
-  <h1>KNIGHT RIDER 3D</h1>
-  <div class="subtitle">THE GREAT HORSE ADVENTURE</div>
-  <div id="trailerText">Explore beautiful lands. Race through challenges. Become the champion.</div>
-  <button id="startButton">START ADVENTURE</button>
-  <div id="credit">Designed by Ahmad bin Muhammad Yusuf<br>Young Programmer in Animation</div>
-</div>
+    <div id="hud" style="display:none;">
+      <div class="bar-box">
+        <div class="bar-label">YOUR HEALTH</div>
+        <div class="bar"><div class="bar-fill" id="playerHealthFill" style="width:100%"></div></div>
+      </div>
+      <div class="bar-box" id="enemyBox" style="display:none;">
+        <div class="bar-label" id="enemyLabel">ENEMY</div>
+        <div class="bar"><div class="bar-fill" id="enemyHealthFill" style="width:100%"></div></div>
+      </div>
+    </div>
 
-<div id="hud">
-  <div>🏆 Level: <span id="levelText">1</span></div>
-  <div>🪙 Coins: <span id="coinsText">0</span></div>
-  <div>⚡ Stamina: <span id="staminaText">100</span>%</div>
-  <div>⏱ Time: <span id="timeText">0</span>s</div>
-  <div>🐎 Speed: <span id="speedText">0</span></div>
-</div>
+    <div id="levelInfo" style="display:none;">Level 1</div>
+    <div id="message"></div>
 
-<button id="pauseButton">Ⅱ PAUSE</button>
+    <div id="btnSizePanel" style="display:none;">
+      Button Size
+      <button id="sizeDown">−</button>
+      <span id="sizeValue">70</span>
+      <button id="sizeUp">+</button>
+    </div>
 
-<div id="upgradePanel">
-  <div style="color:#f3c45b;margin-bottom:5px">HORSE UPGRADES</div>
-  <button id="speedUpgrade">Speed + (20 coins)</button>
-  <button id="staminaUpgrade">Stamina + (15 coins)</button>
-</div>
-
-<div id="controls">
-  <div class="controlGroup">
-    <button class="control" id="left">◀</button>
-    <button class="control" id="right">▶</button>
-  </div>
-
-  <div class="controlGroup">
-    <button class="control action" id="jump">⬆</button>
-    <button class="control action" id="boost">⚡</button>
-    <button class="control action" id="forward">GO</button>
-  </div>
-</div>
-
-<div id="message"></div>
-
-<div id="pauseScreen" class="screen">
-  <h1>GAME PAUSED</h1>
-  <button id="resumeButton">RESUME</button>
-  <button id="restartButton" style="margin-top:12px">RESTART LEVEL</button>
-</div>
-
-<div id="rotateNotice">
-  <div>
-    <div style="font-size:55px">📱 ↻</div>
-    <h2>Rotate Your Device</h2>
-    <p style="margin-top:12px">Please turn your phone sideways to play in landscape mode.</p>
+    <div id="controls" style="display:none;">
+      <div class="btn-group">
+        <div class="ctrl-btn" id="btnLeft">◀</div>
+        <div class="ctrl-btn" id="btnRight">▶</div>
+      </div>
+      <div class="btn-group">
+        <div class="ctrl-btn" id="btnJump">⬆</div>
+        <div class="ctrl-btn" id="btnAttack">⚔</div>
+      </div>
+    </div>
   </div>
 </div>
 
-<script type="importmap">
-{
-  "imports": {
-    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
-    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
-  }
+<script>
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+let W, H;
+
+function resize() {
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
 }
-</script>
+window.addEventListener('resize', resize);
+resize();
 
-<script type="module">
-import * as THREE from "three";
-import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+// ========== GAME STATE ==========
+let gameState = 'title'; // title, playing, levelClear, gameOver
+let level = 1;
+let score = 0;
+let btnSize = 70;
 
-const container = document.getElementById("game");
+const player = {
+  x: 120,
+  y: 0,
+  w: 90,
+  h: 70,
+  vx: 0,
+  vy: 0,
+  speed: 5.5,
+  jumpPower: -14,
+  onGround: false,
+  health: 100,
+  maxHealth: 100,
+  attackCooldown: 0,
+  facing: 1, // 1 right, -1 left
+  invincible: 0
+};
 
-const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x8bc5e8);
-scene.fog = new THREE.Fog(0x8bc5e8, 35, 160);
+let enemies = [];
+let particles = [];
+let keys = {};
+let cameraX = 0;
+const groundY = () => H * 0.72;
 
-const camera = new THREE.PerspectiveCamera(
-  65,
-  window.innerWidth / window.innerHeight,
-  0.1,
-  500
-);
+// ========== INPUT ==========
+const btnLeft = document.getElementById('btnLeft');
+const btnRight = document.getElementById('btnRight');
+const btnJump = document.getElementById('btnJump');
+const btnAttack = document.getElementById('btnAttack');
 
-const renderer = new THREE.WebGLRenderer({
-  antialias: true,
-  powerPreference: "high-performance"
+function setupButtons() {
+  const addTouch = (el, key) => {
+    el.addEventListener('touchstart', e => { e.preventDefault(); keys[key] = true; el.classList.add('active'); }, {passive:false});
+    el.addEventListener('touchend', e => { e.preventDefault(); keys[key] = false; el.classList.remove('active'); }, {passive:false});
+    el.addEventListener('mousedown', () => { keys[key] = true; el.classList.add('active'); });
+    el.addEventListener('mouseup', () => { keys[key] = false; el.classList.remove('active'); });
+    el.addEventListener('mouseleave', () => { keys[key] = false; el.classList.remove('active'); });
+  };
+  addTouch(btnLeft, 'left');
+  addTouch(btnRight, 'right');
+  addTouch(btnJump, 'jump');
+  addTouch(btnAttack, 'attack');
+}
+setupButtons();
+
+document.getElementById('sizeUp').onclick = () => {
+  btnSize = Math.min(110, btnSize + 8);
+  updateBtnSize();
+};
+document.getElementById('sizeDown').onclick = () => {
+  btnSize = Math.max(48, btnSize - 8);
+  updateBtnSize();
+};
+function updateBtnSize() {
+  document.querySelectorAll('.ctrl-btn').forEach(b => {
+    b.style.width = b.style.height = btnSize + 'px';
+    b.style.fontSize = (btnSize * 0.32) + 'px';
+  });
+  document.getElementById('sizeValue').textContent = btnSize;
+}
+
+// Keyboard support
+window.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft' || e.key === 'a') keys.left = true;
+  if (e.key === 'ArrowRight' || e.key === 'd') keys.right = true;
+  if (e.key === 'ArrowUp' || e.key === 'w' || e.key === ' ') keys.jump = true;
+  if (e.key === 'x' || e.key === 'j') keys.attack = true;
+});
+window.addEventListener('keyup', e => {
+  if (e.key === 'ArrowLeft' || e.key === 'a') keys.left = false;
+  if (e.key === 'ArrowRight' || e.key === 'd') keys.right = false;
+  if (e.key === 'ArrowUp' || e.key === 'w' || e.key === ' ') keys.jump = false;
+  if (e.key === 'x' || e.key === 'j') keys.attack = false;
 });
 
-renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.7));
-renderer.shadowMap.enabled = true;
-renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-renderer.outputColorSpace = THREE.SRGBColorSpace;
-container.appendChild(renderer.domElement);
+// ========== DRAWING HELPERS (realistic-ish style) ==========
+function drawHorseAndRider(x, y, facing, isPlayer, attacking) {
+  ctx.save();
+  ctx.translate(x + (facing === -1 ? player.w : 0), y);
+  ctx.scale(facing, 1);
 
-const clock = new THREE.Clock();
-const loader = new GLTFLoader();
+  // Horse body (dark brown)
+  ctx.fillStyle = '#4a2c0a';
+  ctx.beginPath();
+  ctx.ellipse(45, 45, 38, 22, 0, 0, Math.PI * 2);
+  ctx.fill();
 
-scene.add(new THREE.HemisphereLight(0xcdeaff, 0x56623a, 2));
+  // Horse neck
+  ctx.beginPath();
+  ctx.moveTo(70, 35);
+  ctx.quadraticCurveTo(90, 15, 85, 5);
+  ctx.lineTo(75, 8);
+  ctx.quadraticCurveTo(78, 25, 65, 38);
+  ctx.fill();
 
-const sunlight = new THREE.DirectionalLight(0xffffff, 2.3);
-sunlight.position.set(-30, 60, 30);
-sunlight.castShadow = true;
-sunlight.shadow.mapSize.set(2048, 2048);
-scene.add(sunlight);
+  // Horse head
+  ctx.beginPath();
+  ctx.ellipse(88, 8, 14, 9, -0.3, 0, Math.PI * 2);
+  ctx.fill();
 
-/* WORLD */
+  // Legs
+  ctx.strokeStyle = '#3a2208';
+  ctx.lineWidth = 6;
+  ctx.lineCap = 'round';
+  // front legs
+  ctx.beginPath();
+  ctx.moveTo(60, 58); ctx.lineTo(55, 78);
+  ctx.moveTo(70, 58); ctx.lineTo(78, 78);
+  // back legs
+  ctx.moveTo(25, 58); ctx.lineTo(18, 78);
+  ctx.moveTo(35, 58); ctx.lineTo(42, 78);
+  ctx.stroke();
 
-const ground = new THREE.Mesh(
-  new THREE.PlaneGeometry(400, 400),
-  new THREE.MeshStandardMaterial({color:0x507c36})
-);
-ground.rotation.x = -Math.PI / 2;
-ground.position.y = -0.08;
-ground.receiveShadow = true;
-scene.add(ground);
+  // Hooves
+  ctx.fillStyle = '#222';
+  [[55,80],[78,80],[18,80],[42,80]].forEach(p => {
+    ctx.beginPath();
+    ctx.ellipse(p[0], p[1], 5, 3, 0, 0, Math.PI*2);
+    ctx.fill();
+  });
 
-const path = new THREE.Mesh(
-  new THREE.PlaneGeometry(13, 400),
-  new THREE.MeshStandardMaterial({color:0xb69b70})
-);
-path.rotation.x = -Math.PI / 2;
-path.position.set(0, 0, -150);
-scene.add(path);
+  // Tail
+  ctx.strokeStyle = '#2a1805';
+  ctx.lineWidth = 4;
+  ctx.beginPath();
+  ctx.moveTo(10, 40);
+  ctx.quadraticCurveTo(-5, 50, -8, 65);
+  ctx.stroke();
 
-const sun = new THREE.Mesh(
-  new THREE.SphereGeometry(8, 24, 24),
-  new THREE.MeshBasicMaterial({color:0xffe4a0})
-);
-sun.position.set(-45, 50, -100);
-scene.add(sun);
+  // Rider (human figure)
+  // Body
+  ctx.fillStyle = isPlayer ? '#1a3a6e' : '#5a1a1a';
+  ctx.fillRect(38, 18, 18, 22);
 
-/* TREES */
+  // Head
+  ctx.fillStyle = '#e0b090';
+  ctx.beginPath();
+  ctx.arc(47, 12, 9, 0, Math.PI*2);
+  ctx.fill();
 
-function createTree(x,z) {
-  const tree = new THREE.Group();
+  // Helmet / hair
+  ctx.fillStyle = isPlayer ? '#222' : '#333';
+  ctx.beginPath();
+  ctx.arc(47, 9, 9, Math.PI, 0);
+  ctx.fill();
 
-  const trunk = new THREE.Mesh(
-    new THREE.CylinderGeometry(.3,.5,3,8),
-    new THREE.MeshStandardMaterial({color:0x69421e})
-  );
-  trunk.position.y = 1.5;
-  tree.add(trunk);
-
-  const leaves = new THREE.Mesh(
-    new THREE.ConeGeometry(2.2,5,9),
-    new THREE.MeshStandardMaterial({color:0x245d2c})
-  );
-  leaves.position.y = 5;
-  tree.add(leaves);
-
-  tree.position.set(x,0,z);
-  scene.add(tree);
-}
-
-for(let z=-20; z>-350; z-=13) {
-  createTree(-13-Math.random()*9,z);
-  createTree(13+Math.random()*9,z-5);
-}
-
-/* PLAYER */
-
-const player = new THREE.Group();
-scene.add(player);
-player.position.set(0,0,5);
-
-let horse = new THREE.Group();
-let rider = new THREE.Group();
-
-player.add(horse);
-player.add(rider);
-
-function makeFallbackHorse() {
-  const bodyMat = new THREE.MeshStandardMaterial({color:0x744323, roughness:.8});
-  const darkMat = new THREE.MeshStandardMaterial({color:0x241a13});
-  const horseGroup = new THREE.Group();
-
-  const body = new THREE.Mesh(
-    new THREE.BoxGeometry(1.1,1.1,2.1), bodyMat
-  );
-  body.position.y = 1.7;
-  horseGroup.add(body);
-
-  const neck = new THREE.Mesh(
-    new THREE.BoxGeometry(.7,1.25,.7), bodyMat
-  );
-  neck.position.set(0,2.25,-.8);
-  neck.rotation.x = -.25;
-  horseGroup.add(neck);
-
-  const head = new THREE.Mesh(
-    new THREE.BoxGeometry(.65,.65,.8), bodyMat
-  );
-  head.position.set(0,2.7,-1.15);
-  horseGroup.add(head);
-
-  const legs = [];
-  for(let x of [-.38,.38]) {
-    for(let z of [-.75,.75]) {
-      const leg = new THREE.Mesh(
-        new THREE.CylinderGeometry(.12,.15,1.2,8), darkMat
-      );
-      leg.position.set(x,.75,z);
-      horseGroup.add(leg);
-      legs.push(leg);
-    }
+  // Arms
+  ctx.strokeStyle = '#e0b090';
+  ctx.lineWidth = 4;
+  if (attacking) {
+    // Sword arm extended
+    ctx.beginPath();
+    ctx.moveTo(55, 25);
+    ctx.lineTo(95, 15);
+    ctx.stroke();
+    // Sword
+    ctx.strokeStyle = '#ccc';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(95, 15);
+    ctx.lineTo(115, 5);
+    ctx.stroke();
+    ctx.fillStyle = '#888';
+    ctx.fillRect(112, 2, 6, 8);
+  } else {
+    ctx.beginPath();
+    ctx.moveTo(40, 25); ctx.lineTo(30, 38);
+    ctx.moveTo(54, 25); ctx.lineTo(62, 35);
+    ctx.stroke();
   }
 
-  const tail = new THREE.Mesh(
-    new THREE.CylinderGeometry(.08,.15,.9,8), darkMat
-  );
-  tail.position.set(0,1.7,1.3);
-  tail.rotation.x=-.6;
-  horseGroup.add(tail);
-
-  horseGroup.userData.legs=legs;
-  return horseGroup;
+  ctx.restore();
 }
 
-function makeFallbackRider() {
-  const group = new THREE.Group();
-  const coat = new THREE.MeshStandardMaterial({color:0x17395b});
-  const gold = new THREE.MeshStandardMaterial({color:0xd9ad46});
-  const skin = new THREE.MeshStandardMaterial({color:0xb98255});
-
-  const body = new THREE.Mesh(
-    new THREE.BoxGeometry(.65,.9,.45),coat
-  );
-  body.position.y=3.1;
-  group.add(body);
-
-  const head = new THREE.Mesh(
-    new THREE.SphereGeometry(.25,16,16),skin
-  );
-  head.position.y=3.75;
-  group.add(head);
-
-  const helmet = new THREE.Mesh(
-    new THREE.SphereGeometry(.29,16,12,0,Math.PI*2,0,Math.PI/2),gold
-  );
-  helmet.position.y=3.85;
-  group.add(helmet);
-
-  return group;
+function drawEnemy(e) {
+  drawHorseAndRider(e.x - cameraX, e.y, e.facing, false, e.attacking > 0);
 }
 
-horse.add(makeFallbackHorse());
-rider.add(makeFallbackRider());
+function spawnEnemy(isBoss = false) {
+  const baseHealth = isBoss ? 180 + level * 25 : 40 + level * 12;
+  enemies.push({
+    x: cameraX + W + 80 + Math.random() * 100,
+    y: groundY() - 70,
+    w: 90,
+    h: 70,
+    vx: 0,
+    health: baseHealth,
+    maxHealth: baseHealth,
+    facing: -1,
+    attackCooldown: 0,
+    attacking: 0,
+    speed: isBoss ? 2.8 : 2.2 + Math.random(),
+    isBoss: isBoss,
+    hitTimer: 0
+  });
+}
 
-let horseMixer = null;
-let riderMixer = null;
-let horseLoaded = false;
-let riderLoaded = false;
+function startLevel() {
+  enemies = [];
+  player.health = Math.min(player.maxHealth, player.health + 25);
+  player.x = 120;
+  player.y = groundY() - player.h;
+  player.vx = 0;
+  player.vy = 0;
+  cameraX = 0;
+  player.invincible = 60;
 
-function loadModel(url, callback) {
-  loader.load(url, gltf => {
-    callback(gltf);
-  }, undefined, error => {
-    console.warn("Model could not be loaded:", url, error);
+  const isBossLevel = level % 5 === 0;
+  if (isBossLevel) {
+    spawnEnemy(true);
+    showMessage(`BOSS LEVEL ${level}!`, 180);
+  } else {
+    const count = 1 + Math.floor(level / 2);
+    for (let i = 0; i < count; i++) {
+      setTimeout(() => spawnEnemy(false), i * 800);
+    }
+    showMessage(`LEVEL ${level}`, 90);
+  }
+  updateHUD();
+}
+
+function showMessage(txt, frames) {
+  const el = document.getElementById('message');
+  el.textContent = txt;
+  el.style.opacity = 1;
+  setTimeout(() => el.style.opacity = 0, frames * 16);
+}
+
+function updateHUD() {
+  document.getElementById('playerHealthFill').style.width = (player.health / player.maxHealth * 100) + '%';
+  document.getElementById('levelInfo').textContent = `Level ${level}` + (level % 5 === 0 ? '  • BOSS' : '');
+
+  if (enemies.length > 0) {
+    const e = enemies[0];
+    document.getElementById('enemyBox').style.display = 'block';
+    document.getElementById('enemyLabel').textContent = e.isBoss ? 'BOSS' : 'ENEMY';
+    document.getElementById('enemyHealthFill').style.width = (e.health / e.maxHealth * 100) + '%';
+  } else {
+    document.getElementById('enemyBox').style.display = 'none';
+  }
+}
+
+// ========== GAME LOOP ==========
+function update() {
+  if (gameState !== 'playing') return;
+
+  // Player movement
+  player.vx = 0;
+  if (keys.left) { player.vx = -player.speed; player.facing = -1; }
+  if (keys.right) { player.vx = player.speed; player.facing = 1; }
+
+  if (keys.jump && player.onGround) {
+    player.vy = player.jumpPower;
+    player.onGround = false;
+  }
+
+  player.vy += 0.65; // gravity
+  player.x += player.vx;
+  player.y += player.vy;
+
+  // Ground collision
+  const gy = groundY() - player.h;
+  if (player.y >= gy) {
+    player.y = gy;
+    player.vy = 0;
+    player.onGround = true;
+  }
+
+  // Keep player in world
+  if (player.x < cameraX + 30) player.x = cameraX + 30;
+
+  // Camera follow
+  const targetCam = player.x - W * 0.35;
+  cameraX += (targetCam - cameraX) * 0.08;
+  if (cameraX < 0) cameraX = 0;
+
+  // Attack
+  if (keys.attack && player.attackCooldown <= 0) {
+    player.attackCooldown = 28;
+    // Check hit
+    enemies.forEach(e => {
+      const dist = Math.abs((player.x + player.w/2) - (e.x + e.w/2));
+      if (dist < 110 && Math.abs(player.y - e.y) < 50) {
+        e.health -= 18 + Math.floor(level * 1.5);
+        e.hitTimer = 10;
+        e.vx = player.facing * 6;
+        createHitParticles(e.x + e.w/2, e.y + 30);
+      }
+    });
+  }
+  if (player.attackCooldown > 0) player.attackCooldown--;
+  if (player.invincible > 0) player.invincible--;
+
+  // Enemies AI
+  enemies.forEach(e => {
+    if (e.hitTimer > 0) { e.hitTimer--; e.x += e.vx; e.vx *= 0.85; return; }
+
+    const dx = player.x - e.x;
+    e.facing = dx > 0 ? 1 : -1;
+
+    if (Math.abs(dx) > 90) {
+      e.x += Math.sign(dx) * e.speed;
+    } else {
+      // Attack
+      if (e.attackCooldown <= 0) {
+        e.attacking = 18;
+        e.attackCooldown = 50 + Math.random() * 30;
+        // Damage player
+        if (Math.abs(dx) < 100 && player.invincible <= 0) {
+          player.health -= e.isBoss ? 14 : 8;
+          player.invincible = 40;
+          createHitParticles(player.x + player.w/2, player.y + 30);
+        }
+      }
+    }
+    if (e.attackCooldown > 0) e.attackCooldown--;
+    if (e.attacking > 0) e.attacking--;
+  });
+
+  // Remove dead enemies
+  enemies = enemies.filter(e => {
+    if (e.health <= 0) {
+      score += e.isBoss ? 500 : 100;
+      createHitParticles(e.x + 40, e.y + 30, 12);
+      return false;
+    }
+    return true;
+  });
+
+  // Level clear
+  if (enemies.length === 0 && gameState === 'playing') {
+    gameState = 'levelClear';
+    showMessage('LEVEL CLEAR!', 100);
+    setTimeout(() => {
+      level++;
+      gameState = 'playing';
+      startLevel();
+    }, 1600);
+  }
+
+  // Player death
+  if (player.health <= 0) {
+    player.health = 0;
+    gameState = 'gameOver';
+    showMessage('YOU FELL...\nTap to Restart', 9999);
+  }
+
+  updateHUD();
+
+  // Particles
+  particles = particles.filter(p => {
+    p.x += p.vx; p.y += p.vy; p.life--;
+    return p.life > 0;
+  });
+}
+
+function createHitParticles(x, y, count = 7) {
+  for (let i = 0; i < count; i++) {
+    particles.push({
+      x, y,
+      vx: (Math.random() - 0.5) * 8,
+      vy: (Math.random() - 0.5) * 8 - 2,
+      life: 20 + Math.random() * 15,
+      color: `hsl(${Math.random()*40}, 80%, 55%)`
+    });
+  }
+}
+
+function draw() {
+  // Sky already set by CSS, clear only the canvas area needed
+  ctx.clearRect(0, 0, W, H);
+
+  // Simple ground decoration
+  ctx.fillStyle = '#2a4508';
+  ctx.fillRect(0, groundY(), W, H - groundY());
+
+  // Distant hills (parallax)
+  ctx.fillStyle = '#3d5c1a';
+  for (let i = 0; i < 6; i++) {
+    const hx = ((i * 280) - cameraX * 0.3) % (W + 300) - 100;
+    ctx.beginPath();
+    ctx.moveTo(hx, groundY());
+    ctx.quadraticCurveTo(hx + 80, groundY() - 60 - (i%3)*20, hx + 160, groundY());
+    ctx.fill();
+  }
+
+  // Player
+  if (player.invincible <= 0 || Math.floor(player.invincible / 4) % 2 === 0) {
+    drawHorseAndRider(player.x - cameraX, player.y, player.facing, true, player.attackCooldown > 18);
+  }
+
+  // Enemies
+  enemies.forEach(drawEnemy);
+
+  // Particles
+  particles.forEach(p => {
+    ctx.fillStyle = p.color;
+    ctx.globalAlpha = p.life / 30;
+    ctx.beginPath();
+    ctx.arc(p.x - cameraX, p.y, 4, 0, Math.PI*2);
+    ctx.fill();
+    ctx.globalAlpha = 1;
+  });
+}
+
+function loop() {
+  update();
+  draw();
+  requestAnimationFrame(loop);
+}
+loop();
+
+// ========== START ==========
+document.getElementById('startBtn').onclick = () => {
+  document.getElementById('titleScreen').style.display = 'none';
+  document.getElementById('hud').style.display = 'flex';
+  document.getElementById('controls').style.display = 'flex';
+  document.getElementById('btnSizePanel').style.display = 'flex';
+  document.getElementById('levelInfo').style.display = 'block';
+  gameState = 'playing';
+  level = 1;
+  player.health = 100;
+  startLevel();
+};
+
+// Restart on game over
+canvas.addEventListener('click', () => {
+  if (gameState === 'gameOver') {
+    level = 1;
+    player.health = 100;
+    gameState = 'playing';
+    document.getElementById('message').style.opacity = 0;
+    startLevel();
+  }
+});
+document.getElementById('message').addEventListener('click', () => {
+  if (gameState === 'gameOver') {
+    level = 1;
+    player.health = 100;
+    gameState = 'playing';
+    document.getElementById('message').style.opacity = 0;
+    startLevel();
+  }
+});
+</script>
+</body>
+</html>("Model could not be loaded:", url, error);
   });
 }
 
