@@ -2,618 +2,987 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-
-<title>Knight Rider: The Kingdom War</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>KNIGHT RIDER 3D — Horse Adventure</title>
 
 <style>
-
 * {
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    user-select:none;
-    -webkit-user-select:none;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 body {
-    background:#080c0a;
-    color:white;
-    font-family:Arial,sans-serif;
-    overflow:hidden;
+  overflow: hidden;
+  background: #07121c;
+  font-family: Arial, sans-serif;
+  color: white;
+  touch-action: none;
 }
 
 #game {
-    width:100vw;
-    height:100dvh;
-    position:relative;
-    overflow:hidden;
-    background:#202c25;
+  position: fixed;
+  inset: 0;
 }
 
 canvas {
-    width:100%;
-    height:100%;
-    display:block;
-    touch-action:none;
+  display: block;
 }
-
-/* INTRO */
 
 .screen {
-    position:absolute;
-    inset:0;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-    background:
-    linear-gradient(rgba(5,12,9,.82),rgba(5,12,9,.96)),
-    radial-gradient(ellipse at center,#68715a,#101914);
-    z-index:50;
-    text-align:center;
-    padding:20px;
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background:
+    linear-gradient(180deg, rgba(3,10,20,.65), rgba(3,10,20,.95));
+  padding: 20px;
 }
 
-.logo {
-    font-size:clamp(30px,7vw,65px);
-    color:#d9b66d;
-    letter-spacing:3px;
-    font-family:Georgia,serif;
-    text-shadow:0 4px 20px #000;
+h1 {
+  font-size: clamp(30px, 7vw, 65px);
+  color: #f5c45b;
+  text-shadow: 0 4px 15px #000;
+  letter-spacing: 3px;
 }
 
 .subtitle {
-    color:#d1c6a9;
-    margin-top:15px;
-    font-size:14px;
-    letter-spacing:3px;
+  margin-top: 12px;
+  font-size: clamp(13px, 2.5vw, 20px);
+  color: #e8e8e8;
 }
 
-.credit {
-    margin-top:35px;
-    line-height:2;
-    color:#c9c9bd;
+button {
+  border: 2px solid #f3c45b;
+  background: linear-gradient(#b77a22, #68400e);
+  color: white;
+  font-weight: bold;
+  border-radius: 12px;
+  padding: 13px 22px;
+  font-size: 17px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px #0008;
 }
 
-.start {
-    margin-top:35px;
-    padding:17px 55px;
-    background:linear-gradient(#d5b574,#88642d);
-    color:#17150e;
-    border:2px solid #e8d39e;
-    font-weight:bold;
-    font-size:17px;
-    border-radius:6px;
+button:active {
+  transform: scale(.94);
 }
 
-/* HUD */
+#startButton {
+  margin-top: 28px;
+  font-size: 22px;
+  padding: 16px 45px;
+}
+
+#credit {
+  margin-top: 30px;
+  color: #e8c77a;
+  font-size: 14px;
+}
+
+#trailerText {
+  margin-top: 16px;
+  font-size: 15px;
+  color: #ddd;
+}
 
 #hud {
-    position:absolute;
-    top:10px;
-    left:12px;
-    right:12px;
-    display:none;
-    align-items:flex-start;
-    justify-content:space-between;
-    gap:8px;
-    pointer-events:none;
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 5;
+  display: none;
+  background: #07121ccc;
+  border: 1px solid #e8bd55;
+  padding: 10px 14px;
+  border-radius: 12px;
+  line-height: 1.7;
+  min-width: 150px;
 }
 
-.info {
-    background:#101710d9;
-    border:1px solid #a68a52;
-    padding:9px 12px;
-    border-radius:7px;
-    font-size:12px;
-    line-height:1.7;
+#pauseButton {
+  position: fixed;
+  right: 12px;
+  top: 12px;
+  z-index: 6;
+  display: none;
+  padding: 10px 16px;
 }
-
-#hud button {
-    pointer-events:auto;
-}
-
-#pauseBtn {
-    background:#26332b;
-    border:1px solid #d4b779;
-    color:white;
-    border-radius:7px;
-    padding:12px 17px;
-}
-
-/* HEALTH */
-
-.healthbox {
-    position:absolute;
-    top:85px;
-    left:12px;
-    width:145px;
-    display:none;
-}
-
-.bar {
-    height:11px;
-    background:#242424;
-    border:1px solid #aaa;
-    border-radius:10px;
-    overflow:hidden;
-    margin-top:5px;
-}
-
-.fill {
-    height:100%;
-    width:100%;
-    background:#54a65d;
-}
-
-#bossHealth {
-    display:none;
-    position:absolute;
-    top:85px;
-    right:12px;
-    width:170px;
-    text-align:right;
-    font-size:12px;
-}
-
-#bossFill {
-    background:#ad3e36;
-}
-
-/* CONTROLS */
 
 #controls {
-    display:none;
-    position:absolute;
-    bottom:16px;
-    left:12px;
-    right:12px;
-    align-items:flex-end;
-    justify-content:space-between;
-    pointer-events:none;
+  position: fixed;
+  bottom: 15px;
+  left: 0;
+  right: 0;
+  z-index: 6;
+  display: none;
+  justify-content: space-between;
+  align-items: end;
+  padding: 0 18px;
+  pointer-events: none;
 }
 
-#movement {
-    display:grid;
-    grid-template-columns:75px 75px;
-    gap:10px;
-    pointer-events:auto;
+.controlGroup {
+  display: flex;
+  gap: 9px;
+  pointer-events: auto;
+  align-items: end;
 }
 
-#actions {
-    display:grid;
-    grid-template-columns:repeat(2,75px);
-    gap:10px;
-    pointer-events:auto;
+.control {
+  width: clamp(55px, 10vw, 85px);
+  height: clamp(55px, 10vw, 85px);
+  border-radius: 50%;
+  background: #102b42dd;
+  border: 2px solid #e8bd55;
+  color: white;
+  font-size: clamp(19px, 4vw, 30px);
+  font-weight: bold;
+  touch-action: none;
 }
 
-.btn {
-    width:75px;
-    height:75px;
-    border-radius:50%;
-    border:2px solid #c9ac70;
-    background:linear-gradient(145deg,#343e37,#101713);
-    color:white;
-    font-size:25px;
-    font-weight:bold;
-    box-shadow:0 4px 10px #0009;
-    touch-action:none;
+.control.action {
+  background: #744c14e8;
 }
 
-.btn:active {
-    background:#9a773e;
-    transform:scale(.95);
+#message {
+  position: fixed;
+  top: 23%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 8;
+  background: #061522e8;
+  border: 2px solid #e8bd55;
+  border-radius: 12px;
+  padding: 13px 22px;
+  font-size: 18px;
+  text-align: center;
+  display: none;
 }
 
-#fire {
-    border-color:#d6a75a;
-    background:linear-gradient(145deg,#73542a,#2d2416);
+#rotateNotice {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  background: #07121c;
+  color: white;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 25px;
+  font-size: 20px;
 }
 
-#multi {
-    border-color:#d2bd83;
-}
-
-#shield {
-    border-color:#8ca9c0;
-}
-
-/* SECONDARY BUTTONS */
-
-#upgradeOpen {
-    display:none;
-    position:absolute;
-    top:120px;
-    right:12px;
-    padding:12px 15px;
-    background:#17241a;
-    border:1px solid #d0ac68;
-    color:#f1d18a;
-    border-radius:7px;
-}
-
-.panel {
-    display:none;
-    position:absolute;
-    top:50%;
-    left:50%;
-    transform:translate(-50%,-50%);
-    width:min(350px,92%);
-    background:#101a14;
-    border:2px solid #c4a25d;
-    padding:20px;
-    border-radius:12px;
-    text-align:center;
-    z-index:30;
-}
-
-.panel h2 {
-    color:#e4c17d;
-    margin-bottom:12px;
-}
-
-.panel p {
-    margin:12px 0;
-    color:#ddd;
-    font-size:14px;
-}
-
-.upgradeRow {
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    border-bottom:1px solid #455044;
-    padding:13px 0;
-    gap:8px;
-}
-
-.upgradeRow button {
-    background:#98723a;
-    border:0;
-    color:white;
-    padding:10px;
-    border-radius:5px;
-}
-
-.panel button.main {
-    background:#a27d3e;
-    border:0;
-    color:white;
-    padding:13px 25px;
-    margin-top:14px;
-    border-radius:6px;
-}
-
-/* LEVEL COMPLETE */
-
-#completeScreen,
-#defeatScreen,
 #pauseScreen {
-    display:none;
+  display: none;
 }
 
-#completeScreen h1 {
-    color:#e3c47e;
+#upgradePanel {
+  position: fixed;
+  z-index: 7;
+  right: 12px;
+  top: 65px;
+  display: none;
+  background: #07121cdd;
+  padding: 10px;
+  border: 1px solid #e8bd55;
+  border-radius: 12px;
 }
 
-#defeatScreen h1 {
-    color:#c96a5d;
+#upgradePanel button {
+  margin: 3px;
+  font-size: 12px;
+  padding: 8px;
 }
 
-/* MOBILE */
-
-@media(max-width:600px) {
-
-    .btn {
-        width:64px;
-        height:64px;
-        font-size:22px;
-    }
-
-    #movement {
-        grid-template-columns:64px 64px;
-        gap:7px;
-    }
-
-    #actions {
-        grid-template-columns:repeat(2,64px);
-        gap:7px;
-    }
-
-    .info {
-        font-size:10px;
-        padding:7px;
-    }
-
+@media (orientation: portrait) {
+  #rotateNotice {
+    display: flex;
+  }
 }
-
-@media(orientation:portrait) {
-    #rotate {
-        display:flex;
-    }
-}
-
-#rotate {
-    display:none;
-    position:absolute;
-    inset:0;
-    background:#101a14;
-    z-index:100;
-    align-items:center;
-    justify-content:center;
-    text-align:center;
-    padding:30px;
-    color:#e1bd75;
-    font-size:20px;
-}
-
 </style>
 </head>
 
 <body>
 
-<div id="game">
+<div id="game"></div>
 
-<canvas id="canvas"></canvas>
-
-<!-- INTRO -->
-
-<div class="screen" id="intro">
-
-    <div class="logo">KNIGHT RIDER</div>
-
-    <div class="subtitle">THE KINGDOM WAR</div>
-
-    <div class="credit">
-        A REALISTIC 2D HORSE ADVENTURE<br><br>
-
-        DESIGNED BY<br>
-
-        <strong style="color:#e5c37c;font-size:19px">
-        AHMAD BIN MUHAMMAD YUSUF
-        </strong>
-
-        <br>
-
-        <span>YOUNG PROGRAMMER IN ANIMATION</span>
-    </div>
-
-    <button class="start" id="startBtn">
-        START GAME
-    </button>
-
+<div id="intro" class="screen">
+  <h1>KNIGHT RIDER 3D</h1>
+  <div class="subtitle">THE GREAT HORSE ADVENTURE</div>
+  <div id="trailerText">Explore beautiful lands. Race through challenges. Become the champion.</div>
+  <button id="startButton">START ADVENTURE</button>
+  <div id="credit">Designed by Ahmad bin Muhammad Yusuf<br>Young Programmer in Animation</div>
 </div>
-
-<!-- HUD -->
 
 <div id="hud">
-
-    <div class="info">
-        LEVEL: <span id="levelText">1</span><br>
-        COINS: <span id="coinsText">0</span><br>
-        ENEMIES: <span id="enemyText">0</span>
-    </div>
-
-    <button id="pauseBtn">Ⅱ</button>
-
+  <div>🏆 Level: <span id="levelText">1</span></div>
+  <div>🪙 Coins: <span id="coinsText">0</span></div>
+  <div>⚡ Stamina: <span id="staminaText">100</span>%</div>
+  <div>⏱ Time: <span id="timeText">0</span>s</div>
+  <div>🐎 Speed: <span id="speedText">0</span></div>
 </div>
 
-<!-- PLAYER HEALTH -->
+<button id="pauseButton">Ⅱ PAUSE</button>
 
-<div class="healthbox" id="playerBox">
-    PLAYER HEALTH
-    <div class="bar">
-        <div class="fill" id="playerFill"></div>
-    </div>
+<div id="upgradePanel">
+  <div style="color:#f3c45b;margin-bottom:5px">HORSE UPGRADES</div>
+  <button id="speedUpgrade">Speed + (20 coins)</button>
+  <button id="staminaUpgrade">Stamina + (15 coins)</button>
 </div>
-
-<!-- BOSS HEALTH -->
-
-<div id="bossHealth">
-    <span id="bossName">KING'S GUARD</span>
-    <div class="bar">
-        <div class="fill" id="bossFill"></div>
-    </div>
-</div>
-
-<button id="upgradeOpen">⚒ UPGRADES</button>
-
-<!-- CONTROLS -->
 
 <div id="controls">
+  <div class="controlGroup">
+    <button class="control" id="left">◀</button>
+    <button class="control" id="right">▶</button>
+  </div>
 
-    <div id="movement">
-
-        <button class="btn" id="left">◀</button>
-        <button class="btn" id="right">▶</button>
-
-    </div>
-
-    <div id="actions">
-
-        <button class="btn" id="shield">🛡</button>
-        <button class="btn" id="fire">⚔</button>
-        <button class="btn" id="multi">➶</button>
-        <button class="btn" id="jump">⬆</button>
-
-    </div>
-
+  <div class="controlGroup">
+    <button class="control action" id="jump">⬆</button>
+    <button class="control action" id="boost">⚡</button>
+    <button class="control action" id="forward">GO</button>
+  </div>
 </div>
 
-<!-- UPGRADES -->
+<div id="message"></div>
 
-<div class="panel" id="upgradePanel">
-
-    <h2>UPGRADE YOUR EQUIPMENT</h2>
-
-    <p>Available coins: <span id="upgradeCoins">0</span></p>
-
-    <div class="upgradeRow">
-        <span>🐎 Horse health</span>
-        <button id="horseUpgrade">BUY 50</button>
-    </div>
-
-    <div class="upgradeRow">
-        <span>⚔ Sword power</span>
-        <button id="swordUpgrade">BUY 40</button>
-    </div>
-
-    <div class="upgradeRow">
-        <span>➶ Arrow power</span>
-        <button id="arrowUpgrade">BUY 45</button>
-    </div>
-
-    <button class="main" id="closeUpgrade">CONTINUE</button>
-
+<div id="pauseScreen" class="screen">
+  <h1>GAME PAUSED</h1>
+  <button id="resumeButton">RESUME</button>
+  <button id="restartButton" style="margin-top:12px">RESTART LEVEL</button>
 </div>
 
-<!-- LEVEL COMPLETE -->
-
-<div class="screen" id="completeScreen">
-
-    <h1>LEVEL COMPLETED!</h1>
-
-    <p id="completeMessage">You have conquered the battlefield.</p>
-
-    <p>Coins earned: <span id="rewardText">0</span></p>
-
-    <button class="start" id="nextLevel">
-        NEXT LEVEL
-    </button>
-
-    <button class="start" id="completeUpgrade">
-        UPGRADE EQUIPMENT
-    </button>
-
+<div id="rotateNotice">
+  <div>
+    <div style="font-size:55px">📱 ↻</div>
+    <h2>Rotate Your Device</h2>
+    <p style="margin-top:12px">Please turn your phone sideways to play in landscape mode.</p>
+  </div>
 </div>
 
-<!-- DEFEAT -->
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
 
-<div class="screen" id="defeatScreen">
+<script type="module">
+import * as THREE from "three";
+import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 
-    <h1>MISSION FAILED</h1>
+const container = document.getElementById("game");
 
-    <p>Your horse and rider need another attempt.</p>
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x8bc5e8);
+scene.fog = new THREE.Fog(0x8bc5e8, 35, 160);
 
-    <p>Current level: <span id="retryLevel">1</span></p>
+const camera = new THREE.PerspectiveCamera(
+  65,
+  window.innerWidth / window.innerHeight,
+  0.1,
+  500
+);
 
-    <button class="start" id="retry">
-        RETRY LEVEL
-    </button>
+const renderer = new THREE.WebGLRenderer({
+  antialias: true,
+  powerPreference: "high-performance"
+});
 
-    <button class="start" id="defeatUpgrade">
-        UPGRADE EQUIPMENT
-    </button>
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.7));
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+container.appendChild(renderer.domElement);
 
-</div>
+const clock = new THREE.Clock();
+const loader = new GLTFLoader();
 
-<!-- PAUSE -->
+scene.add(new THREE.HemisphereLight(0xcdeaff, 0x56623a, 2));
 
-<div class="screen" id="pauseScreen">
+const sunlight = new THREE.DirectionalLight(0xffffff, 2.3);
+sunlight.position.set(-30, 60, 30);
+sunlight.castShadow = true;
+sunlight.shadow.mapSize.set(2048, 2048);
+scene.add(sunlight);
 
-    <h1>GAME PAUSED</h1>
+/* WORLD */
 
-    <button class="start" id="resume">RESUME</button>
+const ground = new THREE.Mesh(
+  new THREE.PlaneGeometry(400, 400),
+  new THREE.MeshStandardMaterial({color:0x507c36})
+);
+ground.rotation.x = -Math.PI / 2;
+ground.position.y = -0.08;
+ground.receiveShadow = true;
+scene.add(ground);
 
-    <button class="start" id="pauseUpgrade">UPGRADES</button>
+const path = new THREE.Mesh(
+  new THREE.PlaneGeometry(13, 400),
+  new THREE.MeshStandardMaterial({color:0xb69b70})
+);
+path.rotation.x = -Math.PI / 2;
+path.position.set(0, 0, -150);
+scene.add(path);
 
-</div>
+const sun = new THREE.Mesh(
+  new THREE.SphereGeometry(8, 24, 24),
+  new THREE.MeshBasicMaterial({color:0xffe4a0})
+);
+sun.position.set(-45, 50, -100);
+scene.add(sun);
 
-<div id="rotate">
-    PLEASE ROTATE YOUR PHONE TO LANDSCAPE MODE
-</div>
+/* TREES */
 
-</div>
+function createTree(x,z) {
+  const tree = new THREE.Group();
 
-<script>
+  const trunk = new THREE.Mesh(
+    new THREE.CylinderGeometry(.3,.5,3,8),
+    new THREE.MeshStandardMaterial({color:0x69421e})
+  );
+  trunk.position.y = 1.5;
+  tree.add(trunk);
 
-/* =============================
-   GAME INITIALIZATION
-============================= */
+  const leaves = new THREE.Mesh(
+    new THREE.ConeGeometry(2.2,5,9),
+    new THREE.MeshStandardMaterial({color:0x245d2c})
+  );
+  leaves.position.y = 5;
+  tree.add(leaves);
 
-const canvas=document.getElementById("canvas");
-const ctx=canvas.getContext("2d");
-
-const $=id=>document.getElementById(id);
-
-const game=$("game");
-
-let W,H;
-
-function resize() {
-    W=canvas.width=game.clientWidth;
-    H=canvas.height=game.clientHeight;
+  tree.position.set(x,0,z);
+  scene.add(tree);
 }
 
-resize();
+for(let z=-20; z>-350; z-=13) {
+  createTree(-13-Math.random()*9,z);
+  createTree(13+Math.random()*9,z-5);
+}
 
-window.addEventListener("resize",resize);
+/* PLAYER */
+
+const player = new THREE.Group();
+scene.add(player);
+player.position.set(0,0,5);
+
+let horse = new THREE.Group();
+let rider = new THREE.Group();
+
+player.add(horse);
+player.add(rider);
+
+function makeFallbackHorse() {
+  const bodyMat = new THREE.MeshStandardMaterial({color:0x744323, roughness:.8});
+  const darkMat = new THREE.MeshStandardMaterial({color:0x241a13});
+  const horseGroup = new THREE.Group();
+
+  const body = new THREE.Mesh(
+    new THREE.BoxGeometry(1.1,1.1,2.1), bodyMat
+  );
+  body.position.y = 1.7;
+  horseGroup.add(body);
+
+  const neck = new THREE.Mesh(
+    new THREE.BoxGeometry(.7,1.25,.7), bodyMat
+  );
+  neck.position.set(0,2.25,-.8);
+  neck.rotation.x = -.25;
+  horseGroup.add(neck);
+
+  const head = new THREE.Mesh(
+    new THREE.BoxGeometry(.65,.65,.8), bodyMat
+  );
+  head.position.set(0,2.7,-1.15);
+  horseGroup.add(head);
+
+  const legs = [];
+  for(let x of [-.38,.38]) {
+    for(let z of [-.75,.75]) {
+      const leg = new THREE.Mesh(
+        new THREE.CylinderGeometry(.12,.15,1.2,8), darkMat
+      );
+      leg.position.set(x,.75,z);
+      horseGroup.add(leg);
+      legs.push(leg);
+    }
+  }
+
+  const tail = new THREE.Mesh(
+    new THREE.CylinderGeometry(.08,.15,.9,8), darkMat
+  );
+  tail.position.set(0,1.7,1.3);
+  tail.rotation.x=-.6;
+  horseGroup.add(tail);
+
+  horseGroup.userData.legs=legs;
+  return horseGroup;
+}
+
+function makeFallbackRider() {
+  const group = new THREE.Group();
+  const coat = new THREE.MeshStandardMaterial({color:0x17395b});
+  const gold = new THREE.MeshStandardMaterial({color:0xd9ad46});
+  const skin = new THREE.MeshStandardMaterial({color:0xb98255});
+
+  const body = new THREE.Mesh(
+    new THREE.BoxGeometry(.65,.9,.45),coat
+  );
+  body.position.y=3.1;
+  group.add(body);
+
+  const head = new THREE.Mesh(
+    new THREE.SphereGeometry(.25,16,16),skin
+  );
+  head.position.y=3.75;
+  group.add(head);
+
+  const helmet = new THREE.Mesh(
+    new THREE.SphereGeometry(.29,16,12,0,Math.PI*2,0,Math.PI/2),gold
+  );
+  helmet.position.y=3.85;
+  group.add(helmet);
+
+  return group;
+}
+
+horse.add(makeFallbackHorse());
+rider.add(makeFallbackRider());
+
+let horseMixer = null;
+let riderMixer = null;
+let horseLoaded = false;
+let riderLoaded = false;
+
+function loadModel(url, callback) {
+  loader.load(url, gltf => {
+    callback(gltf);
+  }, undefined, error => {
+    console.warn("Model could not be loaded:", url, error);
+  });
+}
+
+loadModel(
+  "https://threejs.org/examples/models/gltf/Horse.glb",
+  gltf => {
+    horse.remove(horse.children[0]);
+
+    const model = gltf.scene;
+    model.scale.set(1.15,1.15,1.15);
+    model.position.set(0,0,0);
+    model.rotation.y=Math.PI;
+
+    model.traverse(obj => {
+      if(obj.isMesh) {
+        obj.castShadow=true;
+        obj.receiveShadow=true;
+      }
+    });
+
+    horse.add(model);
+    horseLoaded=true;
+
+    if(gltf.animations.length) {
+      horseMixer = new THREE.AnimationMixer(model);
+      horseMixer.clipAction(gltf.animations[0]).play();
+    }
+  }
+);
+
+loadModel(
+  "https://threejs.org/examples/models/gltf/Soldier.glb",
+  gltf => {
+    rider.remove(rider.children[0]);
+
+    const model = gltf.scene;
+    model.scale.set(.8,.8,.8);
+    model.position.set(0,1.1,-.15);
+
+    model.traverse(obj => {
+      if(obj.isMesh) obj.castShadow=true;
+    });
+
+    rider.add(model);
+    riderLoaded=true;
+
+    if(gltf.animations.length) {
+      riderMixer = new THREE.AnimationMixer(model);
+      const action = riderMixer.clipAction(gltf.animations[0]);
+      action.play();
+    }
+  }
+);
+
+/* COURSE OBJECTS */
+
+const coins=[];
+const obstacles=[];
+const checkpoints=[];
+
+const coinMaterial = new THREE.MeshStandardMaterial({
+  color:0xffd54f,
+  metalness:.7,
+  roughness:.25
+});
+
+function createCoin(x,z) {
+  const coin = new THREE.Mesh(
+    new THREE.TorusGeometry(.42,.12,10,24),
+    coinMaterial
+  );
+  coin.position.set(x,1.4,z);
+  coin.userData.collected=false;
+  scene.add(coin);
+  coins.push(coin);
+}
+
+function createObstacle(x,z) {
+  const box = new THREE.Mesh(
+    new THREE.BoxGeometry(2.3,1.2,1.1),
+    new THREE.MeshStandardMaterial({color:0x86532d})
+  );
+  box.position.set(x,.6,z);
+  box.castShadow=true;
+  scene.add(box);
+  obstacles.push(box);
+}
+
+function createCheckpoint(z) {
+  const ring = new THREE.Mesh(
+    new THREE.TorusGeometry(2.3,.18,12,40),
+    new THREE.MeshStandardMaterial({
+      color:0x42e7f5,
+      emissive:0x087b9a,
+      metalness:.4
+    })
+  );
+  ring.position.set(0,2.5,z);
+  scene.add(ring);
+  checkpoints.push(ring);
+}
+
+function buildCourse(level) {
+  coins.forEach(c=>scene.remove(c));
+  obstacles.forEach(o=>scene.remove(o));
+  checkpoints.forEach(c=>scene.remove(c));
+
+  coins.length=0;
+  obstacles.length=0;
+  checkpoints.length=0;
+
+  const distance = 100 + level*25;
+
+  for(let i=0;i<distance/9;i++) {
+    const z=-15-i*9;
+    createCoin((Math.random()-.5)*7,z);
+  }
+
+  for(let i=0;i<level+3;i++) {
+    const z=-30-i*20;
+    createObstacle((Math.random()>.5?1:-1)*3.5,z);
+  }
+
+  for(let i=1;i<=3;i++) {
+    createCheckpoint(-distance*i/4);
+  }
+}
+
+/* GAME STATE */
 
 let level=1;
-let coins=0;
-
-let camera=0;
-
-let active=false;
+let coinsCount=0;
+let stamina=100;
+let horseSpeed=0;
+let speedUpgrade=0;
+let staminaUpgrade=0;
+let gameStarted=false;
 let paused=false;
-let finished=false;
+let elapsed=0;
+let courseProgress=0;
+let jumping=false;
+let jumpTime=0;
+let boostPressed=false;
+let forwardPressed=false;
+let leftPressed=false;
+let rightPressed=false;
+let messageTimer=0;
+let challengeMode=false;
 
-let enemies=[];
-let arrows=[];
-let particles=[];
+const baseSpeed=12;
 
-let keys={
-    left:false,
-    right:false,
-    shield:false
-};
+buildCourse(level);
 
-let player={
-    x:170,
-    health:150,
-    maxHealth:150,
-    sword:1,
-    arrow:1,
-    horse:1,
-    attack:0,
-    jumping:0,
-    cooldown:0,
-    multiCooldown:0,
-    invincible:0
-};
+const cameraOffset = new THREE.Vector3(0,6,12);
 
-let bossLevel=false;
+function showMessage(text) {
+  const box=document.getElementById("message");
+  box.textContent=text;
+  box.style.display="block";
+  messageTimer=2.5;
+}
 
-let levelReward=0;
+function updateHUD() {
+  document.getElementById("levelText").textContent=level;
+  document.getElementById("coinsText").textContent=coinsCount;
+  document.getElementById("staminaText").textContent=Math.round(stamina);
+  document.getElementById("timeText").textContent=Math.floor(elapsed);
+  document.getElementById("speedText").textContent=Math.round(horseSpeed);
+}
 
-let groundY=()=>H*.78;
+/* CONTROL BUTTONS */
 
-/* =============================
-   LEVEL SYSTEM
-============================= */
+function bindHold(id, setter) {
+  const el=document.getElementById(id);
+  el.addEventListener("pointerdown",e=>{
+    e.preventDefault();
+    setter(true);
+  });
+  ["pointerup","pointercancel","pointerleave"].forEach(event=>{
+    el.addEventListener(event,e=>{
+      e.preventDefault();
+      setter(false);
+    });
+  });
+}
 
-function createLevel() {
+bindHold("forward",v=>forwardPressed=v);
+bindHold("left",v=>leftPressed=v);
+bindHold("right",v=>rightPressed=v);
+bindHold("boost",v=>boostPressed=v);
 
-    enemies=[];
-    arrows=[];
-    particles=[];
+document.getElementById("jump").addEventListener("pointerdown",()=>{
+  if(!jumping) {
+    jumping=true;
+    jumpTime=0;
+  }
+});
 
-    camera=0;
+/* KEYBOARD */
 
-    player.health=player.maxHealth;
+const keys={};
 
-    player.x=170;
+window.addEventListener("keydown",e=>{
+  keys[e.key.toLowerCase()]=true;
+  if(e.key===" " && !jumping) {
+    jumping=true;
+    jumpTime=0;
+  }
+});
 
-    bossLevel=level%5===0;
+window.addEventListener("keyup",e=>{
+  keys[e.key.toLowerCase()]=false;
+});
 
-    let count=level%5===0?4:5+level*2;
+/* START */
 
-    for(let i=0;i<count;i++) {
+async function startGame() {
+  gameStarted=true;
+  paused=false;
 
-        enemies.push({
-            x:650+i*260,
-            health:100+level*12,
+  document.getElementById("intro").style.display="none";
+  document.getElementById("hud").style.display="block";
+  document.getElementById("controls").style.display="flex";
+  document.getElementById("pauseButton").style.display="block";
+  document.getElementById("upgradePanel").style.display="block";
+
+  try {
+    if(document.documentElement.requestFullscreen) {
+      await document.documentElement.requestFullscreen();
+    }
+  } catch(e) {}
+
+  try {
+    if(screen.orientation && screen.orientation.lock) {
+      await screen.orientation.lock("landscape");
+    }
+  } catch(e) {}
+
+  showMessage("Adventure begins! Reach the checkpoints!");
+}
+
+document.getElementById("startButton").addEventListener("click",startGame);
+
+/* PAUSE */
+
+function pauseGame() {
+  paused=true;
+  document.getElementById("pauseScreen").style.display="flex";
+}
+
+function resumeGame() {
+  paused=false;
+  document.getElementById("pauseScreen").style.display="none";
+  clock.getDelta();
+}
+
+document.getElementById("pauseButton").addEventListener("click",pauseGame);
+document.getElementById("resumeButton").addEventListener("click",resumeGame);
+
+document.getElementById("restartButton").addEventListener("click",()=>{
+  player.position.set(0,0,5);
+  player.rotation.y=0;
+  elapsed=0;
+  courseProgress=0;
+  stamina=100+staminaUpgrade*10;
+  buildCourse(level);
+  resumeGame();
+  showMessage("Level restarted!");
+});
+
+/* UPGRADES */
+
+document.getElementById("speedUpgrade").addEventListener("click",()=>{
+  if(coinsCount>=20) {
+    coinsCount-=20;
+    speedUpgrade++;
+    showMessage("Horse speed upgraded!");
+    updateHUD();
+  } else {
+    showMessage("You need 20 coins!");
+  }
+});
+
+document.getElementById("staminaUpgrade").addEventListener("click",()=>{
+  if(coinsCount>=15) {
+    coinsCount-=15;
+    staminaUpgrade++;
+    stamina=Math.min(100+staminaUpgrade*10,stamina+25);
+    showMessage("Horse stamina upgraded!");
+    updateHUD();
+  } else {
+    showMessage("You need 15 coins!");
+  }
+});
+
+/* LEVEL FINISH */
+
+function finishLevel() {
+  paused=true;
+
+  const nextLevel=level+1;
+  const isChampion=level%5===0;
+
+  const box=document.getElementById("message");
+  box.innerHTML=isChampion
+    ? "🏆 CHAMPION COURSE COMPLETED!<br>Level "+level+" finished!"
+    : "LEVEL "+level+" COMPLETED!";
+
+  box.style.display="block";
+
+  setTimeout(()=>{
+    level=nextLevel;
+    player.position.set(0,0,5);
+    player.rotation.y=0;
+    courseProgress=0;
+    elapsed=0;
+    stamina=100+staminaUpgrade*10;
+    buildCourse(level);
+    box.style.display="none";
+    paused=false;
+    showMessage(isChampion
+      ? "New champion course unlocked!"
+      : "Level "+level+" unlocked!");
+    updateHUD();
+  },2200);
+}
+
+/* COLLISION */
+
+function collectObjects() {
+  for(const coin of coins) {
+    if(!coin.userData.collected &&
+       player.position.distanceTo(coin.position)<2) {
+      coin.userData.collected=true;
+      coin.visible=false;
+      coinsCount++;
+      updateHUD();
+    }
+  }
+
+  for(const obstacle of obstacles) {
+    const dx=Math.abs(player.position.x-obstacle.position.x);
+    const dz=Math.abs(player.position.z-obstacle.position.z);
+
+    if(dx<1.7 && dz<1.5 && player.position.y<.6) {
+      stamina=Math.max(0,stamina-25);
+      player.position.z+=3;
+      showMessage("Obstacle! Try jumping over it.");
+    }
+  }
+
+  for(const ring of checkpoints) {
+    if(!ring.userData.passed &&
+       Math.abs(player.position.z-ring.position.z)<2.5) {
+      ring.userData.passed=true;
+      showMessage("Checkpoint reached!");
+    }
+  }
+}
+
+/* GAME UPDATE */
+
+function update(dt) {
+  if(!gameStarted || paused) return;
+
+  elapsed+=dt;
+
+  const go=forwardPressed || keys["w"] || keys["arrowup"];
+  const left=leftPressed || keys["a"] || keys["arrowleft"];
+  const right=rightPressed || keys["d"] || keys["arrowright"];
+  const boost=boostPressed || keys["shift"];
+
+  const maxSpeed=baseSpeed+speedUpgrade*2;
+  const boosting=boost && stamina>0 && go;
+
+  if(go) {
+    horseSpeed=THREE.MathUtils.lerp(
+      horseSpeed,
+      maxSpeed*(boosting?1.8:1),
+      dt*2
+    );
+  } else {
+    horseSpeed=THREE.MathUtils.lerp(horseSpeed,0,dt*3);
+  }
+
+  if(boosting) {
+    stamina=Math.max(0,stamina-18*dt);
+  } else {
+    stamina=Math.min(100+staminaUpgrade*10,stamina+7*dt);
+  }
+
+  if(left) player.position.x-=7*dt;
+  if(right) player.position.x+=7*dt;
+
+  player.position.x=THREE.MathUtils.clamp(player.position.x,-5.2,5.2);
+
+  if(go) {
+    player.position.z-=horseSpeed*dt;
+    courseProgress+=horseSpeed*dt;
+  }
+
+  if(jumping) {
+    jumpTime+=dt;
+    player.position.y=Math.sin(Math.min(jumpTime/0.85,1)*Math.PI)*2.4;
+
+    if(jumpTime>=.85) {
+      jumping=false;
+      player.position.y=0;
+    }
+  }
+
+  player.rotation.y=THREE.MathUtils.lerp(
+    player.rotation.y,
+    left?.18:right?-.18:0,
+    dt*5
+  );
+
+  if(horseMixer) horseMixer.update(dt);
+  if(riderMixer) riderMixer.update(dt);
+
+  collectObjects();
+
+  const targetCamera=new THREE.Vector3(
+    player.position.x*.45,
+    6+player.position.y,
+    player.position.z+12
+  );
+
+  camera.position.lerp(targetCamera,dt*4);
+  camera.lookAt(
+    player.position.x,
+    2+player.position.y,
+    player.position.z-5
+  );
+
+  if(player.position.z<=-(100+level*25)) {
+    finishLevel();
+  }
+
+  if(stamina<=0) {
+    horseSpeed=Math.min(horseSpeed,5);
+  }
+
+  if(messageTimer>0) {
+    messageTimer-=dt;
+    if(messageTimer<=0) {
+      document.getElementById("message").style.display="none";
+    }
+  }
+
+  updateHUD();
+}
+
+/* INTRO CAMERA */
+
+let trailerTime=0;
+
+function updateTrailer(dt) {
+  if(gameStarted) return;
+
+  trailerTime+=dt;
+  const radius=10;
+
+  camera.position.set(
+    Math.sin(trailerTime*.25)*radius,
+    5+Math.sin(trailerTime*.5),
+    12+Math.cos(trailerTime*.25)*radius
+  );
+
+  camera.lookAt(0,2,0);
+
+  player.rotation.y=Math.sin(trailerTime*.4)*.2;
+
+  if(horseMixer) horseMixer.update(dt);
+  if(riderMixer) riderMixer.update(dt);
+}
+
+/* ANIMATION LOOP */
+
+function animate() {
+  requestAnimationFrame(animate);
+
+  const dt=Math.min(clock.getDelta(),.04);
+
+  coins.forEach((coin,i)=>{
+    if(coin.visible) {
+      coin.rotation.y+=dt*2.5;
+      coin.position.y=1.4+Math.sin(performance.now()*.002+i)*.15;
+    }
+  });
+
+  updateTrailer(dt);
+  update(dt);
+
+  renderer.render(scene,camera);
+}
+
+animate();
+
+/* RESIZE */
+
+window.addEventListener("resize",()=>{
+  camera.aspect=window.innerWidth/window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth,window.innerHeight);
+});
+
+/* MOBILE SAFETY */
+
+document.addEventListener("contextmenu",e=>e.preventDefault());
+
+</script>
+</body>
+    </html>     health:100+level*12,
             maxHealth:100+level*12,
             speed:0.55+Math.min(level*.025,.4),
             attack:0,
