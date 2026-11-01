@@ -2,475 +2,1079 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kingdom Rider: Realms of Valor</title>
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<title>Knight Rider</title>
 
 <style>
-*{box-sizing:border-box}
-body{
- margin:0;background:#101827;color:white;
- font-family:Arial,sans-serif;text-align:center;
- user-select:none;overflow-x:hidden
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    user-select: none;
+    -webkit-user-select: none;
 }
-header{
- background:#172b45;padding:12px;
- border-bottom:3px solid #d6a943
+
+body {
+    background: #080d0c;
+    overflow: hidden;
+    font-family: Arial, sans-serif;
+    color: white;
 }
-h1{color:#f4c75e;margin:5px}
-#stats{
- display:flex;justify-content:space-around;
- flex-wrap:wrap;gap:8px;padding:10px;
- font-size:14px;font-weight:bold
+
+#game {
+    position: relative;
+    width: 100vw;
+    height: 100dvh;
+    overflow: hidden;
+    background: #192b22;
 }
-canvas{
- display:block;width:100%;max-width:1000px;
- margin:auto;border:3px solid #d6a943;
- border-radius:10px;background:#34533b;
- touch-action:none
+
+canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    touch-action: none;
 }
-#menu{padding:10px}
-button{
- border:0;border-radius:12px;padding:12px;
- margin:4px;background:#d6a943;
- color:#172033;font-weight:bold;cursor:pointer;
- touch-action:none
+
+/* TOP INFORMATION */
+
+#top {
+    position: absolute;
+    top: 10px;
+    left: 12px;
+    right: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    pointer-events: none;
 }
-button:active{background:#fff0a8}
-#message{color:#f4c75e;min-height:25px}
-#upgrades{
- background:#172b45;padding:10px;
- margin:10px auto;border-radius:12px
+
+.status {
+    background: rgba(0,0,0,.65);
+    padding: 9px 13px;
+    border-radius: 8px;
+    font-size: 13px;
 }
-#mobileControls{
- position:relative;display:flex;
- justify-content:space-between;align-items:center;
- max-width:950px;margin:12px auto;
- padding:10px;min-height:170px;
+
+#pause {
+    pointer-events: auto;
+    border: 1px solid #d1ad62;
+    background: #25291e;
+    color: white;
+    padding: 10px 16px;
+    border-radius: 7px;
+    font-weight: bold;
 }
-#joystickArea{
- width:145px;height:145px;border-radius:50%;
- background:rgba(255,255,255,.12);
- border:3px solid rgba(255,255,255,.4);
- position:relative;touch-action:none;
+
+/* CONTROLS */
+
+#controls {
+    position: absolute;
+    bottom: 17px;
+    left: 15px;
+    right: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    pointer-events: none;
 }
-#stick{
- width:62px;height:62px;border-radius:50%;
- background:linear-gradient(#e7e7e7,#777);
- border:3px solid white;
- position:absolute;left:39px;top:39px;
- pointer-events:none;
+
+.control {
+    pointer-events: auto;
+    width: 57px;
+    height: 57px;
+    border-radius: 50%;
+    border: 2px solid #c5a76c;
+    background: rgba(15,20,17,.85);
+    color: white;
+    font-size: 21px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    touch-action: none;
 }
-#actions{
- display:grid;grid-template-columns:repeat(2,75px);
- gap:10px;align-items:center;
+
+.control:active {
+    background: #806b3c;
 }
-.action{
- width:75px;height:75px;border-radius:50%;
- background:linear-gradient(#f1d47c,#a87920);
- border:3px solid white;font-size:12px;
+
+#movement {
+    display: flex;
+    gap: 12px;
 }
-#sprint{grid-column:span 2;width:155px;height:55px;border-radius:25px}
-@media(min-width:750px){
- #mobileControls{max-width:850px}
+
+#actions {
+    display: flex;
+    gap: 10px;
 }
+
+#shield {
+    border-color: #8aabc1;
+}
+
+#shoot {
+    border-color: #d5ad61;
+}
+
+#knife {
+    border-color: #c2c2c2;
+}
+
+/* UPGRADE BUTTON */
+
+#upgradeButton {
+    position: absolute;
+    top: 65px;
+    right: 13px;
+    padding: 10px 15px;
+    border: 1px solid #c9a85f;
+    border-radius: 7px;
+    background: rgba(0,0,0,.8);
+    color: #f1d38d;
+    font-weight: bold;
+}
+
+/* UPGRADE PANEL */
+
+#upgradePanel {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    width: min(330px, 90%);
+    background: #101b17;
+    border: 2px solid #c7a45c;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    z-index: 10;
+}
+
+#upgradePanel h2 {
+    color: #e8c477;
+    margin-bottom: 15px;
+}
+
+.upgrade {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 5px;
+    border-bottom: 1px solid #455248;
+    gap: 8px;
+}
+
+.upgrade button {
+    background: #a17c36;
+    color: white;
+    border: none;
+    padding: 9px;
+    border-radius: 5px;
+}
+
+#closeUpgrade {
+    margin-top: 15px;
+    padding: 10px 20px;
+    background: #35483b;
+    color: white;
+    border: none;
+    border-radius: 5px;
+}
+
+#fullscreen {
+    position: absolute;
+    top: 65px;
+    left: 13px;
+    background: rgba(0,0,0,.75);
+    color: white;
+    border: 1px solid #b99a5a;
+    border-radius: 6px;
+    padding: 9px;
+}
+
+/* PAUSE SCREEN */
+
+#pauseScreen {
+    display: none;
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,.82);
+    z-index: 20;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 18px;
+}
+
+#pauseScreen h1 {
+    color: #e5c078;
+}
+
+.menuButton {
+    padding: 13px 30px;
+    background: #8e713b;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+}
+
+@media (orientation: portrait) {
+    #game::after {
+        content: "ROTATE YOUR PHONE TO LANDSCAPE";
+        position: absolute;
+        inset: 0;
+        background: #101914;
+        z-index: 50;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 17px;
+        letter-spacing: 2px;
+        text-align: center;
+        color: #e8c477;
+    }
+}
+
 </style>
 </head>
 
 <body>
 
-<header>
-<h1>🏰 KINGDOM RIDER</h1>
-<p>REALMS OF VALOR</p>
-</header>
+<div id="game">
 
-<div id="stats">
-<span id="realm">Realm: 1</span>
-<span id="coins">Coins: 0</span>
-<span id="health">Horse Health: 100</span>
-<span id="score">Score: 0</span>
+<canvas id="canvas"></canvas>
+
+<div id="top">
+
+    <div class="status">
+        ❤️ <span id="health">100</span>
+        &nbsp; 🪙 <span id="coins">0</span>
+        &nbsp; LEVEL <span id="level">1</span>
+    </div>
+
+    <button id="pause">Ⅱ PAUSE</button>
+
 </div>
 
-<canvas id="game" width="900" height="500"></canvas>
+<button id="fullscreen">⛶ FULL SCREEN</button>
 
-<p id="message">Welcome, brave rider! Press START to begin.</p>
+<button id="upgradeButton">⚒ UPGRADES</button>
 
-<div id="menu">
-<button onclick="startGame()">START GAME</button>
-<button onclick="toggleCamera()">CHANGE VIEW</button>
-<button onclick="pauseGame()">PAUSE</button>
-<button onclick="nextRealm()">NEXT REALM</button>
-</div>
+<div id="controls">
 
-<!-- MOBILE CONTROLS -->
-<div id="mobileControls">
-
-    <div id="joystickArea">
-        <div id="stick"></div>
+    <div id="movement">
+        <button class="control" id="left">◀</button>
+        <button class="control" id="right">▶</button>
     </div>
 
     <div id="actions">
-        <button class="action" id="actionBtn">ACTION</button>
-        <button class="action" id="guardBtn">GUARD</button>
-        <button class="action" id="jumpBtn">JUMP</button>
-        <button class="action" id="sprint">⚡ SPRINT</button>
+        <button class="control" id="shield">🛡</button>
+        <button class="control" id="knife">⚔</button>
+        <button class="control" id="shoot">➶</button>
+        <button class="control" id="jump">⬆</button>
     </div>
 
 </div>
 
-<div id="upgrades">
-<h3>🐎 HORSE UPGRADES</h3>
-<button onclick="upgrade('speed')">Swift Hooves — 30 coins</button>
-<button onclick="upgrade('health')">Horse Heart — 40 coins</button>
-<button onclick="upgrade('armour')">Royal Armour — 50 coins</button>
+<div id="upgradePanel">
+
+    <h2>HORSE & WEAPON UPGRADES</h2>
+
+    <div class="upgrade">
+        <span>🐎 Horse strength</span>
+        <button id="horseUpgrade">Upgrade 20</button>
+    </div>
+
+    <div class="upgrade">
+        <span>⚔ Knife power</span>
+        <button id="knifeUpgrade">Upgrade 25</button>
+    </div>
+
+    <div class="upgrade">
+        <span>➶ Arrow power</span>
+        <button id="arrowUpgrade">Upgrade 30</button>
+    </div>
+
+    <button id="closeUpgrade">CLOSE</button>
+
+</div>
+
+<div id="pauseScreen">
+
+    <h1>GAME PAUSED</h1>
+
+    <button class="menuButton" id="resume">RESUME GAME</button>
+
+    <button class="menuButton" id="restart">RESTART GAME</button>
+
+</div>
+
 </div>
 
 <script>
-const canvas=document.getElementById("game");
-const ctx=canvas.getContext("2d");
 
-const realms=[
-"Green Valley","Dark Forest","Golden Desert",
-"Frozen Mountains","Dragon Kingdom","Crystal Cave",
-"Shadow Lands","Royal Plains","Storm Fortress",
-"Realm of the Final King"
-];
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
 
-let realm=1,coins=0,score=0,frame=0;
-let running=false,paused=false;
-let camera="side";
-let enemies=[],boss=null,particles=[];
-let attackCooldown=0;
-let guarding=false,sprinting=false;
-let joystick={x:0,y:0};
+const game = document.getElementById("game");
 
-let horse={
- x:140,y:350,
- health:100,
- speed:3.5,
- armour:0,
- stamina:100
+let W, H;
+
+function resize() {
+    W = canvas.width = game.clientWidth;
+    H = canvas.height = game.clientHeight;
+}
+
+resize();
+
+window.addEventListener("resize", resize);
+
+let player = {
+    x: 180,
+    y: 0,
+    speed: 4,
+    health: 100,
+    horse: 1,
+    knife: 1,
+    arrow: 1,
+    jumping: false,
+    jumpTime: 0,
+    attack: 0,
+    defending: false
 };
 
-let keys={};
+let camera = 0;
+let coins = 0;
+let level = 1;
+let enemies = [];
+let arrows = [];
+let particles = [];
 
-function message(t){
- document.getElementById("message").textContent=t;
+let running = true;
+let paused = false;
+
+let keys = {};
+
+let worldLength = 3000;
+
+function ground() {
+    return H * 0.78;
 }
 
-function updateStats(){
- document.getElementById("realm").textContent=
- "Realm: "+realm+" — "+realms[realm-1];
+function makeEnemy(x) {
 
- document.getElementById("coins").textContent=
- "Coins: "+coins;
+    return {
+        x: x,
+        health: 100,
+        active: true,
+        attack: 0
+    };
 
- document.getElementById("health").textContent=
- "Horse Health: "+horse.health;
-
- document.getElementById("score").textContent=
- "Score: "+score;
 }
 
-function startGame(){
- if(horse.health<=0){
-  horse.health=100;
-  coins=0;score=0;realm=1;
- }
- running=true;
- paused=false;
- createEnemies();
- message("Your journey begins!");
- updateStats();
+for (let i = 0; i < 6; i++) {
+    enemies.push(makeEnemy(650 + i * 450));
 }
 
-function pauseGame(){
- paused=!paused;
- message(paused?"Game paused.":"Game resumed.");
+/* BACKGROUND */
+
+function background() {
+
+    let sky = ctx.createLinearGradient(0,0,0,H);
+
+    sky.addColorStop(0,"#728b88");
+    sky.addColorStop(.55,"#b1a78d");
+    sky.addColorStop(1,"#3c4938");
+
+    ctx.fillStyle = sky;
+    ctx.fillRect(0,0,W,H);
+
+    /* distant mountains */
+
+    ctx.fillStyle = "#58675d";
+
+    ctx.beginPath();
+    ctx.moveTo(0,H*.62);
+
+    for(let x=0;x<=W+100;x+=100) {
+        ctx.lineTo(x,H*.38 + Math.sin(x*.009)*45);
+    }
+
+    ctx.lineTo(W,H);
+    ctx.lineTo(0,H);
+    ctx.fill();
+
+    /* distant trees */
+
+    for(let i=0;i<16;i++) {
+
+        let x = ((i*190-camera*.25)% (W+200)+W+200)%(W+200);
+
+        ctx.fillStyle = "#283b30";
+
+        ctx.fillRect(x,H*.48,12,H*.22);
+
+        ctx.beginPath();
+        ctx.arc(x+6,H*.46,35,0,Math.PI*2);
+        ctx.fill();
+
+    }
+
+    /* ground */
+
+    ctx.fillStyle = "#454b32";
+    ctx.fillRect(0,ground(),W,H-ground());
+
+    ctx.fillStyle = "#74704b";
+    ctx.fillRect(0,ground()+8,W,H-ground()-8);
+
+    /* ground details */
+
+    for(let i=0;i<70;i++) {
+
+        let x = ((i*97-camera*.8)%(W+100)+W+100)%(W+100);
+
+        ctx.fillStyle = "#8b835b";
+        ctx.fillRect(x,ground()+30+(i%5)*17,25,3);
+
+    }
+
 }
 
-function toggleCamera(){
- camera=camera==="side"?"top":"side";
- message("Camera changed to "+camera+" view.");
+/* DRAW HORSE */
+
+function drawHorse(x,y) {
+
+    ctx.save();
+    ctx.translate(x,y);
+
+    /* legs */
+
+    ctx.strokeStyle="#33251b";
+    ctx.lineWidth=10;
+    ctx.lineCap="round";
+
+    let motion = Math.sin(Date.now()*.012)*9;
+
+    ctx.beginPath();
+
+    ctx.moveTo(-30,-10);
+    ctx.lineTo(-38+motion,-55);
+
+    ctx.moveTo(-12,-10);
+    ctx.lineTo(-10-motion,-55);
+
+    ctx.moveTo(28,-10);
+    ctx.lineTo(36-motion,-55);
+
+    ctx.moveTo(42,-10);
+    ctx.lineTo(45+motion,-55);
+
+    ctx.stroke();
+
+    /* body */
+
+    let body = ctx.createLinearGradient(0,-110,0,0);
+
+    body.addColorStop(0,"#a66d3e");
+    body.addColorStop(.5,"#70452c");
+    body.addColorStop(1,"#39261e");
+
+    ctx.fillStyle=body;
+
+    ctx.beginPath();
+    ctx.ellipse(0,-85,64,30,0,0,Math.PI*2);
+    ctx.fill();
+
+    /* neck */
+
+    ctx.fillStyle="#80502f";
+
+    ctx.beginPath();
+    ctx.moveTo(35,-95);
+    ctx.lineTo(65,-145);
+    ctx.lineTo(90,-143);
+    ctx.lineTo(62,-75);
+    ctx.fill();
+
+    /* head */
+
+    ctx.fillStyle="#68412b";
+
+    ctx.beginPath();
+    ctx.ellipse(83,-146,24,17,-.35,0,Math.PI*2);
+    ctx.fill();
+
+    /* ears */
+
+    ctx.fillStyle="#38251b";
+
+    ctx.beginPath();
+    ctx.moveTo(72,-155);
+    ctx.lineTo(72,-180);
+    ctx.lineTo(85,-158);
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.moveTo(88,-158);
+    ctx.lineTo(105,-176);
+    ctx.lineTo(101,-151);
+    ctx.fill();
+
+    /* mane */
+
+    ctx.strokeStyle="#211b17";
+    ctx.lineWidth=9;
+
+    ctx.beginPath();
+    ctx.moveTo(60,-159);
+    ctx.quadraticCurveTo(40,-143,48,-115);
+    ctx.stroke();
+
+    /* eye */
+
+    ctx.fillStyle="black";
+    ctx.beginPath();
+    ctx.arc(94,-150,2.5,0,Math.PI*2);
+    ctx.fill();
+
+    /* saddle */
+
+    ctx.fillStyle="#25221d";
+
+    ctx.beginPath();
+    ctx.ellipse(-5,-108,37,15,0,Math.PI,Math.PI*2);
+    ctx.fill();
+
+    ctx.restore();
+
 }
 
-function createEnemies(){
- enemies=[];
- boss=null;
+/* DRAW KNIGHT */
 
- for(let i=0;i<4+realm;i++){
-  enemies.push({
-   x:420+Math.random()*400,
-   y:250+Math.random()*160,
-   health:2,
-   alive:true,
-   speed:.5+Math.random()*.4
-  });
- }
+function drawKnight(x,y) {
 
- if(realm===5||realm===10){
-  boss={
-   x:750,y:320,
-   health:realm===10?30:18,
-   maxHealth:realm===10?30:18,
-   alive:true
-  };
-  message("A powerful guardian appears!");
- }
+    ctx.save();
+    ctx.translate(x,y);
+
+    let bounce = Math.sin(Date.now()*.012)*2;
+
+    ctx.translate(0,bounce);
+
+    /* legs */
+
+    ctx.strokeStyle="#252a30";
+    ctx.lineWidth=13;
+
+    ctx.beginPath();
+    ctx.moveTo(-8,-115);
+    ctx.lineTo(-15,-80);
+
+    ctx.moveTo(15,-115);
+    ctx.lineTo(24,-80);
+
+    ctx.stroke();
+
+    /* armour body */
+
+    let armour=ctx.createLinearGradient(-20,-170,20,-105);
+
+    armour.addColorStop(0,"#d1d5d3");
+    armour.addColorStop(.5,"#707d80");
+    armour.addColorStop(1,"#313b40");
+
+    ctx.fillStyle=armour;
+
+    ctx.beginPath();
+    ctx.roundRect(-23,-170,46,62,9);
+    ctx.fill();
+
+    /* helmet */
+
+    ctx.fillStyle="#aeb8b8";
+
+    ctx.beginPath();
+    ctx.arc(0,-189,19,0,Math.PI*2);
+    ctx.fill();
+
+    ctx.fillStyle="#171f22";
+    ctx.fillRect(5,-190,13,6);
+
+    /* shield */
+
+    ctx.fillStyle="#344e60";
+
+    ctx.beginPath();
+    ctx.moveTo(-28,-165);
+    ctx.lineTo(-55,-153);
+    ctx.lineTo(-49,-112);
+    ctx.lineTo(-30,-102);
+    ctx.lineTo(-15,-125);
+    ctx.fill();
+
+    ctx.strokeStyle="#d5b66c";
+    ctx.lineWidth=3;
+    ctx.stroke();
+
+    /* weapon */
+
+    if(player.attack>0) {
+
+        ctx.strokeStyle="#e4e6e1";
+        ctx.lineWidth=6;
+
+        ctx.beginPath();
+        ctx.moveTo(25,-145);
+        ctx.lineTo(65,-190);
+        ctx.stroke();
+
+    }
+
+    ctx.restore();
+
 }
 
-function upgrade(type){
- if(type==="speed"&&coins>=30){
-  coins-=30;
-  horse.speed+=.5;
-  message("Swift Hooves upgraded!");
- }
- else if(type==="health"&&coins>=40){
-  coins-=40;
-  horse.health=Math.min(100,horse.health+35);
-  message("Horse health restored!");
- }
- else if(type==="armour"&&coins>=50){
-  coins-=50;
-  horse.armour++;
-  message("Royal Armour upgraded!");
- }
- else{
-  message("You need more coins!");
- }
- updateStats();
+/* ENEMIES */
+
+function drawEnemies() {
+
+    enemies.forEach(e=>{
+
+        if(!e.active) return;
+
+        let x=e.x-camera;
+
+        if(x<-100 || x>W+100) return;
+
+        ctx.fillStyle="#252b2c";
+
+        ctx.beginPath();
+        ctx.roundRect(x-15,ground()-115,30,65,7);
+        ctx.fill();
+
+        ctx.fillStyle="#89918f";
+
+        ctx.beginPath();
+        ctx.arc(x,ground()-130,15,0,Math.PI*2);
+        ctx.fill();
+
+        ctx.fillStyle="#111";
+
+        ctx.fillRect(x+2,ground()-132,10,5);
+
+        ctx.fillStyle="#c1c7c5";
+        ctx.fillRect(x+17,ground()-112,4,35);
+
+        /* health bar */
+
+        ctx.fillStyle="#222";
+        ctx.fillRect(x-20,ground()-158,40,5);
+
+        ctx.fillStyle="#b44";
+        ctx.fillRect(x-20,ground()-158,40*(e.health/100),5);
+
+    });
+
 }
 
-// LEFT JOYSTICK
-const area=document.getElementById("joystickArea");
-const stick=document.getElementById("stick");
+/* PROJECTILES */
 
-let joystickPointer=null;
+function drawArrows() {
 
-function moveJoystick(e){
- const rect=area.getBoundingClientRect();
- const centerX=rect.left+rect.width/2;
- const centerY=rect.top+rect.height/2;
+    arrows.forEach(a=>{
 
- let dx=e.clientX-centerX;
- let dy=e.clientY-centerY;
+        ctx.save();
 
- const max=42;
- const distance=Math.hypot(dx,dy);
+        ctx.translate(a.x-camera,a.y);
 
- if(distance>max){
-  dx=dx/distance*max;
-  dy=dy/distance*max;
- }
+        ctx.rotate(a.angle);
 
- joystick.x=dx/max;
- joystick.y=dy/max;
+        ctx.strokeStyle="#d6c49a";
+        ctx.lineWidth=3;
 
- stick.style.left=(39+dx)+"px";
- stick.style.top=(39+dy)+"px";
+        ctx.beginPath();
+        ctx.moveTo(-15,0);
+        ctx.lineTo(15,0);
+        ctx.stroke();
+
+        ctx.fillStyle="#d6c49a";
+
+        ctx.beginPath();
+        ctx.moveTo(15,0);
+        ctx.lineTo(8,-5);
+        ctx.lineTo(8,5);
+        ctx.fill();
+
+        ctx.restore();
+
+    });
+
 }
 
-area.addEventListener("pointerdown",e=>{
- joystickPointer=e.pointerId;
- area.setPointerCapture(e.pointerId);
- moveJoystick(e);
+/* PARTICLES */
+
+function drawParticles() {
+
+    particles.forEach(p=>{
+
+        ctx.globalAlpha=p.life/20;
+
+        ctx.fillStyle="#e8c477";
+
+        ctx.fillRect(p.x-camera,p.y,4,4);
+
+    });
+
+    ctx.globalAlpha=1;
+
+}
+
+/* GAME DRAWING */
+
+function draw() {
+
+    background();
+
+    drawEnemies();
+
+    drawArrows();
+
+    drawParticles();
+
+    let py=ground()-35;
+
+    if(player.jumping) {
+        py-=Math.sin(player.jumpTime/20*Math.PI)*100;
+    }
+
+    drawHorse(player.x,py);
+
+    drawKnight(player.x,py-5);
+
+}
+
+/* CONTROLS */
+
+function bindButton(id,action) {
+
+    const button=document.getElementById(id);
+
+    button.addEventListener("pointerdown",e=>{
+        e.preventDefault();
+        action(true);
+    });
+
+    ["pointerup","pointercancel","pointerleave"].forEach(event=>{
+        button.addEventListener(event,()=>action(false));
+    });
+
+}
+
+bindButton("left",v=>keys.left=v);
+bindButton("right",v=>keys.right=v);
+bindButton("shield",v=>player.defending=v);
+
+bindButton("knife",v=>{
+    if(v && !paused) attack();
 });
 
-area.addEventListener("pointermove",e=>{
- if(e.pointerId===joystickPointer)moveJoystick(e);
+bindButton("shoot",v=>{
+    if(v && !paused) shoot();
 });
 
-function resetJoystick(){
- joystickPointer=null;
- joystick.x=0;
- joystick.y=0;
- stick.style.left="39px";
- stick.style.top="39px";
-}
-
-area.addEventListener("pointerup",resetJoystick);
-area.addEventListener("pointercancel",resetJoystick);
-
-// ACTION BUTTONS
-document.getElementById("actionBtn").addEventListener(
- "pointerdown",e=>{e.preventDefault();fantasyAction()}
-);
-
-document.getElementById("guardBtn").addEventListener(
- "pointerdown",e=>{e.preventDefault();activateGuard()}
-);
-
-document.getElementById("guardBtn").addEventListener(
- "pointerup",()=>guarding=false
-);
-
-document.getElementById("guardBtn").addEventListener(
- "pointercancel",()=>guarding=false
-);
-
-document.getElementById("jumpBtn").addEventListener(
- "pointerdown",e=>{e.preventDefault();jump()}
-);
-
-document.getElementById("sprint").addEventListener(
- "pointerdown",e=>{e.preventDefault();sprinting=true}
-);
-
-document.getElementById("sprint").addEventListener(
- "pointerup",()=>sprinting=false
-);
-
-document.getElementById("sprint").addEventListener(
- "pointercancel",()=>sprinting=false
-);
-
-function fantasyAction(){
- if(!running||paused||attackCooldown>0)return;
-
- attackCooldown=35;
-
- // A colourful fantasy energy pulse
- for(let i=0;i<18;i++){
-  particles.push({
-   x:horse.x,y:horse.y,
-   dx:(Math.random()-.5)*7,
-   dy:(Math.random()-.5)*7,
-   life:25,size:Math.random()*7+3
-  });
- }
-
- enemies.forEach(e=>{
-  if(e.alive&&Math.hypot(e.x-horse.x,e.y-horse.y)<145){
-   e.health--;
-
-   if(e.health<=0){
-    e.alive=false;
-    coins+=5;
-    score+=10;
-    message("Guardian defeated! +5 coins");
-   }
-  }
- });
-
- if(boss&&boss.alive&&
- Math.hypot(boss.x-horse.x,boss.y-horse.y)<170){
-  boss.health-=2;
-
-  if(boss.health<=0){
-   boss.alive=false;
-   coins+=50;
-   score+=100;
-   message("🏆 Realm guardian defeated! +50 coins");
-  }
- }
-
- updateStats();
-}
-
-function activateGuard(){
- guarding=true;
- message("Protective shield activated!");
-}
-
-function jump(){
- if(!running||paused)return;
- horse.y-=35;
- setTimeout(()=>horse.y+=35,250);
-}
-
-function nextRealm(){
- if(!running)return;
-
- if(enemies.some(e=>e.alive)||(boss&&boss.alive)){
-  message("Complete this realm first!");
-  return;
- }
-
- if(realm>=10){
-  running=false;
-  message("🏆 Congratulations! You completed all 10 realms!");
-  return;
- }
-
- realm++;
- horse.x=140;
- horse.y=350;
- horse.health=Math.min(100,horse.health+15);
- createEnemies();
- updateStats();
- message("Welcome to "+realms[realm-1]);
-}
-
-// KEYBOARD CONTROLS
-document.addEventListener("keydown",e=>{
- const k=e.key.toLowerCase();
- keys[k]=true;
-
- if(k==="j")fantasyAction();
- if(k==="k")guarding=true;
- if(k==="shift")sprinting=true;
- if(k===" ")jump();
- if(k==="p")pauseGame();
+bindButton("jump",v=>{
+    if(v && !player.jumping) {
+        player.jumping=true;
+        player.jumpTime=0;
+    }
 });
 
-document.addEventListener("keyup",e=>{
- const k=e.key.toLowerCase();
- keys[k]=false;
+window.addEventListener("keydown",e=>{
 
- if(k==="k")guarding=false;
- if(k==="shift")sprinting=false;
+    keys[e.key]=true;
+
+    if(e.key===" " && !player.jumping) {
+        player.jumping=true;
+        player.jumpTime=0;
+    }
+
+    if(e.key==="j") attack();
+
+    if(e.key==="k") shoot();
+
 });
 
-// BACKGROUND
-function drawBackground(){
- const colors=[
- ["#477c42","#b4d58a"],
- ["#193d2d","#46714c"],
- ["#bd8c3c","#e8c57b"],
- ["#8cc9e5","#e7f5fa"],
- ["#492e3c","#a95d4e"],
- ["#243e5a","#6b91ae"],
- ["#191d3b","#51568a"],
- ["#4e884d","#b5d88d"],
- ["#354b67","#9ab0c8"],
- ["#291e38","#79548d"]
- ];
+window.addEventListener("keyup",e=>{
+    keys[e.key]=false;
+});
 
- ctx.fillStyle=colors[realm-1][0];
- ctx.fillRect(0,0,900,500);
+/* ATTACK */
 
- ctx.fillStyle=colors[realm-1][1];
+function attack() {
 
- if(camera==="side"){
-  ctx.fillRect(0,420,900,80);
+    if(player.attack>0 || paused) return;
 
-  for(let i=0;i<8;i++){
-   ctx.beginPath();
-   ctx.arc(i*140+30,420,45,Math.PI,0);
-   ctx.fill();
-  }
- }else{
-  ctx.fillRect(0,0,900,500);
-  ctx.strokeStyle="rgba(255,255,255,.15)";
+    player.attack=18;
 
-  for(let x=0;x<900;x+=60){
-   ctx.beginPath();
-   ctx.moveTo(x,0);
-   ctx.lineTo(x,500);
-   ctx.stroke();
-  }
+    let target=enemies.find(e=>
+        e.active && Math.abs(e.x-(camera+player.x))<125
+    );
 
-  for(let y=0;y<500;y+=60){
-   ctx.beginPath();
-   ctx.moveTo(0,y);
-   ctx.lineTo(900,y);
-   ctx.stroke();
-  }
- }
+    if(target) {
+
+        target.health-=35*player.knife;
+
+        if(target.health<=0) {
+
+            target.active=false;
+
+            coins+=20;
+
+            updateStats();
+
+            levelUp();
+
+        }
+
+    }
+
 }
 
-// HORSE AND KNIGHT
-function drawHorse(){
- const x=horse.x,y=horse.y;
+/* ARROW */
+
+function shoot() {
+
+    if(paused || arrows.length>10) return;
+
+    arrows.push({
+        x:camera+player.x+55,
+        y:ground()-160,
+        speed:10,
+        angle:0
+    });
+
+}
+
+/* LEVEL */
+
+function levelUp() {
+
+    if(enemies.every(e=>!e.active)) {
+
+        level++;
+
+        worldLength+=1200;
+
+        for(let i=0;i<5;i++) {
+            enemies.push(makeEnemy(camera+W+300+i*350));
+        }
+
+        document.getElementById("level").textContent=level;
+
+    }
+
+}
+
+/* UPDATES */
+
+function update() {
+
+    if(paused) return;
+
+    if(keys.left) {
+        camera=Math.max(0,camera- player.speed);
+    }
+
+    if(keys.right) {
+        camera+=player.speed;
+    }
+
+    if(player.attack>0) player.attack--;
+
+    if(player.jumping) {
+
+        player.jumpTime++;
+
+        if(player.jumpTime>=40) {
+            player.jumping=false;
+        }
+
+    }
+
+    arrows.forEach(a=>{
+
+        a.x+=a.speed;
+
+        enemies.forEach(e=>{
+
+            if(e.active && Math.abs(e.x-a.x)<25) {
+
+                e.health-=25*player.arrow;
+
+                a.hit=true;
+
+                if(e.health<=0) {
+
+                    e.active=false;
+                    coins+=20;
+                    updateStats();
+
+                }
+
+            }
+
+        });
+
+    });
+
+    arrows=arrows.filter(a=>!a.hit && a.x<camera+W+100);
+
+    particles=particles.filter(p=>p.life>0);
+
+    particles.forEach(p=>{
+        p.life--;
+        p.y-=1;
+    });
+
+    if(camera>worldLength) {
+        worldLength+=1500;
+        level++;
+        updateStats();
+    }
+
+}
+
+/* STATS */
+
+function updateStats() {
+
+    document.getElementById("coins").textContent=coins;
+
+    document.getElementById("level").textContent=level;
+
+    document.getElementById("health").textContent=player.health;
+
+}
+
+/* UPGRADES */
+
+document.getElementById("upgradeButton").onclick=()=>{
+
+    paused=true;
+
+    document.getElementById("upgradePanel").style.display="block";
+
+};
+
+document.getElementById("closeUpgrade").onclick=()=>{
+
+    document.getElementById("upgradePanel").style.display="none";
+
+    paused=false;
+
+};
+
+function upgrade(cost,property) {
+
+    if(coins>=cost) {
+
+        coins-=cost;
+
+        player[property]++;
+
+        if(property==="horse") {
+            player.health=Math.min(100,player.health+15);
+        }
+
+        updateStats();
+
+    } else {
+
+        alert("Not enough coins!");
+
+    }
+
+}
+
+document.getElementById("horseUpgrade").onclick=()=>{
+    upgrade(20,"horse");
+};
+
+document.getElementById("knifeUpgrade").onclick=()=>{
+    upgrade(25,"knife");
+};
+
+document.getElementById("arrowUpgrade").onclick=()=>{
+    upgrade(30,"arrow");
+};
+
+/* PAUSE */
+
+document.getElementById("pause").onclick=()=>{
+
+    paused=true;
+
+    document.getElementById("pauseScreen").style.display="flex";
+
+};
+
+document.getElementById("resume").onclick=()=>{
+
+    paused=false;
+
+    document.getElementById("pauseScreen").style.display="none";
+
+};
+
+document.getElementById("restart").onclick=()=>{
+
+    location.reload();
+
+};
+
+/* FULL SCREEN */
+
+document.getElementById("fullscreen").onclick=async()=>{
+
+    try {
+
+        if(!document.fullscreenElement) {
+            await game.requestFullscreen();
+        } else {
+            await document.exitFullscreen();
+        }
+
+    } catch(error) {
+
+        alert("Use your browser's full-screen option.");
+
+    }
+
+};
+
+/* MAIN LOOP */
+
+function loop() {
+
+    update();
+
+    draw();
+
+    requestAnimationFrame(loop);
+
+}
+
+loop();
+
+</script>
+
+</body>
+</html>e.x,y=horse.y;
 
  ctx.save();
  ctx.translate(x,y);
