@@ -2,357 +2,1316 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Ahmad's Horse Adventure 3D</title>
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<title>Horse Rider Adventure 3D</title>
 
 <style>
-*{box-sizing:border-box}
-body{margin:0;overflow:hidden;background:#071522;color:white;font-family:Arial}
-canvas{display:block}
-#intro,#pause,#gameover{
- position:fixed;inset:0;z-index:5;
- background:linear-gradient(#071522dd,#020810f5);
- display:flex;align-items:center;justify-content:center;
- flex-direction:column;text-align:center;padding:20px
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
 }
-h1{color:#e9bd55;font-size:clamp(30px,7vw,55px)}
-input{padding:15px;border-radius:9px;border:2px solid #e9bd55;
- font-size:18px;text-align:center;width:230px;margin:15px}
-button{background:#96631b;color:white;border:2px solid #f4cb65;
- border-radius:12px;padding:14px 20px;font-size:17px;font-weight:bold}
-button:active{transform:scale(.94)}
-#hud{position:fixed;top:10px;left:10px;z-index:3;
- background:#071522cc;padding:10px;border-radius:10px;line-height:1.7}
-#pauseBtn{position:fixed;right:10px;top:10px;z-index:4}
-#controls{position:fixed;bottom:15px;left:0;right:0;
- display:none;justify-content:space-between;padding:0 12px;z-index:4}
-.group{display:flex;gap:8px;align-items:end}
-.control{width:65px;height:65px;border-radius:50%;padding:0;
- font-size:24px;background:#102f4ddd}
-.action{background:#795015ee}
-#notice{position:fixed;top:25%;left:50%;transform:translateX(-50%);
- background:#071522eF;border:2px solid #e9bd55;border-radius:10px;
- padding:12px;display:none;z-index:4;text-align:center}
-#pause,#gameover{display:none}
-#upgrades{position:fixed;right:10px;top:65px;z-index:3;display:none}
-#upgrades button{display:block;font-size:12px;padding:8px;margin:5px}
+
+body {
+    background: #080d16;
+    color: white;
+    font-family: Arial, sans-serif;
+    overflow: hidden;
+    touch-action: none;
+}
+
+canvas {
+    display: block;
+}
+
+#game {
+    position: fixed;
+    inset: 0;
+}
+
+/* INTRO SCREEN */
+
+.screen {
+    position: fixed;
+    inset: 0;
+    z-index: 20;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+    background:
+      linear-gradient(135deg, rgba(3,9,20,.96), rgba(12,35,52,.94));
+}
+
+#intro h1 {
+    color: #f7c65b;
+    font-size: clamp(28px, 6vw, 55px);
+    text-shadow: 0 0 20px #c58b28;
+    margin-bottom: 15px;
+}
+
+#intro p {
+    color: #d5e2ed;
+    margin: 8px;
+    font-size: 17px;
+}
+
+#intro .credit {
+    margin-top: 30px;
+    color: #e7bd64;
+    font-weight: bold;
+}
+
+input {
+    width: min(300px, 85vw);
+    padding: 15px;
+    margin: 15px;
+    border: 2px solid #d9a83e;
+    border-radius: 10px;
+    background: #101d2c;
+    color: white;
+    font-size: 18px;
+    text-align: center;
+}
+
+button {
+    border: 2px solid #f1c45e;
+    background: linear-gradient(#dba83e, #96651c);
+    color: #101010;
+    font-weight: bold;
+    border-radius: 12px;
+    padding: 13px 25px;
+    font-size: 17px;
+    cursor: pointer;
+}
+
+button:active {
+    transform: scale(.95);
+}
+
+#message {
+    color: #ff8585;
+    margin-top: 10px;
+}
+
+/* LOADING SCREEN */
+
+#loading {
+    display: none;
+    z-index: 30;
+    background: rgba(0,0,0,.9);
+}
+
+#loading h2 {
+    color: #f4c65d;
+    margin-bottom: 15px;
+}
+
+/* GAME HUD */
+
+#hud {
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    z-index: 5;
+    display: none;
+    gap: 9px;
+    flex-direction: column;
+    font-size: 15px;
+    font-weight: bold;
+    pointer-events: none;
+}
+
+.hudBox {
+    background: rgba(0,0,0,.65);
+    border: 1px solid #dcae48;
+    padding: 9px 13px;
+    border-radius: 9px;
+}
+
+/* GAME MENU */
+
+#menu {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 15;
+    background: rgba(0,0,0,.8);
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 15px;
+}
+
+#menu h1 {
+    color: #f5c65c;
+}
+
+/* BIG MOBILE CONTROLS */
+
+#controls {
+    position: fixed;
+    display: none;
+    bottom: 18px;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    padding: 0 18px;
+    justify-content: space-between;
+    align-items: flex-end;
+    pointer-events: none;
+}
+
+.controlGroup {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    pointer-events: auto;
+}
+
+.control {
+    width: clamp(76px, 12vw, 112px);
+    height: clamp(76px, 12vw, 112px);
+    border-radius: 50%;
+    border: 3px solid #f5d17d;
+    background: rgba(14,29,45,.88);
+    color: white;
+    font-size: clamp(23px, 4vw, 34px);
+    font-weight: bold;
+    box-shadow: 0 0 14px rgba(255,190,70,.35);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    user-select: none;
+    touch-action: none;
+}
+
+.control.action {
+    background: rgba(151,99,20,.9);
+    color: white;
+}
+
+.control:active {
+    background: #e2aa36;
+    color: black;
+    transform: scale(.92);
+}
+
+#pauseButton {
+    position: fixed;
+    top: 12px;
+    right: 12px;
+    z-index: 12;
+    display: none;
+    padding: 12px 18px;
+}
+
+/* LANDSCAPE NOTICE */
+
+#rotateNotice {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background: #08111e;
+    color: white;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 25px;
+    font-size: 22px;
+}
+
+@media (orientation: portrait) and (max-width: 900px) {
+    #rotateNotice {
+        display: flex;
+    }
+}
+
+/* Smaller screens */
+
+@media (max-height: 480px) {
+    #controls {
+        bottom: 8px;
+        padding: 0 12px;
+    }
+
+    .control {
+        width: 78px;
+        height: 78px;
+        font-size: 25px;
+    }
+
+    .controlGroup {
+        gap: 9px;
+    }
+
+    #hud {
+        font-size: 12px;
+    }
+}
 </style>
 </head>
 
 <body>
 
-<div id="intro">
- <h1>AHMAD'S HORSE ADVENTURE</h1>
- <p>THE GREAT RIDER CHALLENGE</p>
- <p>Enter your security password to continue</p>
- <input id="password" type="password" placeholder="Enter password">
- <button id="enter">UNLOCK GAME</button>
- <p id="error" style="color:#ff7777"></p>
- <p style="color:#e9bd55">Designed by Ahmad bin Muhammad Yusuf<br>
- Young Programmer in Animation</p>
+<div id="game"></div>
+
+<div id="rotateNotice">
+    <div>
+        <h2>📱 Rotate Your Device</h2>
+        <p>Please turn your phone sideways to play in landscape mode.</p>
+    </div>
 </div>
+
+<!-- INTRO -->
+
+<div id="intro" class="screen">
+    <h1>🐎 HORSE RIDER ADVENTURE 3D</h1>
+
+    <p>A cinematic horse-riding adventure.</p>
+    <p>Explore new lands, collect coins and overcome challenges.</p>
+
+    <p class="credit">
+        Ahmad bin Muhammad Yusuf<br>
+        Young Programmer in Animation
+    </p>
+
+    <input
+        type="password"
+        id="password"
+        placeholder="Enter game password"
+    >
+
+    <button onclick="unlockGame()">ENTER GAME</button>
+
+    <p id="message"></p>
+</div>
+
+<!-- LOADING -->
+
+<div id="loading" class="screen">
+    <h2>Preparing Your Adventure...</h2>
+    <p id="loadingText">Loading the horse and rider...</p>
+</div>
+
+<!-- HUD -->
 
 <div id="hud">
- Level: <span id="level">1</span><br>
- Coins: <span id="coins">0</span><br>
- Stamina: <span id="stamina">100</span>%<br>
- Speed: <span id="speed">0</span>
+    <div class="hudBox">🏆 Level: <span id="level">1</span></div>
+    <div class="hudBox">🪙 Coins: <span id="coins">0</span></div>
+    <div class="hudBox">🐎 Horse: <span id="horseHealth">100</span>%</div>
+    <div class="hudBox">⭐ Progress: <span id="progress">0</span>%</div>
 </div>
 
-<button id="pauseBtn" style="display:none">Ⅱ PAUSE</button>
+<button id="pauseButton" onclick="pauseGame()">Ⅱ PAUSE</button>
 
-<div id="upgrades">
- <button id="speedUp">HORSE SPEED +</button>
- <button id="staminaUp">HORSE STAMINA +</button>
-</div>
+<!-- CONTROLS -->
 
 <div id="controls">
- <div class="group">
-  <button class="control" id="left">◀</button>
-  <button class="control" id="right">▶</button>
- </div>
- <div class="group">
-  <button class="control action" id="jump">⬆</button>
-  <button class="control action" id="boost">⚡</button>
-  <button class="control action" id="forward">GO</button>
- </div>
+
+    <div class="controlGroup">
+        <div class="control" id="left">◀</div>
+        <div class="control" id="right">▶</div>
+    </div>
+
+    <div class="controlGroup">
+        <div class="control action" id="jump">⬆</div>
+        <div class="control action" id="boost">⚡</div>
+    </div>
+
 </div>
 
-<div id="notice"></div>
+<!-- PAUSE MENU -->
 
-<div id="pause">
- <h1>GAME PAUSED</h1>
- <button id="resume">RESUME</button>
- <button id="restart">RESTART LEVEL</button>
+<div id="menu">
+    <h1 id="menuTitle">GAME PAUSED</h1>
+    <button onclick="resumeGame()">RESUME</button>
+    <button onclick="restartLevel()">RESTART LEVEL</button>
+    <button onclick="upgradeHorse()">UPGRADE HORSE — 20 COINS</button>
 </div>
 
-<div id="gameover">
- <h1>CHALLENGE FAILED</h1>
- <p>Try the level again!</p>
- <button id="retry">REPLAY LEVEL</button>
-</div>
 
 <script type="importmap">
-{"imports":{
-"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
-"three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
-}}
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"
+  }
+}
 </script>
 
+
 <script type="module">
+
 import * as THREE from "three";
-import {GLTFLoader} from "three/addons/loaders/GLTFLoader.js";
 
-/* PASSWORD GATE */
-const PASSWORD="AHMAD2026";
+import { GLTFLoader } from
+"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/loaders/GLTFLoader.js";
 
-document.getElementById("enter").onclick=()=>{
- const input=document.getElementById("password").value;
- if(input===PASSWORD){
-  document.getElementById("intro").style.display="none";
-  startGame();
- }else{
-  document.getElementById("error").textContent="Incorrect password. Try again.";
- }
+
+/* GAME VARIABLES */
+
+let scene, camera, renderer;
+let horse, rider;
+let mixer = null;
+let clock = new THREE.Clock();
+
+let playing = false;
+let paused = false;
+
+let level = 1;
+let coins = 0;
+let horseHealth = 100;
+let progress = 0;
+
+let speed = 0;
+let side = 0;
+let jumpHeight = 0;
+let jumping = false;
+
+let distance = 0;
+let levelDistance = 650;
+
+let obstacles = [];
+let collectables = [];
+
+let horseUpgrade = 1;
+
+const keys = {
+    left: false,
+    right: false,
+    boost: false
 };
 
-document.getElementById("password").addEventListener("keydown",e=>{
- if(e.key==="Enter")document.getElementById("enter").click();
-});
+const container = document.getElementById("game");
 
-/* 3D WORLD */
-const scene=new THREE.Scene();
-scene.background=new THREE.Color(0x86bfe0);
-scene.fog=new THREE.Fog(0x86bfe0,35,150);
 
-const camera=new THREE.PerspectiveCamera(65,innerWidth/innerHeight,.1,500);
-const renderer=new THREE.WebGLRenderer({antialias:true});
-renderer.setSize(innerWidth,innerHeight);
-renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));
-renderer.shadowMap.enabled=true;
-document.body.appendChild(renderer.domElement);
+/* PASSWORD */
 
-scene.add(new THREE.HemisphereLight(0xffffff,0x40552b,2));
+window.unlockGame = async function() {
 
-const sun=new THREE.DirectionalLight(0xffffff,2);
-sun.position.set(-20,40,20);
-sun.castShadow=true;
-scene.add(sun);
+    const entered =
+        document.getElementById("password").value;
 
-const ground=new THREE.Mesh(
- new THREE.PlaneGeometry(300,400),
- new THREE.MeshStandardMaterial({color:0x497b35})
-);
-ground.rotation.x=-Math.PI/2;
-ground.position.z=-150;
-ground.receiveShadow=true;
-scene.add(ground);
+    if (entered !== "AHMAD2026") {
+        document.getElementById("message").textContent =
+            "Incorrect password. Please try again.";
+        return;
+    }
 
-const road=new THREE.Mesh(
- new THREE.PlaneGeometry(12,400),
- new THREE.MeshStandardMaterial({color:0xb69a70})
-);
-road.rotation.x=-Math.PI/2;
-road.position.set(0,.02,-150);
-scene.add(road);
+    document.getElementById("intro").style.display = "none";
 
-/* TREES */
-function tree(x,z){
- const g=new THREE.Group();
- const trunk=new THREE.Mesh(
-  new THREE.CylinderGeometry(.25,.4,3,8),
-  new THREE.MeshStandardMaterial({color:0x68421f})
- );
- trunk.position.y=1.5;
- g.add(trunk);
- const leaves=new THREE.Mesh(
-  new THREE.ConeGeometry(2,5,8),
-  new THREE.MeshStandardMaterial({color:0x20562c})
- );
- leaves.position.y=5;
- g.add(leaves);
- g.position.set(x,0,z);
- scene.add(g);
-}
-for(let z=-10;z>-400;z-=12){
- tree(-13,z);tree(13,z-5);
-}
+    document.getElementById("loading").style.display = "flex";
 
-/* RIDER AND HORSE */
-const player=new THREE.Group();
-scene.add(player);
-player.position.set(0,0,5);
+    await enterLandscape();
 
-const loader=new GLTFLoader();
-let horseMixer=null;
+    init();
 
-function fallbackHorse(){
- const g=new THREE.Group();
- const brown=new THREE.MeshStandardMaterial({color:0x744323});
- const dark=new THREE.MeshStandardMaterial({color:0x26190f});
+    document.getElementById("loading").style.display = "none";
 
- function box(w,h,d,x,y,z,mat){
-  const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat);
-  m.position.set(x,y,z);m.castShadow=true;g.add(m);
-  return m;
- }
- box(1.2,1.1,2.2,0,1.5,0,brown);
- box(.7,1.4,.7,0,2,-.9,brown);
- box(.6,.6,.8,0,2.7,-1.2,brown);
- for(const x of [-.4,.4]){
-  for(const z of [-.8,.8]){
-   box(.22,1.2,.22,x,.6,z,dark);
-  }
- }
- box(.15,.9,.15,0,1.6,1.3,dark);
- return g;
-}
+    document.getElementById("hud").style.display = "flex";
+    document.getElementById("controls").style.display = "flex";
+    document.getElementById("pauseButton").style.display = "block";
 
-function fallbackRider(){
- const g=new THREE.Group();
- const blue=new THREE.MeshStandardMaterial({color:0x173d69});
- const gold=new THREE.MeshStandardMaterial({color:0xe3b64e});
- const skin=new THREE.MeshStandardMaterial({color:0xb98055});
+    playing = true;
 
- const body=new THREE.Mesh(new THREE.BoxGeometry(.7,.9,.5),blue);
- body.position.y=3;g.add(body);
-
- const head=new THREE.Mesh(new THREE.SphereGeometry(.25,16,16),skin);
- head.position.y=3.7;g.add(head);
-
- const helmet=new THREE.Mesh(new THREE.SphereGeometry(.29,16,12),gold);
- helmet.position.y=3.85;g.add(helmet);
- return g;
-}
-
-const horseGroup=fallbackHorse();
-const riderGroup=fallbackRider();
-player.add(horseGroup,riderGroup);
-
-loader.load(
- "https://threejs.org/examples/models/gltf/Horse.glb",
- gltf=>{
-  player.remove(horseGroup);
-  const model=gltf.scene;
-  model.scale.set(1.2,1.2,1.2);
-  model.rotation.y=Math.PI;
-  model.traverse(o=>{if(o.isMesh)o.castShadow=true});
-  player.add(model);
-  if(gltf.animations.length){
-   horseMixer=new THREE.AnimationMixer(model);
-   horseMixer.clipAction(gltf.animations[0]).play();
-  }
- },
- undefined,()=>{}
-);
-
-/* COURSE */
-let coins=[];
-let obstacles=[];
-let level=1;
-let coinCount=0;
-let stamina=100;
-let speedUpgrade=0;
-let staminaUpgrade=0;
-let speed=0;
-let elapsed=0;
-let jumping=false;
-let jumpTime=0;
-let playing=false;
-let paused=false;
-
-function buildCourse(){
- coins.forEach(o=>scene.remove(o));
- obstacles.forEach(o=>scene.remove(o));
- coins=[];obstacles=[];
-
- const coinMat=new THREE.MeshStandardMaterial({
-  color:0xffd52f,metalness:.7,roughness:.25
- });
-
- for(let i=0;i<15+level*3;i++){
-  const c=new THREE.Mesh(
-   new THREE.TorusGeometry(.4,.12,10,20),coinMat
-  );
-  c.position.set((Math.random()-.5)*7,1.5,-20-i*8);
-  c.userData.taken=false;
-  scene.add(c);coins.push(c);
- }
-
- for(let i=0;i<level+3;i++){
-  const o=new THREE.Mesh(
-   new THREE.BoxGeometry(2,1,1),
-   new THREE.MeshStandardMaterial({color:0x81502b})
-  );
-  o.position.set(i%2===0?3:-3,.5,-35-i*20);
-  o.userData.hit=false;
-  scene.add(o);obstacles.push(o);
- }
-}
-buildCourse();
-
-/* CONTROLS */
-let go=false,left=false,right=false,boost=false;
-
-function hold(id,fn){
- const el=document.getElementById(id);
- el.addEventListener("pointerdown",e=>{
-  e.preventDefault();fn(true);
- });
- ["pointerup","pointercancel","pointerleave"].forEach(ev=>{
-  el.addEventListener(ev,e=>{e.preventDefault();fn(false)});
- });
-}
-hold("forward",v=>go=v);
-hold("left",v=>left=v);
-hold("right",v=>right=v);
-hold("boost",v=>boost=v);
-
-document.getElementById("jump").onclick=()=>{
- if(!jumping){jumping=true;jumpTime=0}
+    animate();
 };
 
-const keys={};
-addEventListener("keydown",e=>{
- keys[e.key.toLowerCase()]=true;
- if(e.key===" "&&!jumping){jumping=true;jumpTime=0}
-});
-addEventListener("keyup",e=>keys[e.key.toLowerCase()]=false);
 
-/* GAME UI */
-function message(t){
- const n=document.getElementById("notice");
- n.textContent=t;n.style.display="block";
- setTimeout(()=>n.style.display="none",1800);
+/* LANDSCAPE AND FULLSCREEN */
+
+async function enterLandscape() {
+
+    try {
+        if (!document.fullscreenElement) {
+            await document.documentElement.requestFullscreen();
+        }
+    } catch(e) {
+        console.log("Fullscreen unavailable.");
+    }
+
+    try {
+        if (screen.orientation &&
+            screen.orientation.lock) {
+            await screen.orientation.lock("landscape");
+        }
+    } catch(e) {
+        console.log("Landscape lock unavailable. Rotate manually.");
+    }
 }
 
-function hud(){
- document.getElementById("level").textContent=level;
- document.getElementById("coins").textContent=coinCount;
- document.getElementById("stamina").textContent=Math.round(stamina);
- document.getElementById("speed").textContent=Math.round(speed);
+
+/* THREE.JS SETUP */
+
+function init() {
+
+    scene = new THREE.Scene();
+
+    scene.background = new THREE.Color(0x8cc7ed);
+    scene.fog = new THREE.Fog(0x8cc7ed, 45, 180);
+
+    camera = new THREE.PerspectiveCamera(
+        65,
+        window.innerWidth / window.innerHeight,
+        0.1,
+        500
+    );
+
+    camera.position.set(0, 5, 10);
+
+    renderer = new THREE.WebGLRenderer({
+        antialias: true
+    });
+
+    renderer.setSize(
+        window.innerWidth,
+        window.innerHeight
+    );
+
+    renderer.setPixelRatio(
+        Math.min(window.devicePixelRatio, 2)
+    );
+
+    renderer.shadowMap.enabled = true;
+
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+    container.appendChild(renderer.domElement);
+
+
+    /* LIGHTING */
+
+    const sunlight = new THREE.DirectionalLight(
+        0xffffff,
+        2.2
+    );
+
+    sunlight.position.set(-20, 30, 20);
+    sunlight.castShadow = true;
+
+    scene.add(sunlight);
+
+    const ambient = new THREE.HemisphereLight(
+        0xc5e6ff,
+        0x786044,
+        1.7
+    );
+
+    scene.add(ambient);
+
+
+    /* SKY AND ENVIRONMENT */
+
+    createEnvironment();
+
+    createTrack();
+
+    createHorse();
+
+    createObstacles();
+
+    createCollectables();
+
+    window.addEventListener("resize", resizeGame);
+
+    setupControls();
 }
 
-function startGame(){
- playing=true;
- document.getElementById("hud").style.display="block";
- document.getElementById("controls").style.display="flex";
- document.getElementById("pauseBtn").style.display="block";
- document.getElementById("upgrades").style.display="block";
- message("Welcome, rider! Complete the course!");
+
+/* ENVIRONMENT */
+
+function createEnvironment() {
+
+    const ground = new THREE.Mesh(
+        new THREE.PlaneGeometry(500, 500),
+        new THREE.MeshStandardMaterial({
+            color: 0x477b37,
+            roughness: 1
+        })
+    );
+
+    ground.rotation.x = -Math.PI / 2;
+    ground.position.y = -0.1;
+    ground.receiveShadow = true;
+
+    scene.add(ground);
+
+
+    /* MOUNTAINS */
+
+    for (let i = 0; i < 22; i++) {
+
+        const mountain = new THREE.Mesh(
+            new THREE.ConeGeometry(
+                9 + Math.random() * 10,
+                20 + Math.random() * 25,
+                5
+            ),
+            new THREE.MeshStandardMaterial({
+                color: i % 2 ? 0x657d72 : 0x829080
+            })
+        );
+
+        mountain.position.set(
+            (Math.random() > .5 ? 1 : -1) *
+            (35 + Math.random() * 65),
+            7,
+            -i * 16
+        );
+
+        scene.add(mountain);
+    }
+
+
+    /* TREES */
+
+    for (let i = 0; i < 90; i++) {
+
+        const x = Math.random() > .5 ? 13 : -13;
+
+        const z = -Math.random() * 650;
+
+        createTree(x, z);
+    }
+
+
+    /* SUN */
+
+    const sun = new THREE.Mesh(
+        new THREE.SphereGeometry(5, 24, 24),
+        new THREE.MeshBasicMaterial({
+            color: 0xffe7a1
+        })
+    );
+
+    sun.position.set(40, 40, -120);
+
+    scene.add(sun);
 }
 
-/* UPGRADES */
-document.getElementById("speedUp").onclick=()=>{
- if(coinCount>=20){
-  coinCount-=20;speedUpgrade++;
-  message("Horse speed increased!");
- }else message("You need 20 coins!");
- hud();
+
+function createTree(x, z) {
+
+    const tree = new THREE.Group();
+
+    const trunk = new THREE.Mesh(
+        new THREE.CylinderGeometry(.25, .4, 3, 8),
+        new THREE.MeshStandardMaterial({
+            color: 0x604026
+        })
+    );
+
+    trunk.position.y = 1.5;
+
+    tree.add(trunk);
+
+    const leaves = new THREE.Mesh(
+        new THREE.ConeGeometry(2, 5, 8),
+        new THREE.MeshStandardMaterial({
+            color: 0x245b30
+        })
+    );
+
+    leaves.position.y = 4;
+
+    tree.add(leaves);
+
+    tree.position.set(x, 0, z);
+
+    scene.add(tree);
+}
+
+
+/* TRACK */
+
+function createTrack() {
+
+    const road = new THREE.Mesh(
+        new THREE.PlaneGeometry(13, 1000),
+        new THREE.MeshStandardMaterial({
+            color: 0x9a8058
+        })
+    );
+
+    road.rotation.x = -Math.PI / 2;
+    road.position.set(0, .01, -300);
+
+    scene.add(road);
+
+
+    /* ROAD EDGES */
+
+    for (let x of [-6.5, 6.5]) {
+
+        const edge = new THREE.Mesh(
+            new THREE.BoxGeometry(.2, .15, 1000),
+            new THREE.MeshStandardMaterial({
+                color: 0xd6b36a
+            })
+        );
+
+        edge.position.set(x, .1, -300);
+
+        scene.add(edge);
+    }
+}
+
+
+/* HORSE AND RIDER */
+
+function createHorse() {
+
+    const loader = new GLTFLoader();
+
+    document.getElementById("loadingText").textContent =
+        "Loading 3D horse...";
+
+
+    loader.load(
+        "https://threejs.org/examples/models/gltf/Horse.glb",
+
+        (gltf) => {
+
+            horse = gltf.scene;
+
+            horse.scale.set(1.25, 1.25, 1.25);
+
+            horse.position.set(0, 0, 2);
+
+            horse.rotation.y = Math.PI;
+
+            horse.traverse(obj => {
+                if (obj.isMesh) {
+                    obj.castShadow = true;
+                    obj.receiveShadow = true;
+                }
+            });
+
+            scene.add(horse);
+
+            if (gltf.animations.length) {
+                mixer = new THREE.AnimationMixer(horse);
+                mixer.clipAction(gltf.animations[0]).play();
+            }
+
+            loadRider();
+        },
+
+        undefined,
+
+        () => {
+            createFallbackHorse();
+            loadRider();
+        }
+    );
+}
+
+
+/* FALLBACK HORSE */
+
+function createFallbackHorse() {
+
+    horse = new THREE.Group();
+
+    const bodyMaterial = new THREE.MeshStandardMaterial({
+        color: 0x704222,
+        roughness: .8
+    });
+
+    const body = new THREE.Mesh(
+        new THREE.BoxGeometry(1.2, .8, 2),
+        bodyMaterial
+    );
+
+    body.position.y = 1.5;
+
+    horse.add(body);
+
+
+    const head = new THREE.Mesh(
+        new THREE.BoxGeometry(.6, .9, .6),
+        bodyMaterial
+    );
+
+    head.position.set(0, 2, -1.1);
+
+    horse.add(head);
+
+
+    for (let x of [-.4, .4]) {
+        for (let z of [-.65, .65]) {
+
+            const leg = new THREE.Mesh(
+                new THREE.BoxGeometry(.18, 1, .18),
+                bodyMaterial
+            );
+
+            leg.position.set(x, .55, z);
+
+            horse.add(leg);
+        }
+    }
+
+    horse.position.set(0, 0, 2);
+
+    scene.add(horse);
+}
+
+
+/* RIDER MODEL */
+
+function loadRider() {
+
+    document.getElementById("loadingText").textContent =
+        "Preparing the rider...";
+
+    const loader = new GLTFLoader();
+
+    loader.load(
+        "https://threejs.org/examples/models/gltf/Soldier.glb",
+
+        (gltf) => {
+
+            rider = gltf.scene;
+
+            rider.scale.set(.55, .55, .55);
+
+            rider.position.set(0, 1.4, 2);
+
+            rider.rotation.y = Math.PI;
+
+            rider.traverse(obj => {
+                if (obj.isMesh) {
+                    obj.castShadow = true;
+                }
+            });
+
+            scene.add(rider);
+        },
+
+        undefined,
+
+        () => {
+            createFallbackRider();
+        }
+    );
+}
+
+
+/* FALLBACK RIDER */
+
+function createFallbackRider() {
+
+    rider = new THREE.Group();
+
+    const clothes = new THREE.MeshStandardMaterial({
+        color: 0x203a68
+    });
+
+    const body = new THREE.Mesh(
+        new THREE.BoxGeometry(.6, .9, .35),
+        clothes
+    );
+
+    body.position.y = 1.6;
+
+    rider.add(body);
+
+
+    const head = new THREE.Mesh(
+        new THREE.SphereGeometry(.25, 16, 16),
+        new THREE.MeshStandardMaterial({
+            color: 0xc68e63
+        })
+    );
+
+    head.position.y = 2.2;
+
+    rider.add(head);
+
+    rider.position.set(0, 0, 2);
+
+    scene.add(rider);
+}
+
+
+/* OBSTACLES */
+
+function createObstacles() {
+
+    obstacles = [];
+
+    for (let i = 0; i < 35; i++) {
+
+        const obstacle = new THREE.Mesh(
+            new THREE.BoxGeometry(1.5, 1.5, 1.5),
+            new THREE.MeshStandardMaterial({
+                color: 0x76533b
+            })
+        );
+
+        obstacle.position.set(
+            (Math.random() * 8) - 4,
+            .75,
+            -15 - i * 18
+        );
+
+        obstacle.castShadow = true;
+
+        scene.add(obstacle);
+
+        obstacles.push(obstacle);
+    }
+}
+
+
+/* COINS */
+
+function createCollectables() {
+
+    collectables = [];
+
+    for (let i = 0; i < 60; i++) {
+
+        const coin = new THREE.Mesh(
+            new THREE.TorusGeometry(.4, .12, 12, 24),
+            new THREE.MeshStandardMaterial({
+                color: 0xffd12e,
+                metalness: .8,
+                roughness: .2
+            })
+        );
+
+        coin.position.set(
+            (Math.random() * 7) - 3.5,
+            1.5,
+            -10 - i * 10
+        );
+
+        scene.add(coin);
+
+        collectables.push(coin);
+    }
+}
+
+
+/* TOUCH CONTROLS */
+
+function setupControls() {
+
+    function bindHold(id, action) {
+
+        const element = document.getElementById(id);
+
+        element.addEventListener("pointerdown", e => {
+            e.preventDefault();
+            keys[action] = true;
+        });
+
+        element.addEventListener("pointerup", () => {
+            keys[action] = false;
+        });
+
+        element.addEventListener("pointerleave", () => {
+            keys[action] = false;
+        });
+
+        element.addEventListener("pointercancel", () => {
+            keys[action] = false;
+        });
+    }
+
+    bindHold("left", "left");
+    bindHold("right", "right");
+    bindHold("boost", "boost");
+
+
+    document.getElementById("jump").addEventListener(
+        "pointerdown",
+        e => {
+            e.preventDefault();
+            jump();
+        }
+    );
+
+
+    /* KEYBOARD */
+
+    window.addEventListener("keydown", e => {
+
+        if (e.key === "ArrowLeft" || e.key === "a")
+            keys.left = true;
+
+        if (e.key === "ArrowRight" || e.key === "d")
+            keys.right = true;
+
+        if (e.key === "ArrowUp" || e.key === " ")
+            jump();
+
+        if (e.key === "Shift")
+            keys.boost = true;
+    });
+
+
+    window.addEventListener("keyup", e => {
+
+        if (e.key === "ArrowLeft" || e.key === "a")
+            keys.left = false;
+
+        if (e.key === "ArrowRight" || e.key === "d")
+            keys.right = false;
+
+        if (e.key === "Shift")
+            keys.boost = false;
+    });
+}
+
+
+/* JUMP */
+
+function jump() {
+
+    if (!playing || paused || jumping) return;
+
+    jumping = true;
+    jumpHeight = 3;
+}
+
+
+/* GAME MOVEMENT */
+
+function updateGame(delta) {
+
+    if (!playing || paused) return;
+
+    const normalSpeed = 13 * horseUpgrade;
+
+    speed = keys.boost ? normalSpeed * 1.7 : normalSpeed;
+
+    if (keys.left) side -= 8 * delta;
+
+    if (keys.right) side += 8 * delta;
+
+    side = THREE.MathUtils.clamp(side, -5, 5);
+
+
+    /* JUMP MOVEMENT */
+
+    if (jumping) {
+
+        jumpHeight -= 6 * delta;
+
+        if (jumpHeight <= 0) {
+            jumpHeight = 0;
+            jumping = false;
+        }
+    }
+
+
+    /* MOVE THE HORSE */
+
+    if (horse) {
+
+        horse.position.x = THREE.MathUtils.lerp(
+            horse.position.x,
+            side,
+            .15
+        );
+
+        horse.position.y = jumpHeight;
+
+        horse.position.z = 2;
+
+        horse.rotation.z = keys.left ? .12 :
+                           keys.right ? -.12 : 0;
+    }
+
+
+    if (rider && horse) {
+
+        rider.position.x = horse.position.x;
+
+        rider.position.y = 1.4 + jumpHeight;
+
+        rider.position.z = 2;
+    }
+
+
+    /* MOVE THE WORLD TOWARDS THE PLAYER */
+
+    distance += speed * delta;
+
+    obstacles.forEach(obstacle => {
+
+        obstacle.position.z += speed * delta;
+
+        if (obstacle.position.z > 5) {
+            obstacle.position.z -= levelDistance;
+        }
+
+        const close =
+            Math.abs(obstacle.position.z - 2) < 1.5;
+
+        const horizontal =
+            Math.abs(obstacle.position.x - side) < 1.2;
+
+        if (close && horizontal && jumpHeight < 1.2) {
+
+            horseHealth -= 1;
+
+            if (horseHealth <= 0) {
+                endLevel();
+            }
+        }
+    });
+
+
+    /* COINS */
+
+    collectables.forEach(coin => {
+
+        coin.rotation.y += delta * 3;
+
+        coin.position.z += speed * delta;
+
+        if (coin.position.z > 5) {
+            coin.position.z -= levelDistance;
+        }
+
+        const close =
+            Math.abs(coin.position.z - 2) < 1.3;
+
+        const horizontal =
+            Math.abs(coin.position.x - side) < 1.5;
+
+        if (close && horizontal && coin.visible) {
+
+            coins += 1;
+
+            coin.visible = false;
+
+            setTimeout(() => {
+                coin.visible = true;
+            }, 2500);
+
+            updateHUD();
+        }
+    });
+
+
+    /* LEVEL PROGRESS */
+
+    progress = Math.min(
+        100,
+        Math.floor((distance % levelDistance) /
+        levelDistance * 100)
+    );
+
+    if (progress >= 100) {
+
+        level++;
+
+        distance = 0;
+
+        horseHealth = Math.min(100, horseHealth + 10);
+
+        levelDistance += 100;
+
+        document.getElementById("loadingText").textContent =
+            "Welcome to Level " + level;
+
+        updateHUD();
+    }
+
+
+    /* CAMERA FOLLOW */
+
+    camera.position.x = THREE.MathUtils.lerp(
+        camera.position.x,
+        side * .35,
+        .04
+    );
+
+    camera.position.y = 5 + jumpHeight * .3;
+
+    camera.lookAt(
+        side * .3,
+        1.5 + jumpHeight,
+        -6
+    );
+
+
+    /* HORSE ANIMATION */
+
+    if (mixer) {
+        mixer.update(delta);
+    }
+
+    updateHUD();
+}
+
+
+/* HUD */
+
+function updateHUD() {
+
+    document.getElementById("level").textContent = level;
+
+    document.getElementById("coins").textContent = coins;
+
+    document.getElementById("horseHealth").textContent =
+        Math.max(0, Math.floor(horseHealth));
+
+    document.getElementById("progress").textContent =
+        progress;
+}
+
+
+/* PAUSE */
+
+window.pauseGame = function() {
+
+    if (!playing) return;
+
+    paused = true;
+
+    document.getElementById("menuTitle").textContent =
+        "GAME PAUSED";
+
+    document.getElementById("menu").style.display = "flex";
 };
 
-document.getElementById("staminaUp").onclick=()=>{
- if(coinCount>=15){
+
+window.resumeGame = function() {
+
+    paused = false;
+
+    document.getElementById("menu").style.display = "none";
+};
+
+
+window.restartLevel = function() {
+
+    distance = 0;
+
+    progress = 0;
+
+    horseHealth = 100;
+
+    side = 0;
+
+    if (horse) {
+        horse.position.set(0, 0, 2);
+    }
+
+    if (rider) {
+        rider.position.set(0, 1.4, 2);
+    }
+
+    obstacles.forEach((o, i) => {
+        o.position.z = -15 - i * 18;
+    });
+
+    collectables.forEach((c, i) => {
+        c.visible = true;
+        c.position.z = -10 - i * 10;
+    });
+
+    paused = false;
+
+    playing = true;
+
+    document.getElementById("menu").style.display = "none";
+
+    updateHUD();
+};
+
+
+/* UPGRADE HORSE */
+
+window.upgradeHorse = function() {
+
+    if (coins < 20) {
+
+        document.getElementById("menuTitle").textContent =
+            "YOU NEED 20 COINS TO UPGRADE!";
+
+        return;
+    }
+
+    coins -= 20;
+
+    horseUpgrade += .15;
+
+    document.getElementById("menuTitle").textContent =
+        "HORSE UPGRADED!";
+
+    updateHUD();
+};
+
+
+/* LEVEL FAILED */
+
+function endLevel() {
+
+    playing = false;
+
+    paused = true;
+
+    document.getElementById("menuTitle").textContent =
+        "CHALLENGE FAILED — TRY AGAIN";
+
+    document.getElementById("menu").style.display = "flex";
+}
+
+
+/* RESIZE */
+
+function resizeGame() {
+
+    if (!camera || !renderer) return;
+
+    camera.aspect =
+        window.innerWidth / window.innerHeight;
+
+    camera.updateProjectionMatrix();
+
+    renderer.setSize(
+        window.innerWidth,
+        window.innerHeight
+    );
+}
+
+
+/* MAIN GAME LOOP */
+
+function animate() {
+
+    requestAnimationFrame(animate);
+
+    const delta = Math.min(clock.getDelta(), .05);
+
+    if (playing && !paused) {
+        updateGame(delta);
+    }
+
+    if (renderer && scene && camera) {
+        renderer.render(scene, camera);
+    }
+}
+
+</script>
+
+</body>
+ </html>
   coinCount-=15;staminaUpgrade++;
   stamina=Math.min(100+staminaUpgrade*15,stamina+25);
   message("Horse stamina increased!");
