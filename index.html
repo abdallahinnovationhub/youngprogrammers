@@ -2,217 +2,509 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
-<title>Rider Nike Horse Fight - Pro</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Ahmad's Horse Adventure 3D</title>
+
 <style>
-  *{margin:0;padding:0;box-sizing:border-box;user-select:none;-webkit-user-select:none;touch-action:none;}
-  body{background:#050505;overflow:hidden;font-family:Arial,Helvetica,sans-serif;color:#fff;}
-  #gameContainer{position:relative;width:100vw;height:100vh;background:linear-gradient(#4a90c2 0%,#87b8d9 42%,#3d6b1e 42%,#1e330a 100%);}
-  canvas{display:block;width:100%;height:100%;}
-  #ui{position:absolute;inset:0;pointer-events:none;}
-
-  /* PASSWORD + TITLE */
-  #titleScreen{
-    position:absolute;inset:0;background:rgba(0,0,0,0.92);
-    display:flex;flex-direction:column;justify-content:center;align-items:center;
-    text-align:center;z-index:40;pointer-events:auto;
-  }
-  #titleScreen h1{font-size:clamp(24px,6.5vw,44px);color:#ffd700;text-shadow:0 0 20px #ff9900;line-height:1.15;margin-bottom:8px;}
-  #titleScreen p{font-size:clamp(12px,3.5vw,16px);color:#bbb;margin:3px 0;}
-  #passBox{margin-top:18px;display:flex;flex-direction:column;align-items:center;gap:10px;}
-  #passInput{
-    padding:12px 18px;font-size:18px;border:2px solid #ffd700;border-radius:8px;
-    background:#111;color:#fff;text-align:center;width:220px;outline:none;
-  }
-  #startBtn{
-    padding:13px 38px;font-size:18px;font-weight:bold;
-    background:linear-gradient(#c00,#800);border:none;border-radius:10px;color:#fff;cursor:pointer;
-  }
-  #startBtn:active{transform:scale(0.95);}
-  #passError{color:#f55;font-size:14px;height:18px;}
-
-  /* HUD */
-  #hud{position:absolute;top:6px;left:6px;right:6px;display:none;justify-content:space-between;z-index:5;}
-  .bar-box{background:rgba(0,0,0,0.65);padding:5px 9px;border-radius:6px;min-width:125px;}
-  .bar-label{font-size:11px;margin-bottom:2px;}
-  .bar{height:12px;background:#222;border-radius:3px;overflow:hidden;}
-  .bar-fill{height:100%;transition:width 0.15s;}
-  #playerHealthFill{background:linear-gradient(#0c0,#060);}
-  #enemyHealthFill{background:linear-gradient(#e22,#800);}
-
-  #levelInfo{position:absolute;top:6px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.65);padding:3px 12px;border-radius:16px;font-size:13px;display:none;z-index:5;}
-  #weaponInfo{position:absolute;top:36px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.6);padding:3px 11px;border-radius:12px;font-size:12px;display:none;z-index:5;color:#ffd700;}
-  #scoreInfo{position:absolute;top:62px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.55);padding:2px 10px;border-radius:10px;font-size:12px;display:none;z-index:5;}
-  #message{position:absolute;top:40%;left:50%;transform:translate(-50%,-50%);font-size:clamp(20px,5.8vw,36px);font-weight:bold;text-shadow:0 0 14px #000;opacity:0;transition:opacity 0.3s;z-index:20;text-align:center;pointer-events:none;white-space:pre-line;}
-
-  /* CONTROLS */
-  #controls{position:absolute;bottom:14px;left:0;right:0;display:none;justify-content:space-between;padding:0 10px;z-index:10;}
-  .btn-group{display:flex;gap:9px;pointer-events:auto;}
-  .ctrl-btn{
-    width:64px;height:64px;border-radius:50%;
-    background:rgba(255,255,255,0.2);border:3px solid rgba(255,255,255,0.5);
-    display:flex;justify-content:center;align-items:center;font-size:20px;font-weight:bold;color:#fff;
-  }
-  .ctrl-btn:active,.ctrl-btn.active{background:rgba(255,180,0,0.55);transform:scale(0.92);}
-
-  #btnSizePanel{
-    position:absolute;top:90px;right:6px;background:rgba(0,0,0,0.65);padding:4px 8px;border-radius:8px;
-    z-index:15;pointer-events:auto;display:none;align-items:center;gap:6px;font-size:12px;
-  }
-  #btnSizePanel button{width:28px;height:28px;border:none;border-radius:5px;background:#444;color:#fff;font-size:16px;cursor:pointer;}
-
-  #weaponBtn,#upgradeBtn{
-    position:absolute;border-radius:50%;background:rgba(0,0,0,0.6);border:2px solid #ffd700;
-    color:#ffd700;font-size:11px;font-weight:bold;display:none;justify-content:center;align-items:center;
-    pointer-events:auto;z-index:12;text-align:center;line-height:1.15;
-  }
-  #weaponBtn{bottom:95px;right:12px;width:54px;height:54px;}
-  #upgradeBtn{bottom:95px;left:12px;width:54px;height:54px;border-color:#0f0;color:#0f0;}
+*{box-sizing:border-box}
+body{margin:0;overflow:hidden;background:#071522;color:white;font-family:Arial}
+canvas{display:block}
+#intro,#pause,#gameover{
+ position:fixed;inset:0;z-index:5;
+ background:linear-gradient(#071522dd,#020810f5);
+ display:flex;align-items:center;justify-content:center;
+ flex-direction:column;text-align:center;padding:20px
+}
+h1{color:#e9bd55;font-size:clamp(30px,7vw,55px)}
+input{padding:15px;border-radius:9px;border:2px solid #e9bd55;
+ font-size:18px;text-align:center;width:230px;margin:15px}
+button{background:#96631b;color:white;border:2px solid #f4cb65;
+ border-radius:12px;padding:14px 20px;font-size:17px;font-weight:bold}
+button:active{transform:scale(.94)}
+#hud{position:fixed;top:10px;left:10px;z-index:3;
+ background:#071522cc;padding:10px;border-radius:10px;line-height:1.7}
+#pauseBtn{position:fixed;right:10px;top:10px;z-index:4}
+#controls{position:fixed;bottom:15px;left:0;right:0;
+ display:none;justify-content:space-between;padding:0 12px;z-index:4}
+.group{display:flex;gap:8px;align-items:end}
+.control{width:65px;height:65px;border-radius:50%;padding:0;
+ font-size:24px;background:#102f4ddd}
+.action{background:#795015ee}
+#notice{position:fixed;top:25%;left:50%;transform:translateX(-50%);
+ background:#071522eF;border:2px solid #e9bd55;border-radius:10px;
+ padding:12px;display:none;z-index:4;text-align:center}
+#pause,#gameover{display:none}
+#upgrades{position:fixed;right:10px;top:65px;z-index:3;display:none}
+#upgrades button{display:block;font-size:12px;padding:8px;margin:5px}
 </style>
 </head>
+
 <body>
-<div id="gameContainer">
-  <canvas id="gameCanvas"></canvas>
-  <div id="ui">
-    <div id="titleScreen">
-      <h1>RIDER NIKE<br>HORSE FIGHT</h1>
-      <p>Designed by Ahmed bin Muhammad Yusuf<br>(young programmers)</p>
-      <p style="margin-top:10px;color:#aaa;font-size:13px;">Knife • Sword • Bow • Gun</p>
-      <div id="passBox">
-        <input id="passInput" type="password" placeholder="Enter Password" maxlength="12">
-        <div id="passError"></div>
-        <button id="startBtn">ENTER GAME</button>
-      </div>
-    </div>
 
-    <div id="hud">
-      <div class="bar-box">
-        <div class="bar-label">YOUR HEALTH</div>
-        <div class="bar"><div class="bar-fill" id="playerHealthFill" style="width:100%"></div></div>
-      </div>
-      <div class="bar-box" id="enemyBox" style="display:none;">
-        <div class="bar-label" id="enemyLabel">ENEMY</div>
-        <div class="bar"><div class="bar-fill" id="enemyHealthFill" style="width:100%"></div></div>
-      </div>
-    </div>
-
-    <div id="levelInfo">Level 1</div>
-    <div id="weaponInfo">Weapon: Knife</div>
-    <div id="scoreInfo">Score: 0</div>
-    <div id="message"></div>
-
-    <div id="btnSizePanel">
-      Size <button id="sizeDown">−</button>
-      <span id="sizeValue">64</span>
-      <button id="sizeUp">+</button>
-    </div>
-
-    <div id="weaponBtn">WEAPON<br>CHANGE</div>
-    <div id="upgradeBtn">UPGRADE<br>WEAPON</div>
-
-    <div id="controls">
-      <div class="btn-group">
-        <div class="ctrl-btn" id="btnLeft">◀</div>
-        <div class="ctrl-btn" id="btnRight">▶</div>
-      </div>
-      <div class="btn-group">
-        <div class="ctrl-btn" id="btnJump">⬆</div>
-        <div class="ctrl-btn" id="btnAttack">⚔</div>
-      </div>
-    </div>
-  </div>
+<div id="intro">
+ <h1>AHMAD'S HORSE ADVENTURE</h1>
+ <p>THE GREAT RIDER CHALLENGE</p>
+ <p>Enter your security password to continue</p>
+ <input id="password" type="password" placeholder="Enter password">
+ <button id="enter">UNLOCK GAME</button>
+ <p id="error" style="color:#ff7777"></p>
+ <p style="color:#e9bd55">Designed by Ahmad bin Muhammad Yusuf<br>
+ Young Programmer in Animation</p>
 </div>
 
-<script>
-const canvas = document.getElementById('gameCanvas');
-const ctx = canvas.getContext('2d');
-let W, H;
-function resize(){ W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
-window.addEventListener('resize', resize); resize();
+<div id="hud">
+ Level: <span id="level">1</span><br>
+ Coins: <span id="coins">0</span><br>
+ Stamina: <span id="stamina">100</span>%<br>
+ Speed: <span id="speed">0</span>
+</div>
 
-// ========== PASSWORD ==========
-const CORRECT_PASS = "AHMED2026";   // Change this if you want
+<button id="pauseBtn" style="display:none">Ⅱ PAUSE</button>
 
-// ========== WEAPONS ==========
-const WEAPONS = [
-  { name:"Knife",   type:"melee", damage:14, range:70,  cooldown:18, color:"#ddd", unlock:1,  level:1 },
-  { name:"Sword",   type:"melee", damage:22, range:100, cooldown:26, color:"#ccc", unlock:1,  level:1 },
-  { name:"Bow",     type:"ranged",damage:18, range:280, cooldown:32, color:"#8b5", unlock:4,  level:1 },
-  { name:"Gun",     type:"ranged",damage:26, range:340, cooldown:22, color:"#555", unlock:8,  level:1 }
-];
-let currentWeaponIndex = 0;
-function getWeapon(){ return WEAPONS[currentWeaponIndex]; }
+<div id="upgrades">
+ <button id="speedUp">HORSE SPEED +</button>
+ <button id="staminaUp">HORSE STAMINA +</button>
+</div>
 
-// ========== STATE ==========
-let gameState = 'title';
-let level = 1;
-let score = 0;
-let btnSize = 64;
+<div id="controls">
+ <div class="group">
+  <button class="control" id="left">◀</button>
+  <button class="control" id="right">▶</button>
+ </div>
+ <div class="group">
+  <button class="control action" id="jump">⬆</button>
+  <button class="control action" id="boost">⚡</button>
+  <button class="control action" id="forward">GO</button>
+ </div>
+</div>
 
-const player = {
-  x:140, y:0, w:100, h:78,
-  vx:0, vy:0, speed:6.0, jumpPower:-15,
-  onGround:false, health:100, maxHealth:100,
-  attackCooldown:0, facing:1, invincible:0,
-  frame:0
+<div id="notice"></div>
+
+<div id="pause">
+ <h1>GAME PAUSED</h1>
+ <button id="resume">RESUME</button>
+ <button id="restart">RESTART LEVEL</button>
+</div>
+
+<div id="gameover">
+ <h1>CHALLENGE FAILED</h1>
+ <p>Try the level again!</p>
+ <button id="retry">REPLAY LEVEL</button>
+</div>
+
+<script type="importmap">
+{"imports":{
+"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+"three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+}}
+</script>
+
+<script type="module">
+import * as THREE from "three";
+import {GLTFLoader} from "three/addons/loaders/GLTFLoader.js";
+
+/* PASSWORD GATE */
+const PASSWORD="AHMAD2026";
+
+document.getElementById("enter").onclick=()=>{
+ const input=document.getElementById("password").value;
+ if(input===PASSWORD){
+  document.getElementById("intro").style.display="none";
+  startGame();
+ }else{
+  document.getElementById("error").textContent="Incorrect password. Try again.";
+ }
 };
 
-let enemies = [];
-let particles = [];
-let projectiles = [];
-let keys = {};
-let cameraX = 0;
-const groundY = () => H * 0.68;
-
-// ========== INPUT ==========
-const btnLeft=document.getElementById('btnLeft');
-const btnRight=document.getElementById('btnRight');
-const btnJump=document.getElementById('btnJump');
-const btnAttack=document.getElementById('btnAttack');
-
-function addBtn(el, key){
-  el.addEventListener('touchstart', e=>{e.preventDefault();keys[key]=true;el.classList.add('active');},{passive:false});
-  el.addEventListener('touchend', e=>{e.preventDefault();keys[key]=false;el.classList.remove('active');},{passive:false});
-  el.addEventListener('mousedown', ()=>{keys[key]=true;el.classList.add('active');});
-  el.addEventListener('mouseup', ()=>{keys[key]=false;el.classList.remove('active');});
-  el.addEventListener('mouseleave', ()=>{keys[key]=false;el.classList.remove('active');});
-}
-addBtn(btnLeft,'left'); addBtn(btnRight,'right'); addBtn(btnJump,'jump'); addBtn(btnAttack,'attack');
-
-document.getElementById('weaponBtn').addEventListener('touchstart', e=>{e.preventDefault();cycleWeapon();},{passive:false});
-document.getElementById('weaponBtn').addEventListener('mousedown', cycleWeapon);
-document.getElementById('upgradeBtn').addEventListener('touchstart', e=>{e.preventDefault();upgradeWeapon();},{passive:false});
-document.getElementById('upgradeBtn').addEventListener('mousedown', upgradeWeapon);
-
-document.getElementById('sizeUp').onclick = ()=>{ btnSize=Math.min(100,btnSize+6); applySize(); };
-document.getElementById('sizeDown').onclick = ()=>{ btnSize=Math.max(48,btnSize-6); applySize(); };
-function applySize(){
-  document.querySelectorAll('.ctrl-btn').forEach(b=>{
-    b.style.width=b.style.height=btnSize+'px';
-    b.style.fontSize=(btnSize*0.31)+'px';
-  });
-  document.getElementById('sizeValue').textContent=btnSize;
-}
-
-window.addEventListener('keydown', e=>{
-  if(['ArrowLeft','a','A'].includes(e.key)) keys.left=true;
-  if(['ArrowRight','d','D'].includes(e.key)) keys.right=true;
-  if(['ArrowUp','w','W',' '].includes(e.key)) keys.jump=true;
-  if(['x','X','j','J'].includes(e.key)) keys.attack=true;
-  if(e.key==='q'||e.key==='Q') cycleWeapon();
-  if(e.key==='e'||e.key==='E') upgradeWeapon();
-});
-window.addEventListener('keyup', e=>{
-  if(['ArrowLeft','a','A'].includes(e.key)) keys.left=false;
-  if(['ArrowRight','d','D'].includes(e.key)) keys.right=false;
-  if(['ArrowUp','w','W',' '].includes(e.key)) keys.jump=false;
-  if(['x','X','j','J'].includes(e.key)) keys.attack=false;
+document.getElementById("password").addEventListener("keydown",e=>{
+ if(e.key==="Enter")document.getElementById("enter").click();
 });
 
-// ========== WEAPON FUNCTIONS ==========
-function cycleWeapon(){
-  let next = currentWeaponIndex;
-  do{ next = (next+1)%WEAPONS.length; } while(WEAPONS[next].unlock > level && next !== currentWeaponIndex);
+/* 3D WORLD */
+const scene=new THREE.Scene();
+scene.background=new THREE.Color(0x86bfe0);
+scene.fog=new THREE.Fog(0x86bfe0,35,150);
+
+const camera=new THREE.PerspectiveCamera(65,innerWidth/innerHeight,.1,500);
+const renderer=new THREE.WebGLRenderer({antialias:true});
+renderer.setSize(innerWidth,innerHeight);
+renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));
+renderer.shadowMap.enabled=true;
+document.body.appendChild(renderer.domElement);
+
+scene.add(new THREE.HemisphereLight(0xffffff,0x40552b,2));
+
+const sun=new THREE.DirectionalLight(0xffffff,2);
+sun.position.set(-20,40,20);
+sun.castShadow=true;
+scene.add(sun);
+
+const ground=new THREE.Mesh(
+ new THREE.PlaneGeometry(300,400),
+ new THREE.MeshStandardMaterial({color:0x497b35})
+);
+ground.rotation.x=-Math.PI/2;
+ground.position.z=-150;
+ground.receiveShadow=true;
+scene.add(ground);
+
+const road=new THREE.Mesh(
+ new THREE.PlaneGeometry(12,400),
+ new THREE.MeshStandardMaterial({color:0xb69a70})
+);
+road.rotation.x=-Math.PI/2;
+road.position.set(0,.02,-150);
+scene.add(road);
+
+/* TREES */
+function tree(x,z){
+ const g=new THREE.Group();
+ const trunk=new THREE.Mesh(
+  new THREE.CylinderGeometry(.25,.4,3,8),
+  new THREE.MeshStandardMaterial({color:0x68421f})
+ );
+ trunk.position.y=1.5;
+ g.add(trunk);
+ const leaves=new THREE.Mesh(
+  new THREE.ConeGeometry(2,5,8),
+  new THREE.MeshStandardMaterial({color:0x20562c})
+ );
+ leaves.position.y=5;
+ g.add(leaves);
+ g.position.set(x,0,z);
+ scene.add(g);
+}
+for(let z=-10;z>-400;z-=12){
+ tree(-13,z);tree(13,z-5);
+}
+
+/* RIDER AND HORSE */
+const player=new THREE.Group();
+scene.add(player);
+player.position.set(0,0,5);
+
+const loader=new GLTFLoader();
+let horseMixer=null;
+
+function fallbackHorse(){
+ const g=new THREE.Group();
+ const brown=new THREE.MeshStandardMaterial({color:0x744323});
+ const dark=new THREE.MeshStandardMaterial({color:0x26190f});
+
+ function box(w,h,d,x,y,z,mat){
+  const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat);
+  m.position.set(x,y,z);m.castShadow=true;g.add(m);
+  return m;
+ }
+ box(1.2,1.1,2.2,0,1.5,0,brown);
+ box(.7,1.4,.7,0,2,-.9,brown);
+ box(.6,.6,.8,0,2.7,-1.2,brown);
+ for(const x of [-.4,.4]){
+  for(const z of [-.8,.8]){
+   box(.22,1.2,.22,x,.6,z,dark);
+  }
+ }
+ box(.15,.9,.15,0,1.6,1.3,dark);
+ return g;
+}
+
+function fallbackRider(){
+ const g=new THREE.Group();
+ const blue=new THREE.MeshStandardMaterial({color:0x173d69});
+ const gold=new THREE.MeshStandardMaterial({color:0xe3b64e});
+ const skin=new THREE.MeshStandardMaterial({color:0xb98055});
+
+ const body=new THREE.Mesh(new THREE.BoxGeometry(.7,.9,.5),blue);
+ body.position.y=3;g.add(body);
+
+ const head=new THREE.Mesh(new THREE.SphereGeometry(.25,16,16),skin);
+ head.position.y=3.7;g.add(head);
+
+ const helmet=new THREE.Mesh(new THREE.SphereGeometry(.29,16,12),gold);
+ helmet.position.y=3.85;g.add(helmet);
+ return g;
+}
+
+const horseGroup=fallbackHorse();
+const riderGroup=fallbackRider();
+player.add(horseGroup,riderGroup);
+
+loader.load(
+ "https://threejs.org/examples/models/gltf/Horse.glb",
+ gltf=>{
+  player.remove(horseGroup);
+  const model=gltf.scene;
+  model.scale.set(1.2,1.2,1.2);
+  model.rotation.y=Math.PI;
+  model.traverse(o=>{if(o.isMesh)o.castShadow=true});
+  player.add(model);
+  if(gltf.animations.length){
+   horseMixer=new THREE.AnimationMixer(model);
+   horseMixer.clipAction(gltf.animations[0]).play();
+  }
+ },
+ undefined,()=>{}
+);
+
+/* COURSE */
+let coins=[];
+let obstacles=[];
+let level=1;
+let coinCount=0;
+let stamina=100;
+let speedUpgrade=0;
+let staminaUpgrade=0;
+let speed=0;
+let elapsed=0;
+let jumping=false;
+let jumpTime=0;
+let playing=false;
+let paused=false;
+
+function buildCourse(){
+ coins.forEach(o=>scene.remove(o));
+ obstacles.forEach(o=>scene.remove(o));
+ coins=[];obstacles=[];
+
+ const coinMat=new THREE.MeshStandardMaterial({
+  color:0xffd52f,metalness:.7,roughness:.25
+ });
+
+ for(let i=0;i<15+level*3;i++){
+  const c=new THREE.Mesh(
+   new THREE.TorusGeometry(.4,.12,10,20),coinMat
+  );
+  c.position.set((Math.random()-.5)*7,1.5,-20-i*8);
+  c.userData.taken=false;
+  scene.add(c);coins.push(c);
+ }
+
+ for(let i=0;i<level+3;i++){
+  const o=new THREE.Mesh(
+   new THREE.BoxGeometry(2,1,1),
+   new THREE.MeshStandardMaterial({color:0x81502b})
+  );
+  o.position.set(i%2===0?3:-3,.5,-35-i*20);
+  o.userData.hit=false;
+  scene.add(o);obstacles.push(o);
+ }
+}
+buildCourse();
+
+/* CONTROLS */
+let go=false,left=false,right=false,boost=false;
+
+function hold(id,fn){
+ const el=document.getElementById(id);
+ el.addEventListener("pointerdown",e=>{
+  e.preventDefault();fn(true);
+ });
+ ["pointerup","pointercancel","pointerleave"].forEach(ev=>{
+  el.addEventListener(ev,e=>{e.preventDefault();fn(false)});
+ });
+}
+hold("forward",v=>go=v);
+hold("left",v=>left=v);
+hold("right",v=>right=v);
+hold("boost",v=>boost=v);
+
+document.getElementById("jump").onclick=()=>{
+ if(!jumping){jumping=true;jumpTime=0}
+};
+
+const keys={};
+addEventListener("keydown",e=>{
+ keys[e.key.toLowerCase()]=true;
+ if(e.key===" "&&!jumping){jumping=true;jumpTime=0}
+});
+addEventListener("keyup",e=>keys[e.key.toLowerCase()]=false);
+
+/* GAME UI */
+function message(t){
+ const n=document.getElementById("notice");
+ n.textContent=t;n.style.display="block";
+ setTimeout(()=>n.style.display="none",1800);
+}
+
+function hud(){
+ document.getElementById("level").textContent=level;
+ document.getElementById("coins").textContent=coinCount;
+ document.getElementById("stamina").textContent=Math.round(stamina);
+ document.getElementById("speed").textContent=Math.round(speed);
+}
+
+function startGame(){
+ playing=true;
+ document.getElementById("hud").style.display="block";
+ document.getElementById("controls").style.display="flex";
+ document.getElementById("pauseBtn").style.display="block";
+ document.getElementById("upgrades").style.display="block";
+ message("Welcome, rider! Complete the course!");
+}
+
+/* UPGRADES */
+document.getElementById("speedUp").onclick=()=>{
+ if(coinCount>=20){
+  coinCount-=20;speedUpgrade++;
+  message("Horse speed increased!");
+ }else message("You need 20 coins!");
+ hud();
+};
+
+document.getElementById("staminaUp").onclick=()=>{
+ if(coinCount>=15){
+  coinCount-=15;staminaUpgrade++;
+  stamina=Math.min(100+staminaUpgrade*15,stamina+25);
+  message("Horse stamina increased!");
+ }else message("You need 15 coins!");
+ hud();
+};
+
+/* LEVELS */
+function nextLevel(){
+ paused=true;
+ message("LEVEL COMPLETED!");
+ setTimeout(()=>{
+  level++;
+  player.position.set(0,0,5);
+  player.rotation.y=0;
+  stamina=100+staminaUpgrade*15;
+  elapsed=0;
+  speed=0;
+  buildCourse();
+  paused=false;
+  message("LEVEL "+level+" UNLOCKED!");
+  hud();
+ },1800);
+}
+
+/* PAUSE AND REPLAY */
+function pause(){
+ paused=true;
+ document.getElementById("pause").style.display="flex";
+}
+function resume(){
+ paused=false;
+ document.getElementById("pause").style.display="none";
+}
+document.getElementById("pauseBtn").onclick=pause;
+document.getElementById("resume").onclick=resume;
+
+function restart(){
+ player.position.set(0,0,5);
+ player.rotation.y=0;
+ stamina=100+staminaUpgrade*15;
+ speed=0;elapsed=0;
+ buildCourse();resume();
+}
+document.getElementById("restart").onclick=restart;
+document.getElementById("retry").onclick=()=>{
+ document.getElementById("gameover").style.display="none";
+ restart();
+};
+
+/* UPDATE */
+const clock=new THREE.Clock();
+
+function update(dt){
+ if(!playing||paused)return;
+
+ elapsed+=dt;
+
+ const moving=go||keys["w"]||keys["arrowup"];
+ const turnLeft=left||keys["a"]||keys["arrowleft"];
+ const turnRight=right||keys["d"]||keys["arrowright"];
+ const boosting=boost||keys["shift"];
+
+ const maxSpeed=12+speedUpgrade*2;
+ if(moving){
+  speed=THREE.MathUtils.lerp(speed,maxSpeed,dt*2);
+ }else{
+  speed=THREE.MathUtils.lerp(speed,0,dt*3);
+ }
+
+ if(boosting&&moving&&stamina>0){
+  speed=maxSpeed*1.7;
+  stamina=Math.max(0,stamina-20*dt);
+ }else{
+  stamina=Math.min(100+staminaUpgrade*15,stamina+7*dt);
+ }
+
+ if(moving)player.position.z-=speed*dt;
+ if(turnLeft)player.position.x-=7*dt;
+ if(turnRight)player.position.x+=7*dt;
+
+ player.position.x=THREE.MathUtils.clamp(player.position.x,-5,5);
+
+ player.rotation.y=turnLeft?.2:turnRight?-.2:0;
+
+ if(jumping){
+  jumpTime+=dt;
+  player.position.y=Math.sin(Math.min(jumpTime/.8,1)*Math.PI)*2.3;
+  if(jumpTime>=.8){
+   jumping=false;player.position.y=0;
+  }
+ }
+
+ if(horseMixer)horseMixer.update(dt);
+
+ for(const c of coins){
+  c.rotation.y+=dt*2;
+  if(!c.userData.taken&&player.position.distanceTo(c.position)<2){
+   c.userData.taken=true;c.visible=false;
+   coinCount++;hud();
+  }
+ }
+
+ for(const o of obstacles){
+  if(!o.userData.hit&&
+     Math.abs(player.position.x-o.position.x)<1.5&&
+     Math.abs(player.position.z-o.position.z)<1.5&&
+     player.position.y<.8){
+   o.userData.hit=true;
+   stamina=Math.max(0,stamina-25);
+   player.position.z+=3;
+   message("Obstacle! Jump over it next time.");
+  }
+ }
+
+ if(stamina<=0){
+  speed=Math.min(speed,4);
+ }
+
+ if(player.position.z<-(120+level*20)){
+  nextLevel();
+ }
+
+ camera.position.lerp(
+  new THREE.Vector3(player.position.x,6,player.position.z+12),
+  dt*4
+ );
+ camera.lookAt(player.position.x,2,player.position.z-5);
+
+ hud();
+}
+
+/* RENDER */
+camera.position.set(0,6,17);
+camera.lookAt(0,2,0);
+
+function animate(){
+ requestAnimationFrame(animate);
+ const dt=Math.min(clock.getDelta(),.04);
+ update(dt);
+ renderer.render(scene,camera);
+}
+animate();
+
+addEventListener("resize",()=>{
+ camera.aspect=innerWidth/innerHeight;
+ camera.updateProjectionMatrix();
+ renderer.setSize(innerWidth,innerHeight);
+});
+</script>
+</body>
+</html>aponIndex);
   currentWeaponIndex = next;
   updateWeaponUI();
 }
