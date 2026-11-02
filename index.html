@@ -2,950 +2,1188 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Ultimate Bus Simulator</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#063c32">
+
+<title>Al-Noor | Islamic Learning Centre</title>
 
 <style>
 * {
-    box-sizing: border-box;
     margin: 0;
     padding: 0;
-    user-select: none;
-    -webkit-user-select: none;
+    box-sizing: border-box;
 }
 
-html, body {
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    background: #111;
-    font-family: Arial, sans-serif;
+body {
+    font-family: Georgia, serif;
+    background: #f3f7f3;
+    color: #18372d;
 }
 
-#game {
-    width: 100%;
-    height: 100dvh;
-    position: relative;
-    overflow: hidden;
+header {
+    background: linear-gradient(135deg,#032f26,#08765b);
+    color: white;
+    text-align: center;
+    padding: 30px 15px;
 }
 
-#world {
-    position: absolute;
-    inset: 0;
+header h1 {
+    font-size: 32px;
+    margin-bottom: 10px;
 }
 
-canvas {
+header p {
+    color: #d6eee3;
+}
+
+nav {
+    background: #052c24;
+    display: flex;
+    overflow-x: auto;
+    padding: 10px;
+    gap: 8px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+nav button {
+    flex-shrink: 0;
+    padding: 12px 17px;
+    background: #126b53;
+    border: none;
+    color: white;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+nav button:hover {
+    background: #d6b65c;
+    color: #153c30;
+}
+
+.container {
+    max-width: 1100px;
+    margin: auto;
+    padding: 18px;
+}
+
+.page {
+    display: none;
+}
+
+.page.active {
     display: block;
 }
 
-/* TOP INFORMATION */
-#hud {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    right: 10px;
-    display: flex;
-    justify-content: space-between;
-    gap: 8px;
-    z-index: 10;
-    pointer-events: none;
-}
-
-.info {
-    background: rgba(0,0,0,.78);
+.hero {
+    background: linear-gradient(135deg,#075b43,#0a8a68);
     color: white;
-    padding: 9px 13px;
-    border-radius: 9px;
-    font-size: clamp(11px, 2vw, 15px);
-    border: 1px solid #82909b;
-}
-
-/* DRIVING CONTROLS */
-#controls {
-    position: absolute;
-
-    /* Controls are raised above the bottom of the screen */
-    top: 57%;
-    bottom: auto;
-    transform: translateY(-50%);
-
-    left: 0;
-    right: 0;
-    padding: 0 14px;
-
-    display: none;
-    justify-content: space-between;
-    align-items: center;
-
-    z-index: 30;
-    pointer-events: none;
-}
-
-.control-group {
-    display: flex;
-    align-items: center;
-    gap: clamp(5px, 1.5vw, 13px);
-    pointer-events: auto;
-}
-
-button {
-    cursor: pointer;
-    touch-action: none;
-    -webkit-tap-highlight-color: transparent;
-}
-
-.drive-btn {
-    width: clamp(52px, 10vw, 76px);
-    height: clamp(52px, 10vw, 76px);
-    border-radius: 50%;
-    border: 3px solid white;
-    background: rgba(17, 43, 65, .94);
-    color: white;
-    font-weight: bold;
-    font-size: clamp(11px, 2vw, 16px);
-    box-shadow: 0 4px 10px #000;
-}
-
-.drive-btn:active {
-    background: #168cdb;
-    transform: scale(.94);
-}
-
-.pedal {
-    width: clamp(55px, 10vw, 78px);
-    height: clamp(75px, 15vw, 105px);
-    border-radius: 13px;
-    border: 3px solid white;
-    color: white;
-    font-weight: bold;
-    background: rgba(20, 55, 76, .95);
-    box-shadow: 0 4px 10px #000;
-}
-
-#accelerator {
-    background: rgba(0, 125, 70, .95);
-}
-
-#brake {
-    background: rgba(170, 35, 35, .95);
-}
-
-/* GEAR AND CAMERA BUTTONS */
-#topButtons {
-    position: absolute;
-    top: 62px;
-    right: 12px;
-    display: none;
-    gap: 7px;
-    z-index: 40;
-}
-
-.small-btn {
-    background: #142638;
-    color: white;
-    border: 2px solid white;
-    border-radius: 8px;
-    padding: 10px 12px;
-    font-weight: bold;
-    font-size: 12px;
-}
-
-#gearBox {
-    position: absolute;
-    top: 62px;
-    left: 12px;
-    display: none;
-    gap: 5px;
-    z-index: 40;
-}
-
-.gear-btn {
-    width: 39px;
-    height: 39px;
-    border-radius: 7px;
-    border: 2px solid white;
-    color: white;
-    background: #25394b;
-    font-weight: bold;
-}
-
-.gear-btn.active {
-    background: #e49b19;
-    color: black;
-}
-
-/* PICKUP BUTTON */
-#pickup {
-    position: absolute;
-    left: 50%;
-    top: 43%;
-    transform: translate(-50%, -50%);
-    display: none;
-    background: #e99c18;
-    color: black;
-    padding: 14px 22px;
-    border: 3px solid white;
-    border-radius: 12px;
-    font-weight: bold;
-    font-size: 15px;
-    z-index: 50;
-}
-
-/* GARAGE */
-#garage {
-    position: absolute;
-    inset: 0;
-    z-index: 100;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: linear-gradient(135deg, #071a2d, #123d59, #07131e);
-    color: white;
+    padding: 35px 20px;
+    border-radius: 16px;
     text-align: center;
-    padding: 15px;
+    margin-bottom: 20px;
 }
 
-.panel {
-    width: min(520px, 95%);
-    max-height: 92%;
-    overflow-y: auto;
-    background: rgba(0,0,0,.72);
-    border: 2px solid #d69b36;
-    border-radius: 18px;
-    padding: 20px;
+.hero h2 {
+    font-size: 27px;
+    margin-bottom: 12px;
 }
 
-.panel h1 {
-    color: #f6c65d;
-    margin-bottom: 7px;
-    font-size: clamp(23px, 5vw, 35px);
+.card {
+    background: white;
+    padding: 22px;
+    border-radius: 14px;
+    margin-bottom: 18px;
+    box-shadow: 0 3px 12px #0000000d;
+    border: 1px solid #e1eae3;
 }
 
-.panel p {
-    color: #ddd;
-    margin: 8px 0 15px;
+.card h2 {
+    color: #087153;
+    margin-bottom: 15px;
 }
 
-.destination {
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(140px,1fr));
+    gap: 14px;
+}
+
+.feature {
+    background: white;
+    border: 1px solid #dbe8df;
+    padding: 22px 12px;
+    text-align: center;
+    border-radius: 13px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.feature span {
+    display: block;
+    font-size: 35px;
+    margin-bottom: 10px;
+}
+
+button, select, input {
+    font-family: inherit;
+}
+
+.action {
+    background: #087153;
+    color: white;
+    border: none;
+    padding: 12px 18px;
+    border-radius: 8px;
+    margin: 5px 3px;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.action.secondary {
+    background: #d3aa42;
+    color: #153a2d;
+}
+
+select, input {
     width: 100%;
     padding: 13px;
-    margin: 5px 0;
-    border-radius: 9px;
-    border: 2px solid #8c9aa6;
-    background: #193a52;
-    color: white;
-    font-weight: bold;
+    border: 1px solid #b8cbbd;
+    border-radius: 8px;
+    margin: 9px 0;
+    background: white;
     font-size: 15px;
 }
 
-.destination.selected {
-    background: #b17a18;
-    border-color: white;
-    color: black;
-}
-
-#startButton {
-    width: 100%;
-    padding: 15px;
-    background: #e6a72e;
-    border: none;
-    border-radius: 10px;
+label {
+    display: block;
     margin-top: 12px;
-    font-size: 18px;
     font-weight: bold;
-    color: black;
 }
 
-#missionText {
-    color: #ffdc8b;
-    font-weight: bold;
-    margin: 8px;
-}
-
-#message {
-    position: absolute;
-    left: 50%;
-    top: 24%;
-    transform: translateX(-50%);
-    background: rgba(0,0,0,.85);
-    color: white;
-    padding: 12px 18px;
-    border-radius: 10px;
-    display: none;
-    z-index: 60;
+.arabic {
+    direction: rtl;
     text-align: center;
-    max-width: 85%;
+    font-size: 29px;
+    line-height: 2.1;
+    color: #123f30;
+    padding: 15px 5px;
 }
 
-@media (orientation: portrait) {
-    #game::after {
-        content: "ROTATE YOUR PHONE TO LANDSCAPE";
-        position: absolute;
-        inset: 0;
-        z-index: 200;
-        background: #071a2d;
-        color: white;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        font-size: 22px;
-        font-weight: bold;
-        padding: 25px;
-    }
+.verse {
+    border-bottom: 1px solid #e2e9e3;
+    padding: 15px 5px;
+}
+
+.verse-number {
+    color: #b38a2c;
+    font-size: 14px;
+}
+
+.small {
+    font-size: 14px;
+    color: #687d70;
+}
+
+#counter {
+    font-size: 75px;
+    font-weight: bold;
+    color: #087153;
+    text-align: center;
+    margin: 25px 0;
+}
+
+.counter-button {
+    width: 190px;
+    height: 190px;
+    border-radius: 50%;
+    display: block;
+    margin: 20px auto;
+    background: linear-gradient(135deg,#075b43,#0a936d);
+    color: white;
+    border: 8px solid #d6b65c;
+    font-size: 27px;
+    box-shadow: 0 5px 15px #0002;
+    touch-action: manipulation;
+}
+
+.compass {
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    border: 9px solid #d5b44f;
+    margin: 25px auto;
+    background: #eaf5ed;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 65px;
+}
+
+#qiblaArrow {
+    display: inline-block;
+    color: #087153;
+    transform: rotate(0deg);
+    transition: transform .3s;
+}
+
+footer {
+    background: #052c24;
+    color: white;
+    padding: 25px;
+    text-align: center;
+    margin-top: 35px;
+}
+
+.status {
+    background: #e6f4eb;
+    padding: 12px;
+    border-radius: 8px;
+    margin-top: 12px;
+}
+
+.dua {
+    border-left: 4px solid #d6b65c;
+    padding: 15px;
+    margin: 15px 0;
+    background: #f5f8f4;
+    border-radius: 8px;
+}
+
+@media(max-width:600px) {
+    header h1 {font-size: 26px;}
+    .arabic {font-size: 25px;}
+    .container {padding: 12px;}
+    .counter-button {width: 175px;height:175px;}
 }
 </style>
 </head>
 
 <body>
 
-<div id="game">
+<header>
+    <h1>☪ AL-NOOR</h1>
+    <p>Islamic Learning & Qur'an Companion</p>
+    <p style="margin-top:15px;font-size:24px">
+        بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
+    </p>
+</header>
 
-    <div id="world"></div>
+<nav>
+    <button onclick="showPage('home')">Home</button>
+    <button onclick="showPage('quran')">Al-Qur'an</button>
+    <button onclick="showPage('mudarasah')">Mudarasah</button>
+    <button onclick="showPage('qibla')">Qibla</button>
+    <button onclick="showPage('dua')">Du'a</button>
+    <button onclick="showPage('tasbih')">Tasbih</button>
+</nav>
 
-    <div id="hud">
-        <div class="info">💰 ₦<span id="money">0</span></div>
-        <div class="info">MISSION <span id="level">1</span></div>
-        <div class="info">SPEED <span id="speed">0</span> km/h</div>
-        <div class="info">PASSENGERS <span id="passengers">0</span></div>
-    </div>
+<div class="container">
 
-    <div id="gearBox">
-        <button class="gear-btn active" onclick="changeGear('P')">P</button>
-        <button class="gear-btn" onclick="changeGear('R')">R</button>
-        <button class="gear-btn" onclick="changeGear('N')">N</button>
-        <button class="gear-btn" onclick="changeGear('D')">D</button>
-    </div>
+<!-- HOME -->
 
-    <div id="topButtons">
-        <button class="small-btn" onclick="changeCamera()">CAMERA</button>
-        <button class="small-btn" onclick="pauseGame()">PAUSE</button>
-    </div>
+<section id="home" class="page active">
 
-    <div id="controls">
+<div class="hero">
+    <h2>Welcome to Al-Noor</h2>
+    <p>Your digital Islamic learning companion.</p>
+    <p class="arabic" style="color:white">
+        وَقُل رَّبِّ زِدْنِي عِلْمًا
+    </p>
+    <p>And say: My Lord, increase me in knowledge.</p>
+</div>
 
-        <div class="control-group">
-            <button class="drive-btn" id="left">◀</button>
-            <button class="drive-btn" id="right">▶</button>
-        </div>
+<div class="grid">
 
-        <div class="control-group">
-            <button class="drive-btn" id="brake">BRAKE</button>
-            <button class="drive-btn" id="accelerator">DRIVE</button>
-        </div>
+<div class="feature" onclick="showPage('quran')">
+    <span>📖</span>
+    Holy Qur'an
+</div>
 
-    </div>
+<div class="feature" onclick="showPage('mudarasah')">
+    <span>📚</span>
+    Qur'an Mudarasah
+</div>
 
-    <button id="pickup" onclick="collectPassengers()">
-        PICK UP PASSENGERS
+<div class="feature" onclick="showPage('qibla')">
+    <span>🕋</span>
+    Qibla Finder
+</div>
+
+<div class="feature" onclick="showPage('dua')">
+    <span>🤲</span>
+    Du'a Collection
+</div>
+
+<div class="feature" onclick="showPage('tasbih')">
+    <span>📿</span>
+    Digital Tasbih
+</div>
+
+</div>
+
+<div class="card" style="margin-top:20px">
+    <h2>About Al-Noor</h2>
+    <p>
+    Al-Noor is an Islamic educational platform designed
+    to help Muslims read the Holy Qur'an, practise
+    recitation, learn supplications, find the Qibla
+    direction and remember Allah through Dhikr.
+    </p>
+</div>
+
+</section>
+
+
+<!-- QURAN -->
+
+<section id="quran" class="page">
+
+<div class="card">
+    <h2>📖 The Holy Qur'an</h2>
+    <p>Select the Surah you wish to read.</p>
+
+    <label>Select Surah</label>
+    <select id="surahSelect">
+        <option>Loading Surahs...</option>
+    </select>
+
+    <button class="action" onclick="loadSurah()">
+        Open Surah
     </button>
 
-    <div id="message"></div>
+    <div id="quranInfo"></div>
+</div>
 
-    <div id="garage">
-        <div class="panel">
-            <h1>ULTIMATE BUS SIMULATOR</h1>
-            <p>Welcome to your bus driving career.</p>
+<div class="card">
+    <h2>📜 Qur'an Reading</h2>
+    <div id="quranContent">
+        Select a Surah to begin reading.
+    </div>
+</div>
 
-            <h3>SELECT YOUR DESTINATION</h3>
+</section>
 
-            <button class="destination selected" onclick="selectDestination('City', this)">
-                🏙️ CITY ROUTE
-            </button>
 
-            <button class="destination" onclick="selectDestination('Desert', this)">
-                🏜️ DESERT ROUTE
-            </button>
+<!-- MUDARASAH -->
 
-            <button class="destination" onclick="selectDestination('Village', this)">
-                🌳 VILLAGE ROUTE
-            </button>
+<section id="mudarasah" class="page">
 
-            <button class="destination" onclick="selectDestination('Highway', this)">
-                🛣️ HIGHWAY ROUTE
-            </button>
+<div class="hero">
+    <h2>📚 Qur'an Mudarasah</h2>
+    <p>Practise your Qur'an recitation.</p>
+</div>
 
-            <div id="missionText">MISSION 1: Collect passengers.</div>
+<div class="card">
 
-            <button id="startButton" onclick="startGame()">
-                START DRIVING
-            </button>
-        </div>
+    <h2>Choose Your Reading</h2>
+
+    <label>Reading Type</label>
+
+    <select id="readingType" onchange="changeReadingType()">
+        <option value="surah">Select Surah</option>
+        <option value="juz">Select Juz</option>
+    </select>
+
+    <div id="surahChoice">
+        <label>Choose Surah</label>
+        <select id="mudarasahSurah"></select>
+    </div>
+
+    <div id="juzChoice" style="display:none">
+        <label>Choose Juz</label>
+        <select id="juzSelect">
+        </select>
+    </div>
+
+    <label>Number of verses to practise</label>
+    <input type="number" id="verseCount" value="2" min="1">
+
+    <button class="action" onclick="startMudarasah()">
+        Start Mudarasah
+    </button>
+
+</div>
+
+<div class="card">
+
+    <h2>Reading Practice</h2>
+
+    <div id="practiceText" class="arabic">
+        Your selected Qur'an verses will appear here.
+    </div>
+
+    <button class="action" onclick="playPracticeAudio()">
+        ▶ Listen to Recitation
+    </button>
+
+    <button class="action secondary" onclick="startSpeech()">
+        🎤 Start My Recitation
+    </button>
+
+    <button class="action" onclick="stopSpeech()">
+        Stop Recording
+    </button>
+
+    <div id="speechResult" class="status">
+        Your recitation feedback will appear here.
+    </div>
+
+    <p class="small">
+    Note: Speech recognition is experimental. It may not
+    recognise Arabic correctly, and cannot reliably detect
+    all Tajweed or pronunciation mistakes. Ask a qualified
+    Qur'an teacher to check your recitation.
+    </p>
+
+</div>
+
+</section>
+
+
+<!-- QIBLA -->
+
+<section id="qibla" class="page">
+
+<div class="hero">
+    <h2>🕋 Qibla Finder</h2>
+    <p>Find the direction of the Holy Ka'abah.</p>
+</div>
+
+<div class="card">
+
+    <h2>Qibla Compass</h2>
+
+    <div class="compass">
+        <span id="qiblaArrow">⬆</span>
+    </div>
+
+    <div style="text-align:center">
+        <h2 id="qiblaDegree">--°</h2>
+        <p id="qiblaStatus">Location not yet detected.</p>
+    </div>
+
+    <button class="action" onclick="findQibla()">
+        Find My Qibla
+    </button>
+
+    <button class="action secondary" onclick="enableCompass()">
+        Enable Compass
+    </button>
+
+    <div class="status">
+        The Qibla direction is calculated from your
+        location towards the Ka'abah in Makkah.
+        Keep your device level and calibrate its compass.
     </div>
 
 </div>
 
-<script type="module">
-import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js";
+</section>
 
-const world = document.getElementById("world");
 
-const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x8ac7ec);
-scene.fog = new THREE.Fog(0x8ac7ec, 80, 400);
+<!-- DUA -->
 
-const camera = new THREE.PerspectiveCamera(
-    65,
-    window.innerWidth / window.innerHeight,
-    0.1,
-    1000
-);
+<section id="dua" class="page">
 
-camera.position.set(0, 7, 13);
+<div class="hero">
+    <h2>🤲 Du'a Collection</h2>
+    <p>Remember Allah in your daily life.</p>
+</div>
 
-const renderer = new THREE.WebGLRenderer({antialias:true});
-renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-renderer.shadowMap.enabled = true;
-world.appendChild(renderer.domElement);
+<div class="card">
 
-/* LIGHTING */
+<h2>Daily Supplications</h2>
 
-scene.add(new THREE.HemisphereLight(0xffffff, 0x536b45, 2));
+<div class="dua">
+<h3>1. Du'a Before Eating</h3>
+<div class="arabic">بِسْمِ اللَّهِ</div>
+<p>Transliteration: Bismillah.</p>
+<p>Meaning: In the name of Allah.</p>
+</div>
 
-const sunlight = new THREE.DirectionalLight(0xffffff, 2);
-sunlight.position.set(-20, 40, 20);
-sunlight.castShadow = true;
-scene.add(sunlight);
+<div class="dua">
+<h3>2. Du'a After Eating</h3>
+<div class="arabic">
+الْحَمْدُ لِلَّهِ الَّذِي أَطْعَمَنِي هَذَا وَرَزَقَنِيهِ مِنْ غَيْرِ حَوْلٍ مِنِّي وَلَا قُوَّةٍ
+</div>
+<p>Meaning: Praise be to Allah who fed me this and provided it for me without any power or strength from me.</p>
+</div>
 
-/* MATERIALS */
+<div class="dua">
+<h3>3. Du'a for Knowledge</h3>
+<div class="arabic">
+رَبِّ زِدْنِي عِلْمًا
+</div>
+<p>Transliteration: Rabbi zidni ilma.</p>
+<p>Meaning: My Lord, increase me in knowledge.</p>
+</div>
 
-function material(color, roughness=0.8) {
-    return new THREE.MeshStandardMaterial({color, roughness});
-}
+<div class="dua">
+<h3>4. Du'a for Forgiveness</h3>
+<div class="arabic">
+رَبَّنَا ظَلَمْنَا أَنْفُسَنَا وَإِنْ لَمْ تَغْفِرْ لَنَا وَتَرْحَمْنَا لَنَكُونَنَّ مِنَ الْخَاسِرِينَ
+</div>
+<p>Meaning: Our Lord, we have wronged ourselves, and if You do not forgive us and have mercy upon us, we will surely be among the losers.</p>
+</div>
 
-const grassMat = material(0x478b40);
-const roadMat = material(0x303438);
-const whiteMat = material(0xffffff);
-const busMat = material(0xd51d1d);
-const glassMat = new THREE.MeshStandardMaterial({
-    color:0x8bd4e9,
-    roughness:0.2,
-    metalness:0.2
-});
+<div class="dua">
+<h3>5. Du'a Before Sleeping</h3>
+<div class="arabic">
+بِاسْمِكَ اللَّهُمَّ أَمُوتُ وَأَحْيَا
+</div>
+<p>Meaning: In Your name, O Allah, I die and I live.</p>
+</div>
 
-/* WORLD */
+</div>
+</section>
 
-const ground = new THREE.Mesh(
-    new THREE.PlaneGeometry(500, 500),
-    grassMat
-);
-ground.rotation.x = -Math.PI/2;
-ground.position.y = -0.15;
-ground.receiveShadow = true;
-scene.add(ground);
 
-const road = new THREE.Mesh(
-    new THREE.PlaneGeometry(14, 500),
-    roadMat
-);
-road.rotation.x = -Math.PI/2;
-road.position.y = 0;
-scene.add(road);
+<!-- TASBIH -->
 
-for(let z=-240; z<250; z+=12) {
-    const line = new THREE.Mesh(
-        new THREE.BoxGeometry(0.18, 0.03, 5),
-        whiteMat
-    );
-    line.position.set(0,0.04,z);
-    scene.add(line);
-}
+<section id="tasbih" class="page">
 
-/* BUS */
+<div class="hero">
+    <h2>📿 Digital Tasbih Counter</h2>
+    <p>Remember Allah wherever you are.</p>
+</div>
 
-const bus = new THREE.Group();
-scene.add(bus);
+<div class="card" style="text-align:center">
 
-const body = new THREE.Mesh(
-    new THREE.BoxGeometry(3.5, 3.2, 9),
-    busMat
-);
-body.position.y = 2;
-body.castShadow = true;
-bus.add(body);
+    <h2 id="dhikrName">سُبْحَانَ اللَّهِ</h2>
 
-const roof = new THREE.Mesh(
-    new THREE.BoxGeometry(3.55, 0.25, 9.05),
-    material(0xeeeeee)
-);
-roof.position.y = 3.7;
-bus.add(roof);
+    <label>Select Dhikr</label>
 
-/* WINDOWS */
+    <select id="dhikrSelect" onchange="changeDhikr()">
+        <option value="سُبْحَانَ اللَّهِ">SubhanAllah</option>
+        <option value="الْحَمْدُ لِلَّهِ">Alhamdulillah</option>
+        <option value="اللَّهُ أَكْبَرُ">Allahu Akbar</option>
+        <option value="أَسْتَغْفِرُ اللَّهَ">Astaghfirullah</option>
+        <option value="لَا إِلَٰهَ إِلَّا اللَّهُ">La ilaha illallah</option>
+        <option value="لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللَّهِ">La hawla wa la quwwata illa billah</option>
+    </select>
 
-for(let z=-3.3; z<=3.3; z+=1.5) {
-    for(const side of [-1,1]) {
-        const windowMesh = new THREE.Mesh(
-            new THREE.BoxGeometry(0.06, 1.2, 1.15),
-            glassMat
-        );
-        windowMesh.position.set(side*1.77, 2.6, z);
-        bus.add(windowMesh);
-    }
-}
+    <label>Target Count</label>
+    <select id="target">
+        <option value="33">33</option>
+        <option value="99">99</option>
+        <option value="100">100</option>
+        <option value="1000">1000</option>
+    </select>
 
-const frontGlass = new THREE.Mesh(
-    new THREE.BoxGeometry(2.8, 1.2, 0.06),
-    glassMat
-);
-frontGlass.position.set(0, 2.65, -4.53);
-bus.add(frontGlass);
+    <div id="counter">0</div>
 
-/* WHEELS */
+    <button class="counter-button" onclick="countTasbih()">
+        TAP
+    </button>
 
-const wheels = [];
+    <p id="counterStatus">Keep remembering Allah.</p>
 
-for(const x of [-1.8,1.8]) {
-    for(const z of [-3,3]) {
-        const wheel = new THREE.Mesh(
-            new THREE.CylinderGeometry(0.65,0.65,0.35,24),
-            material(0x171717)
-        );
-        wheel.rotation.z = Math.PI/2;
-        wheel.position.set(x,0.7,z);
-        bus.add(wheel);
-        wheels.push(wheel);
-    }
-}
+    <button class="action" onclick="resetCounter()">
+        Reset Counter
+    </button>
 
-bus.position.set(0,0,0);
+    <button class="action secondary" onclick="undoCounter()">
+        Undo
+    </button>
 
-/* SCENERY */
+    <label>
+        <input type="checkbox" id="vibration" style="width:auto">
+        Enable vibration
+    </label>
 
-function createBuilding(x,z,color) {
-    const h = 5 + Math.random()*12;
+</div>
 
-    const building = new THREE.Mesh(
-        new THREE.BoxGeometry(5,h,6),
-        material(color)
-    );
+</section>
 
-    building.position.set(x,h/2,z);
-    scene.add(building);
+</div>
 
-    for(let y=2; y<h-1; y+=2.5) {
-        for(let side=-1; side<=1; side+=2) {
-            const w = new THREE.Mesh(
-                new THREE.BoxGeometry(0.08,0.9,0.9),
-                glassMat
-            );
-            w.position.set(x+side*2.52,y,z);
-            scene.add(w);
-        }
-    }
-}
 
-function createTree(x,z) {
-    const trunk = new THREE.Mesh(
-        new THREE.CylinderGeometry(0.25,0.4,2.5,8),
-        material(0x71421e)
-    );
-    trunk.position.set(x,1.25,z);
-    scene.add(trunk);
+<footer>
+    <h2>☪ AL-NOOR</h2>
+    <p>Islamic Learning & Qur'an Companion</p>
+    <p style="margin-top:10px">
+        May Allah increase us in beneficial knowledge.
+    </p>
+</footer>
 
-    const leaves = new THREE.Mesh(
-        new THREE.SphereGeometry(1.7,10,10),
-        material(0x207333)
-    );
-    leaves.position.set(x,3.3,z);
-    scene.add(leaves);
-}
 
-for(let z=-230; z<240; z+=18) {
-    createBuilding(-13,z,0x9aabb9);
-    createBuilding(13,z,0xb9a38d);
-}
+<script>
 
-for(let z=-220; z<240; z+=13) {
-    createTree(-23,z);
-    createTree(23,z+6);
-}
+const API = "https://api.alquran.cloud/v1";
 
-/* PASSENGER MODELS */
+let currentSurah = null;
+let practiceVerses = [];
+let audio = null;
+let recognition = null;
+let count = 0;
+let history = [];
+let qiblaBearing = null;
+let heading = null;
 
-const passengers = [];
 
-function createPassenger(x,z) {
-    const person = new THREE.Group();
+// NAVIGATION
 
-    const shirtColors = [0x2455a4,0xb43c32,0x22804c,0x9b6a23];
-    const shirtColor = shirtColors[
-        Math.floor(Math.random()*shirtColors.length)
-    ];
-
-    const bodyPerson = new THREE.Mesh(
-        new THREE.CylinderGeometry(0.3,0.38,1.1,10),
-        material(shirtColor)
-    );
-    bodyPerson.position.y = 1.15;
-    person.add(bodyPerson);
-
-    const head = new THREE.Mesh(
-        new THREE.SphereGeometry(0.28,14,14),
-        material(0x9b633f)
-    );
-    head.position.y = 1.9;
-    person.add(head);
-
-    const legMaterial = material(0x252b36);
-
-    for(const side of [-1,1]) {
-        const leg = new THREE.Mesh(
-            new THREE.CylinderGeometry(0.11,0.12,0.8,8),
-            legMaterial
-        );
-        leg.position.set(side*0.16,0.4,0);
-        person.add(leg);
-    }
-
-    person.position.set(x,0,z);
-    scene.add(person);
-    passengers.push(person);
-}
-
-for(let i=0;i<5;i++) {
-    createPassenger(-5, -28-i*1.3);
-    createPassenger(5, -28-i*1.3);
-}
-
-/* GAME STATE */
-
-let destination = "City";
-let gear = "P";
-let speed = 0;
-let money = 0;
-let passengerCount = 0;
-let level = 1;
-let cameraMode = 0;
-let started = false;
-let paused = false;
-let steering = 0;
-let accelerator = false;
-let braking = false;
-let collected = false;
-
-const destinations = {
-    City: {color:0x8ac7ec, drop:-150},
-    Desert: {color:0xd7b46d, drop:-150},
-    Village: {color:0x9bcf8d, drop:-150},
-    Highway: {color:0x9bc5e5, drop:-150}
-};
-
-/* DESTINATION SELECTION */
-
-window.selectDestination = function(name, button) {
-    destination = name;
-
-    document.querySelectorAll(".destination").forEach(b =>
-        b.classList.remove("selected")
-    );
-
-    button.classList.add("selected");
-
-    document.getElementById("missionText").textContent =
-        "MISSION " + level + ": Collect passengers and reach the " + name + " destination.";
-};
-
-/* START GAME */
-
-window.startGame = function() {
-    document.getElementById("garage").style.display = "none";
-    document.getElementById("controls").style.display = "flex";
-    document.getElementById("gearBox").style.display = "flex";
-    document.getElementById("topButtons").style.display = "flex";
-
-    bus.position.set(0,0,0);
-    speed = 0;
-    gear = "P";
-    passengerCount = 0;
-    collected = false;
-    started = true;
-    paused = false;
-
-    showMessage("Welcome! Collect passengers at the bus stop.");
-    updateUI();
-};
-
-/* GEAR */
-
-window.changeGear = function(newGear) {
-    if(!started) return;
-
-    gear = newGear;
-
-    document.querySelectorAll(".gear-btn").forEach(b => {
-        b.classList.toggle("active", b.textContent === newGear);
+function showPage(id) {
+    document.querySelectorAll(".page").forEach(p => {
+        p.classList.remove("active");
     });
 
-    if(newGear === "P") {
-        speed = 0;
-    }
+    document.getElementById(id).classList.add("active");
 
-    showMessage("Gear: " + newGear);
-};
-
-/* CAMERA */
-
-window.changeCamera = function() {
-    cameraMode = (cameraMode + 1) % 3;
-
-    const names = ["Outside view","Side view","Top view"];
-    showMessage(names[cameraMode]);
-};
-
-/* PAUSE */
-
-window.pauseGame = function() {
-    paused = !paused;
-    showMessage(paused ? "GAME PAUSED" : "GAME RESUMED");
-};
-
-/* MESSAGE */
-
-let messageTimer;
-
-function showMessage(text) {
-    const box = document.getElementById("message");
-    box.textContent = text;
-    box.style.display = "block";
-
-    clearTimeout(messageTimer);
-
-    messageTimer = setTimeout(() => {
-        box.style.display = "none";
-    },2500);
+    window.scrollTo({top:0,behavior:"smooth"});
 }
 
-/* PASSENGERS */
 
-window.collectPassengers = function() {
-    if(!started || collected) return;
+// LOAD SURAH LIST
 
-    if(speed > 2) {
-        showMessage("Stop the bus before collecting passengers!");
-        return;
-    }
+async function loadSurahList() {
 
-    if(gear !== "P") {
-        showMessage("Put the bus in PARK first!");
-        return;
-    }
+    try {
 
-    collected = true;
-    passengerCount = 5;
+        const response = await fetch(API + "/surah");
+        const result = await response.json();
 
-    passengers.forEach(p => p.visible = false);
+        const lists = [
+            document.getElementById("surahSelect"),
+            document.getElementById("mudarasahSurah")
+        ];
 
-    document.getElementById("pickup").style.display = "none";
+        lists.forEach(select => {
 
-    showMessage("5 passengers boarded! Drive to your destination.");
-    updateUI();
-}
+            select.innerHTML = "";
 
-/* INPUTS */
+            result.data.forEach(s => {
 
-function holdButton(id, down, up) {
-    const button = document.getElementById(id);
+                const option = document.createElement("option");
 
-    button.addEventListener("pointerdown", e => {
-        e.preventDefault();
-        down();
-    });
+                option.value = s.number;
 
-    ["pointerup","pointercancel","pointerleave"].forEach(event => {
-        button.addEventListener(event, e => {
-            e.preventDefault();
-            up();
-        });
-    });
-}
+                option.textContent =
+                    s.number + ". " + s.englishName +
+                    " — " + s.name;
 
-holdButton("accelerator",
-    () => accelerator=true,
-    () => accelerator=false
-);
+                select.appendChild(option);
 
-holdButton("brake",
-    () => braking=true,
-    () => braking=false
-);
+            });
 
-holdButton("left",
-    () => steering=-1,
-    () => {if(steering===-1) steering=0;}
-);
-
-holdButton("right",
-    () => steering=1,
-    () => {if(steering===1) steering=0;}
-);
-
-/* KEYBOARD SUPPORT */
-
-window.addEventListener("keydown", e => {
-    if(e.key==="ArrowUp" || e.key==="w") accelerator=true;
-    if(e.key==="ArrowDown" || e.key==="s") braking=true;
-    if(e.key==="ArrowLeft" || e.key==="a") steering=-1;
-    if(e.key==="ArrowRight" || e.key==="d") steering=1;
-});
-
-window.addEventListener("keyup", e => {
-    if(e.key==="ArrowUp" || e.key==="w") accelerator=false;
-    if(e.key==="ArrowDown" || e.key==="s") braking=false;
-    if(["ArrowLeft","ArrowRight","a","d"].includes(e.key)) steering=0;
-});
-
-/* UI */
-
-function updateUI() {
-    document.getElementById("money").textContent = money;
-    document.getElementById("level").textContent = level;
-    document.getElementById("speed").textContent = Math.round(speed*12);
-    document.getElementById("passengers").textContent = passengerCount;
-}
-
-/* GAME LOOP */
-
-const clock = new THREE.Clock();
-
-function animate() {
-    requestAnimationFrame(animate);
-
-    const delta = Math.min(clock.getDelta(),0.04);
-
-    if(started && !paused) {
-
-        if(gear==="D" && accelerator) {
-            speed = Math.min(speed + delta*3, 12);
-        }
-
-        if(gear==="R" && accelerator) {
-            speed = Math.min(speed + delta*2, 5);
-        }
-
-        if(braking) {
-            speed = Math.max(0,speed-delta*9);
-        }
-
-        if(!accelerator && !braking) {
-            speed = Math.max(0,speed-delta*0.7);
-        }
-
-        let direction = gear==="R" ? 1 : -1;
-
-        if(gear==="D" || gear==="R") {
-            bus.position.z += speed*delta*direction;
-        }
-
-        bus.position.x += steering*speed*delta*0.22;
-
-        bus.position.x = THREE.MathUtils.clamp(
-            bus.position.x,-4.5,4.5
-        );
-
-        bus.rotation.y = THREE.MathUtils.lerp(
-            bus.rotation.y,
-            -steering*0.12,
-            delta*4
-        );
-
-        wheels.forEach(w => {
-            w.rotation.x += speed*delta;
         });
 
-        /* PASSENGER STOP */
+    } catch(error) {
+        document.getElementById("quranInfo").textContent =
+            "Unable to connect. Check your internet connection.";
+    }
 
-        const stopDistance = Math.abs(bus.position.z + 28);
+    const juz = document.getElementById("juzSelect");
 
-        if(!collected && stopDistance < 7) {
-            document.getElementById("pickup").style.display = "block";
+    for(let i=1;i<=30;i++) {
+        const option = document.createElement("option");
+        option.value=i;
+        option.textContent="Juz "+i;
+        juz.appendChild(option);
+    }
+
+}
+
+loadSurahList();
+
+
+// OPEN SURAH
+
+async function loadSurah() {
+
+    const number = document.getElementById("surahSelect").value;
+
+    const content = document.getElementById("quranContent");
+
+    content.innerHTML = "Loading Qur'an...";
+
+    try {
+
+        const response = await fetch(
+            API + "/surah/" + number + "/quran-uthmani"
+        );
+
+        const result = await response.json();
+
+        currentSurah = result.data;
+
+        document.getElementById("quranInfo").innerHTML =
+            "<h3>" + currentSurah.englishName +
+            " (" + currentSurah.name + ")</h3>";
+
+        content.innerHTML = "";
+
+        currentSurah.ayahs.forEach(ayah => {
+
+            const div = document.createElement("div");
+
+            div.className = "verse";
+
+            const arabic = document.createElement("div");
+            arabic.className = "arabic";
+            arabic.textContent = ayah.text;
+
+            const number = document.createElement("p");
+            number.className = "verse-number";
+            number.textContent = "Verse " + ayah.numberInSurah;
+
+            const play = document.createElement("button");
+            play.className = "action";
+            play.textContent = "▶ Play Verse";
+
+            play.onclick = () => playAyah(ayah.number);
+
+            div.append(arabic,number,play);
+            content.appendChild(div);
+
+        });
+
+    } catch(error) {
+        content.textContent =
+            "Unable to load Qur'an. Please check your internet.";
+    }
+
+}
+
+
+// QURAN AUDIO
+
+async function playAyah(number) {
+
+    try {
+
+        const response = await fetch(
+            API + "/ayah/" + number + "/ar.alafasy"
+        );
+
+        const result = await response.json();
+
+        if(audio) audio.pause();
+
+        audio = new Audio(result.data.audio);
+
+        audio.play();
+
+    } catch(error) {
+        alert("Audio could not be loaded.");
+    }
+
+}
+
+
+// MUDARASAH
+
+function changeReadingType() {
+
+    const type = document.getElementById("readingType").value;
+
+    document.getElementById("surahChoice").style.display =
+        type === "surah" ? "block" : "none";
+
+    document.getElementById("juzChoice").style.display =
+        type === "juz" ? "block" : "none";
+
+}
+
+
+async function startMudarasah() {
+
+    const type = document.getElementById("readingType").value;
+
+    const amount = Math.max(
+        1,
+        Math.min(286,Number(document.getElementById("verseCount").value)||2)
+    );
+
+    const output = document.getElementById("practiceText");
+
+    output.textContent = "Preparing your lesson...";
+
+    try {
+
+        let url;
+
+        if(type === "surah") {
+
+            const number =
+                document.getElementById("mudarasahSurah").value;
+
+            url = API + "/surah/" + number + "/quran-uthmani";
+
         } else {
-            document.getElementById("pickup").style.display = "none";
+
+            const juz = document.getElementById("juzSelect").value;
+
+            url = API + "/juz/" + juz + "/quran-uthmani";
+
         }
 
-        /* DESTINATION */
+        const response = await fetch(url);
 
-        if(collected && bus.position.z < -145 && !paused) {
-            if(speed < 1 && gear==="P") {
-                completeMission();
-            }
-        }
+        const result = await response.json();
+
+        practiceVerses = result.data.ayahs.slice(0,amount);
+
+        output.innerHTML = "";
+
+        practiceVerses.forEach(a => {
+
+            const p = document.createElement("p");
+            p.textContent = a.text;
+            p.style.marginBottom = "20px";
+
+            output.appendChild(p);
+
+        });
+
+        document.getElementById("speechResult").textContent =
+            "Your lesson is ready. Listen first, then practise.";
+
+    } catch(error) {
+
+        output.textContent =
+            "Unable to load your lesson. Check your connection.";
+
     }
 
-    /* CAMERA VIEWS */
+}
 
-    if(cameraMode===0) {
-        camera.position.lerp(
-            new THREE.Vector3(
-                bus.position.x,
-                bus.position.y+7,
-                bus.position.z+13
-            ),0.08
-        );
-        camera.lookAt(bus.position.x,bus.position.y+1,bus.position.z-5);
 
-    } else if(cameraMode===1) {
-        camera.position.lerp(
-            new THREE.Vector3(
-                bus.position.x+12,
-                bus.position.y+5,
-                bus.position.z+2
-            ),0.08
+// PLAY PRACTICE AUDIO
+
+async function playPracticeAudio() {
+
+    if(!practiceVerses.length) {
+        alert("Please select your lesson first.");
+        return;
+    }
+
+    for(const verse of practiceVerses) {
+
+        try {
+
+            const response = await fetch(
+                API + "/ayah/" + verse.number + "/ar.alafasy"
+            );
+
+            const result = await response.json();
+
+            if(audio) audio.pause();
+
+            audio = new Audio(result.data.audio);
+
+            await new Promise(resolve => {
+
+                audio.onended = resolve;
+                audio.onerror = resolve;
+
+                audio.play().catch(resolve);
+
+            });
+
+        } catch(error) {
+            continue;
+        }
+
+    }
+
+}
+
+
+// SPEECH RECOGNITION
+
+function startSpeech() {
+
+    const SpeechRecognition =
+        window.SpeechRecognition ||
+        window.webkitSpeechRecognition;
+
+    if(!SpeechRecognition) {
+
+        alert("Your browser does not support speech recognition. Try a supported browser.");
+
+        return;
+    }
+
+    if(!practiceVerses.length) {
+
+        alert("Select a lesson first.");
+        return;
+
+    }
+
+    recognition = new SpeechRecognition();
+
+    recognition.lang = "ar-SA";
+    recognition.continuous = true;
+    recognition.interimResults = true;
+
+    document.getElementById("speechResult").textContent =
+        "Listening... Please recite clearly.";
+
+    recognition.onresult = function(event) {
+
+        let transcript = "";
+
+        for(let i=0;i<event.results.length;i++) {
+
+            transcript += event.results[i][0].transcript + " ";
+
+        }
+
+        const clean = text => text
+            .replace(/[ًٌٍَُِّْٰـۖۗۚۛۜ۝۞]/g,"")
+            .replace(/[أإآٱ]/g,"ا")
+            .replace(/\s+/g," ")
+            .trim();
+
+        const expected = clean(
+            practiceVerses.map(v=>v.text).join(" ")
         );
-        camera.lookAt(bus.position);
+
+        const spoken = clean(transcript);
+
+        document.getElementById("speechResult").textContent =
+            "Recognised speech: " + transcript +
+            "\n\nCompare your reading with the displayed Qur'an. " +
+            "Speech recognition cannot reliably identify every mistake.";
+
+    };
+
+    recognition.onerror = function() {
+
+        document.getElementById("speechResult").textContent =
+            "Microphone recognition error. Check microphone permission and try again.";
+
+    };
+
+    recognition.start();
+
+}
+
+
+function stopSpeech() {
+
+    if(recognition) {
+        recognition.stop();
+    }
+
+}
+
+
+// QIBLA FINDER
+
+function calculateQibla(lat,lon) {
+
+    const kaabaLat = 21.4225 * Math.PI/180;
+    const kaabaLon = 39.8262 * Math.PI/180;
+
+    const userLat = lat * Math.PI/180;
+    const userLon = lon * Math.PI/180;
+
+    const deltaLon = kaabaLon-userLon;
+
+    const y = Math.sin(deltaLon);
+
+    const x =
+        Math.cos(userLat)*Math.tan(kaabaLat) -
+        Math.sin(userLat)*Math.cos(deltaLon);
+
+    let bearing = Math.atan2(y,x)*180/Math.PI;
+
+    bearing = (bearing+360)%360;
+
+    qiblaBearing = bearing;
+
+    document.getElementById("qiblaDegree").textContent =
+        bearing.toFixed(1)+"° from North";
+
+    document.getElementById("qiblaStatus").textContent =
+        "Qibla direction successfully calculated.";
+
+    updateArrow();
+
+}
+
+
+function findQibla() {
+
+    if(!navigator.geolocation) {
+
+        alert("Your device does not support location services.");
+        return;
+
+    }
+
+    document.getElementById("qiblaStatus").textContent =
+        "Detecting your location...";
+
+    navigator.geolocation.getCurrentPosition(
+
+        position => {
+
+            calculateQibla(
+                position.coords.latitude,
+                position.coords.longitude
+            );
+
+        },
+
+        error => {
+
+            document.getElementById("qiblaStatus").textContent =
+                "Location permission denied or unavailable. Allow location access and try again.";
+
+        },
+
+        {enableHighAccuracy:true,timeout:15000}
+
+    );
+
+}
+
+
+// DEVICE COMPASS
+
+async function enableCompass() {
+
+    try {
+
+        if(typeof DeviceOrientationEvent !== "undefined" &&
+           typeof DeviceOrientationEvent.requestPermission === "function") {
+
+            const permission =
+                await DeviceOrientationEvent.requestPermission();
+
+            if(permission !== "granted") {
+                alert("Compass permission was not granted.");
+                return;
+            }
+
+        }
+
+        window.addEventListener(
+            "deviceorientationabsolute",
+            compassUpdate
+        );
+
+        window.addEventListener(
+            "deviceorientation",
+            compassUpdate
+        );
+
+        alert("Compass activated. Rotate your phone slowly to calibrate.");
+
+    } catch(error) {
+
+        alert("Compass is unavailable on this device or browser.");
+
+    }
+
+}
+
+
+function compassUpdate(event) {
+
+    if(event.webkitCompassHeading != null) {
+        heading = event.webkitCompassHeading;
+    } else if(event.alpha != null) {
+        heading = (360-event.alpha)%360;
+    }
+
+    updateArrow();
+
+}
+
+
+function updateArrow() {
+
+    if(qiblaBearing === null) return;
+
+    const relative = heading === null ?
+        qiblaBearing : qiblaBearing-heading;
+
+    document.getElementById("qiblaArrow").style.transform =
+        "rotate("+relative+"deg)";
+
+}
+
+
+// TASBIH COUNTER
+
+function changeDhikr() {
+
+    document.getElementById("dhikrName").textContent =
+        document.getElementById("dhikrSelect").value;
+
+    resetCounter();
+
+}
+
+
+function countTasbih() {
+
+    history.push(count);
+
+    count++;
+
+    document.getElementById("counter").textContent = count;
+
+    const target = Number(
+        document.getElementById("target").value
+    );
+
+    if(document.getElementById("vibration").checked &&
+       navigator.vibrate) {
+
+        navigator.vibrate(40);
+
+    }
+
+    if(count % target === 0) {
+
+        document.getElementById("counterStatus").textContent =
+            "Alhamdulillah! You completed "+target+" repetitions.";
+
+        if(navigator.vibrate) navigator.vibrate([100,50,100]);
 
     } else {
-        camera.position.lerp(
-            new THREE.Vector3(
-                bus.position.x,
-                bus.position.y+25,
-                bus.position.z+1
-            ),0.08
-        );
-        camera.lookAt(bus.position);
+
+        document.getElementById("counterStatus").textContent =
+            "Keep remembering Allah. Target: "+target;
+
     }
 
-    updateUI();
-    renderer.render(scene,camera);
 }
 
-animate();
 
-/* COMPLETE MISSION */
+function resetCounter() {
 
-function completeMission() {
-    started = false;
-    speed = 0;
+    count=0;
+    history=[];
 
-    money += 5000;
-    passengerCount = 0;
+    document.getElementById("counter").textContent="0";
 
-    document.getElementById("controls").style.display = "none";
-    document.getElementById("gearBox").style.display = "none";
-    document.getElementById("topButtons").style.display = "none";
+    document.getElementById("counterStatus").textContent =
+        "Counter reset. Begin your Dhikr.";
 
-    level++;
-
-    document.querySelector("#garage h1").textContent = "MISSION COMPLETED!";
-    document.getElementById("missionText").textContent =
-        "You earned ₦5,000. Your next mission is Level " + level + ".";
-
-    document.getElementById("startButton").textContent =
-        "START NEXT LEVEL";
-
-    document.getElementById("garage").style.display = "flex";
-
-    updateUI();
 }
 
-/* RESIZE */
 
-window.addEventListener("resize", () => {
-    camera.aspect = window.innerWidth/window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth,window.innerHeight);
-});
+function undoCounter() {
+
+    if(history.length) {
+
+        count=history.pop();
+
+        document.getElementById("counter").textContent=count;
+
+    }
+
+}
 
 </script>
 
