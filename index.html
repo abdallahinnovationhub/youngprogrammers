@@ -1,33 +1,24 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport"
-content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 
-<title>Ultimate Bus Driving Simulator</title>
+<title>Ultimate 3D Bus Simulator</title>
 
 <style>
-
 * {
+    box-sizing:border-box;
     margin:0;
     padding:0;
-    box-sizing:border-box;
     user-select:none;
 }
 
 body {
-    background:#05080c;
-    color:white;
-    font-family:Arial,sans-serif;
     overflow:hidden;
-}
-
-button {
-    border:0;
-    cursor:pointer;
+    background:#080d14;
+    font-family:Arial,sans-serif;
     color:white;
-    font-weight:bold;
 }
 
 #game {
@@ -35,7 +26,10 @@ button {
     height:100vh;
     position:relative;
     overflow:hidden;
-    background:#111;
+}
+
+canvas {
+    display:block;
 }
 
 .screen {
@@ -44,291 +38,267 @@ button {
     display:none;
 }
 
-.active {
-    display:flex;
+.screen.active {
+    display:block;
 }
 
-/* LANDSCAPE */
-
-@media (orientation:portrait) {
-    #rotate {
-        display:flex;
-    }
-}
-
-#rotate {
-    position:absolute;
-    inset:0;
-    background:#080e19;
-    z-index:1000;
-    display:none;
-    justify-content:center;
-    align-items:center;
-    text-align:center;
-    font-size:22px;
+button {
+    border:none;
+    cursor:pointer;
+    font-weight:bold;
+    color:white;
 }
 
 /* GARAGE */
 
 #garage {
-    background:
-    linear-gradient(#101c2b88,#05080e),
-    linear-gradient(120deg,#35495d,#101820);
+    background:linear-gradient(130deg,#101c2d,#35495c);
+    display:none;
     flex-direction:column;
     justify-content:center;
     align-items:center;
 }
 
-.title {
-    font-size:clamp(24px,4vw,48px);
-    color:#ffc94c;
-    text-shadow:0 3px 8px black;
-    margin-bottom:12px;
-}
-
-.garage-box {
-    width:90%;
-    height:65%;
-    background:#172331;
-    border:3px solid #b38b35;
-    border-radius:15px;
-    position:relative;
+#garage.active {
     display:flex;
-    align-items:center;
+}
+
+h1 {
+    color:#ffc94a;
+    text-align:center;
+    margin:15px;
+    font-size:clamp(23px,4vw,42px);
+}
+
+.garage {
+    width:85%;
+    height:60%;
+    background:linear-gradient(#25394d,#101820);
+    border:3px solid #c99a3a;
+    border-radius:15px;
+    display:flex;
     justify-content:center;
+    align-items:center;
+    font-size:clamp(90px,15vw,160px);
 }
 
-.garage-floor {
-    position:absolute;
-    bottom:0;
-    height:25%;
-    width:100%;
-    background:repeating-linear-gradient(
-        90deg,#252d36 0 70px,#333d49 70px 140px
-    );
-}
-
-.bus-preview {
-    font-size:clamp(70px,13vw,150px);
-    z-index:2;
-    filter:drop-shadow(0 12px 7px black);
-}
-
-.garage-buttons {
+.buttons {
     display:flex;
     gap:15px;
     margin-top:20px;
 }
 
-.main-btn {
-    padding:14px 30px;
-    background:#d99c23;
-    border-radius:9px;
+.main {
+    background:#c38b25;
+    padding:15px 30px;
+    border-radius:8px;
     font-size:17px;
 }
 
 /* LEVELS */
 
 #levels {
-    background:linear-gradient(135deg,#10233b,#080d17);
-    flex-direction:column;
-    align-items:center;
-    padding:20px;
+    background:#101d30;
+    padding:25px;
+    text-align:center;
 }
 
-.level-list {
+.levels {
     display:grid;
     grid-template-columns:repeat(5,1fr);
     gap:12px;
-    width:90%;
-    margin-top:20px;
+    max-width:700px;
+    margin:25px auto;
 }
 
 .level {
-    background:#263b51;
-    border:2px solid #506c83;
-    border-radius:12px;
+    background:#b58225;
     padding:20px 5px;
-    font-size:20px;
+    border-radius:9px;
+    font-size:18px;
 }
 
-.level.locked {
-    background:#171c25;
-    color:#777;
-}
-
-.level.unlocked {
-    background:#b77b18;
+.locked {
+    background:#323b47;
+    color:#888;
 }
 
 /* ENVIRONMENT */
 
 #environment {
-    background:linear-gradient(135deg,#132d40,#080d17);
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
+    background:linear-gradient(#23425c,#111c29);
+    text-align:center;
+    padding:25px;
 }
 
-.environment-list {
+.places {
     display:flex;
+    justify-content:center;
     flex-wrap:wrap;
     gap:15px;
-    justify-content:center;
+    margin:30px;
 }
 
-.environment-card {
-    background:#24374b;
-    padding:30px;
-    min-width:130px;
+.place {
+    background:#243d52;
+    border:2px solid #c99a3a;
+    padding:25px;
     border-radius:12px;
-    border:2px solid #b58b35;
-    font-size:18px;
+    min-width:120px;
 }
 
-/* GAME SCREEN */
+/* GAME HUD */
 
-#driving {
-    background:#6e9bba;
+#hud {
+    position:absolute;
+    inset:0;
+    pointer-events:none;
     display:none;
 }
 
-#world {
-    width:100%;
-    height:100%;
+#hud.active {
     display:block;
 }
 
-.hud {
+.top {
     position:absolute;
-    top:8px;
+    top:10px;
     left:10px;
     right:10px;
     display:flex;
     justify-content:space-between;
-    pointer-events:none;
+    gap:5px;
 }
 
-.hud-box {
-    background:#101820dd;
-    border:1px solid #c99a3a;
-    padding:8px 12px;
-    border-radius:8px;
-    font-size:clamp(11px,1.5vw,17px);
+.info {
+    background:#101820dc;
+    border:1px solid #d4a13c;
+    padding:9px 12px;
+    border-radius:7px;
+    font-size:clamp(10px,1.5vw,16px);
 }
 
-.controls {
+/* GEAR */
+
+#gear {
     position:absolute;
-    bottom:10px;
+    right:15px;
+    top:65px;
+    display:flex;
+    flex-direction:column;
+    gap:5px;
+    pointer-events:auto;
+}
+
+.gear {
+    background:#172331ed;
+    border:2px solid #8495a6;
+    padding:9px 16px;
+    border-radius:6px;
+}
+
+.gear.selected {
+    background:#c58b24;
+    border-color:white;
+}
+
+/* CONTROLS */
+
+#controls {
+    position:absolute;
+    bottom:12px;
     left:0;
     right:0;
     display:flex;
     justify-content:space-between;
-    padding:0 15px;
     align-items:end;
+    padding:0 12px;
+    pointer-events:none;
 }
 
-.control-group {
+.group {
     display:flex;
-    gap:9px;
     align-items:end;
+    gap:8px;
+    pointer-events:auto;
 }
 
-.control {
-    width:clamp(48px,7vw,85px);
-    height:clamp(48px,7vw,85px);
+.ctrl {
+    width:clamp(48px,7vw,76px);
+    height:clamp(48px,7vw,76px);
+    background:#162536eF;
+    border:2px solid #d0d9e0;
     border-radius:50%;
-    background:#172333dd;
-    border:3px solid #b9c5d0;
-    font-size:clamp(11px,1.4vw,17px);
+    font-size:clamp(10px,1.5vw,15px);
 }
 
 .pedal {
+    width:clamp(53px,7vw,75px);
+    height:85px;
+    background:#286447;
     border-radius:12px;
-    height:80px;
-    width:65px;
-    background:#1c673e;
 }
 
 #brake {
-    background:#a52d2d;
+    background:#a52c2c;
 }
 
-#reverse {
-    background:#4c526b;
+#steering {
+    width:90px;
+    height:90px;
+    font-size:30px;
 }
 
-#camera {
-    background:#a56d17;
-}
-
-#message {
+#status {
     position:absolute;
-    top:23%;
+    top:45%;
     left:50%;
-    transform:translateX(-50%);
+    transform:translate(-50%,-50%);
     background:#101820e8;
-    padding:12px 20px;
-    border-radius:10px;
+    padding:13px 22px;
+    border-radius:9px;
     display:none;
     text-align:center;
-    z-index:10;
+    white-space:nowrap;
+    z-index:5;
 }
 
-#passengerPanel {
+#board {
     position:absolute;
-    top:55px;
-    right:10px;
-    background:#101820e8;
-    padding:10px;
-    border-radius:10px;
-    font-size:13px;
+    top:65px;
+    left:10px;
+    pointer-events:auto;
+    background:#126044;
+    padding:12px;
+    border-radius:8px;
 }
 
 #pause {
     position:absolute;
-    top:60px;
-    left:10px;
-    background:#172333;
-    padding:10px;
-    border-radius:8px;
+    top:65px;
+    left:145px;
+    pointer-events:auto;
+    padding:12px;
+    background:#172331;
+    border-radius:7px;
 }
 
-#dispute {
+#rotate {
     position:absolute;
     inset:0;
-    background:#000b;
+    z-index:100;
     display:none;
+    background:#080d14;
     justify-content:center;
     align-items:center;
-    z-index:30;
-}
-
-.dialog {
-    background:#18283b;
-    border:2px solid #d3a23a;
-    padding:25px;
-    border-radius:15px;
     text-align:center;
-    width:80%;
-    max-width:420px;
+    font-size:24px;
 }
 
-.dialog button {
-    background:#c18a27;
-    padding:12px 18px;
-    margin:10px;
-    border-radius:8px;
-}
-
-#complete {
-    position:absolute;
-    inset:0;
-    display:none;
-    justify-content:center;
-    align-items:center;
-    background:#000c;
-    z-index:40;
+@media(orientation:portrait) {
+    #rotate {
+        display:flex;
+    }
 }
 
 </style>
@@ -337,11 +307,7 @@ button {
 <body>
 
 <div id="rotate">
-    <div>
-        📱<br><br>
-        Please rotate your phone<br>
-        to landscape mode.
-    </div>
+    Please rotate your phone horizontally.
 </div>
 
 <div id="game">
@@ -350,30 +316,17 @@ button {
 
 <div id="garage" class="screen active">
 
-<h1 class="title">ULTIMATE BUS SIMULATOR</h1>
+<h1>ULTIMATE 3D BUS SIMULATOR</h1>
 
-<div class="garage-box">
-
-<div class="bus-preview">🚌</div>
-
-<div class="garage-floor"></div>
-
+<div class="garage">
+    🚌
 </div>
 
-<h3 style="margin-top:15px">
-YOUR BUS GARAGE
-</h3>
+<h2>YOUR BUS GARAGE</h2>
 
-<div class="garage-buttons">
-
-<button class="main-btn" onclick="showLevels()">
-MISSIONS
-</button>
-
-<button class="main-btn" onclick="showLevels()">
-PLAY
-</button>
-
+<div class="buttons">
+    <button class="main" onclick="openLevels()">MISSIONS</button>
+    <button class="main" onclick="openLevels()">PLAY</button>
 </div>
 
 </div>
@@ -382,141 +335,90 @@ PLAY
 
 <div id="levels" class="screen">
 
-<h1 class="title">SELECT YOUR MISSION</h1>
+<h1>SELECT LEVEL</h1>
 
-<div class="level-list" id="levelList"></div>
+<div class="levels" id="levelList"></div>
 
-<button class="main-btn"
-style="margin-top:20px"
-onclick="showScreen('garage')">
-BACK TO GARAGE
-</button>
+<button class="main" onclick="screen('garage')">BACK</button>
 
 </div>
 
-<!-- ENVIRONMENTS -->
+<!-- ENVIRONMENT -->
 
 <div id="environment" class="screen">
 
-<h1 class="title">SELECT DESTINATION</h1>
+<h1>SELECT YOUR ROUTE</h1>
 
-<div class="environment-list">
+<div class="places">
 
-<button class="environment-card"
-onclick="startGame('City')">
-🏙️<br> CITY
-</button>
+<button class="place" onclick="start('City')">🏙️<br>CITY</button>
 
-<button class="environment-card"
-onclick="startGame('Desert')">
-🏜️<br> DESERT
-</button>
+<button class="place" onclick="start('Desert')">🏜️<br>DESERT</button>
 
-<button class="environment-card"
-onclick="startGame('Village')">
-🏡<br> VILLAGE
-</button>
+<button class="place" onclick="start('Village')">🏡<br>VILLAGE</button>
 
-<button class="environment-card"
-onclick="startGame('Highway')">
-🛣️<br> HIGHWAY
-</button>
+<button class="place" onclick="start('Highway')">🛣️<br>HIGHWAY</button>
 
-<button class="environment-card"
-onclick="startGame('Mountain')">
-⛰️<br> MOUNTAIN
-</button>
+<button class="place" onclick="start('Mountain')">⛰️<br>MOUNTAIN</button>
 
 </div>
 
-<button class="main-btn"
-style="margin-top:25px"
-onclick="showLevels()">
-BACK
-</button>
+<button class="main" onclick="openLevels()">BACK</button>
 
 </div>
 
 <!-- DRIVING -->
 
-<div id="driving" class="screen">
+<div id="hud">
 
-<canvas id="world"></canvas>
+<div class="top">
 
-<div class="hud">
-
-<div class="hud-box">
-🚌 BUS SIMULATOR
-<br>
-<span id="destination">CITY</span>
+<div class="info">
+🚌 ULTIMATE BUS
+<br><span id="location">CITY</span>
 </div>
 
-<div class="hud-box">
-💰 ₦<span id="money">0</span>
-</div>
-
-<div class="hud-box">
+<div class="info">
 SPEED: <span id="speed">0</span> KM/H
 </div>
 
+<div class="info">
+💰 ₦<span id="money">0</span>
 </div>
-
-<button id="pause" onclick="pauseGame()">
-Ⅱ PAUSE
-</button>
-
-<div id="passengerPanel">
-👥 Passengers: <span id="passengers">0</span>
-<br>
-📍 <span id="task">Find passengers</span>
-</div>
-
-<div id="message"></div>
-
-<div class="controls">
-
-<div class="control-group">
-
-<button class="control"
-id="left">
-◀
-</button>
-
-<button class="control"
-id="right">
-▶
-</button>
-
-<button class="control"
-id="camera"
-onclick="changeCamera()">
-CAM
-</button>
 
 </div>
 
-<div class="control-group">
-
-<button class="control pedal"
-id="brake">
-BRAKE
+<button id="board" onclick="boardPassenger()">
+👤 PICK UP
 </button>
 
-<button class="control pedal"
-id="accelerator">
-ACCEL
-</button>
+<button id="pause" onclick="togglePause()">Ⅱ</button>
 
-<button class="control pedal"
-id="reverse">
-REV
-</button>
+<div id="gear">
 
-<button class="control"
-id="park"
-onclick="toggleParking()">
-P
-</button>
+<button class="gear" onclick="setGear('P')">P - PARK</button>
+<button class="gear" onclick="setGear('R')">R - REVERSE</button>
+<button class="gear" onclick="setGear('N')">N - NEUTRAL</button>
+<button class="gear selected" onclick="setGear('D')">D - DRIVE</button>
+
+</div>
+
+<div id="status"></div>
+
+<div id="controls">
+
+<div class="group">
+
+<button class="ctrl" id="left">◀</button>
+<button class="ctrl" id="right">▶</button>
+<button class="ctrl" onclick="changeCamera()">CAM</button>
+
+</div>
+
+<div class="group">
+
+<button class="ctrl pedal" id="brake">BRAKE</button>
+<button class="ctrl pedal" id="accelerator">ACCEL</button>
 
 </div>
 
@@ -524,5023 +426,734 @@ P
 
 </div>
 
-<!-- FARE DISPUTE -->
-
-<div id="dispute">
-
-<div class="dialog">
-
-<h2>PASSENGER FARE DISPUTE</h2>
-
-<p style="margin:15px">
-A passenger is refusing to pay the fare.
-How would you handle the situation?
-</p>
-
-<button onclick="resolveDispute(true)">
-REPORT DISPUTE
-</button>
-
-<button onclick="resolveDispute(false)">
-LET IT GO
-</button>
-
 </div>
 
-</div>
+<script type="module">
 
-<!-- COMPLETION -->
-
-<div id="complete">
-
-<div class="dialog">
-
-<h1>MISSION COMPLETED!</h1>
-
-<p style="margin:15px">
-You successfully completed your bus journey.
-</p>
-
-<h2>🏆 REWARD: ₦<span id="reward">0</span></h2>
-
-<button onclick="nextLevel()">
-NEXT LEVEL
-</button>
-
-<button onclick="showScreen('garage')">
-GARAGE
-</button>
-
-</div>
-
-</div>
-
-</div>
-
-<script>
+import * as THREE from
+'https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js';
 
 /* GAME DATA */
 
-let money = 0;
-let currentLevel = 1;
-let unlockedLevel = 1;
+let money=0;
+let currentLevel=1;
+let unlocked=1;
+let passengers=0;
+let gear='D';
+let speed=0;
+let paused=false;
+let cameraMode=0;
+let steering=0;
+let accelerate=false;
+let braking=false;
+let worldType='City';
+let bus;
+let wheels=[];
+let people=[];
+let road;
+let renderer,scene,camera;
+let moving=false;
 
-let passengers = 0;
-let camera = 0;
-let speed = 0;
-let distance = 0;
-let steering = 0;
-let acceleration = false;
-let braking = false;
-let reversing = false;
-let parked = true;
-let paused = false;
-let destination = "City";
-let fare = 500;
+/* NAVIGATION */
 
-const canvas = document.getElementById("world");
-const ctx = canvas.getContext("2d");
+window.screen=function(id){
 
-function resize() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+document.querySelectorAll('.screen')
+.forEach(s=>s.classList.remove('active'));
+
+document.getElementById('hud').classList.remove('active');
+
+document.getElementById(id).classList.add('active');
+
+};
+
+window.openLevels=function(){
+
+screen('levels');
+
+let list=document.getElementById('levelList');
+
+list.innerHTML='';
+
+for(let i=1;i<=30;i++){
+
+let b=document.createElement('button');
+
+b.className='level '+(i<=unlocked?'':'locked');
+
+b.innerText=i<=unlocked?'LEVEL '+i:'🔒 '+i;
+
+b.onclick=()=>{
+
+if(i<=unlocked){
+
+currentLevel=i;
+
+screen('environment');
+
 }
 
-resize();
-window.addEventListener("resize",resize);
+};
 
-/* SCREEN NAVIGATION */
-
-function showScreen(id) {
-
-    document.querySelectorAll(".screen")
-    .forEach(s => {
-        s.classList.remove("active");
-        s.style.display = "";
-    });
-
-    let screen = document.getElementById(id);
-
-    screen.classList.add("active");
-
-    if(id === "driving") {
-        screen.style.display = "flex";
-    }
+list.appendChild(b);
 
 }
 
-function showLevels() {
+};
 
-    showScreen("levels");
+window.setGear=function(g){
 
-    let list = document.getElementById("levelList");
+if(Math.abs(speed)>3){
 
-    list.innerHTML = "";
+notify('STOP BEFORE CHANGING GEAR');
 
-    for(let i=1;i<=20;i++) {
+return;
 
-        let button = document.createElement("button");
+}
 
-        button.className =
-        "level " +
-        (i<=unlockedLevel ? "unlocked":"locked");
+gear=g;
 
-        button.innerHTML =
-        i<=unlockedLevel ?
-        "LEVEL "+i :
-        "🔒 "+i;
+document.querySelectorAll('.gear')
+.forEach(b=>b.classList.remove('selected'));
 
-        button.onclick = () => {
+[...document.querySelectorAll('.gear')]
+.find(b=>b.innerText.startsWith(g))
+.classList.add('selected');
 
-            if(i<=unlockedLevel) {
+notify('GEAR: '+g);
 
-                currentLevel = i;
+};
 
-                showScreen("environment");
+function notify(msg){
 
-            }
+let s=document.getElementById('status');
 
-        };
+s.innerText=msg;
 
-        list.appendChild(button);
+s.style.display='block';
 
-    }
+setTimeout(()=>s.style.display='none',2200);
+
+}
+
+/* THREE JS */
+
+function init3D(){
+
+scene=new THREE.Scene();
+
+scene.background=new THREE.Color(0x8bc4e8);
+
+scene.fog=new THREE.Fog(0x8bc4e8,35,180);
+
+camera=new THREE.PerspectiveCamera(
+65,
+innerWidth/innerHeight,
+0.1,
+500
+);
+
+renderer=new THREE.WebGLRenderer({
+antialias:true,
+powerPreference:'high-performance'
+});
+
+renderer.setSize(innerWidth,innerHeight);
+
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+
+renderer.shadowMap.enabled=true;
+
+renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+
+renderer.outputColorSpace=THREE.SRGBColorSpace;
+
+document.getElementById('game').appendChild(renderer.domElement);
+
+let ambient=new THREE.HemisphereLight(0xffffff,0x52606c,2);
+
+scene.add(ambient);
+
+let sun=new THREE.DirectionalLight(0xffffff,3);
+
+sun.position.set(-20,35,20);
+
+sun.castShadow=true;
+
+sun.shadow.mapSize.set(2048,2048);
+
+scene.add(sun);
+
+createBus();
+
+createRoad();
+
+createEnvironment();
+
+animate();
+
+}
+
+/* MATERIALS */
+
+function material(color,roughness=.75){
+
+return new THREE.MeshStandardMaterial({
+color,
+roughness
+});
+
+}
+
+/* BUS MODEL */
+
+function createBus(){
+
+bus=new THREE.Group();
+
+let yellow=material(0xe6ad22);
+
+let glass=material(0x17394e,.2);
+
+let black=material(0x15191d);
+
+let white=material(0xe5e8e8);
+
+let body=new THREE.Mesh(
+new THREE.BoxGeometry(2.8,1.6,6),
+yellow
+);
+
+body.position.y=1.65;
+
+body.castShadow=true;
+
+bus.add(body);
+
+/* Roof */
+
+let roof=new THREE.Mesh(
+new THREE.BoxGeometry(2.7,.2,5.8),
+white
+);
+
+roof.position.y=2.55;
+
+bus.add(roof);
+
+/* Windows */
+
+for(let side of [-1,1]){
+
+for(let z=-2.3;z<=2.3;z+=1.1){
+
+let win=new THREE.Mesh(
+new THREE.BoxGeometry(.04,.8,.85),
+glass
+);
+
+win.position.set(side*1.41,2.05,z);
+
+bus.add(win);
+
+}
+
+}
+
+/* Windshield */
+
+let windshield=new THREE.Mesh(
+new THREE.BoxGeometry(2.4,.8,.04),
+glass
+);
+
+windshield.position.set(0,2.05,-3.01);
+
+bus.add(windshield);
+
+/* Wheels */
+
+for(let x of [-1.45,1.45]){
+
+for(let z of [-2,2]){
+
+let wheel=new THREE.Mesh(
+new THREE.CylinderGeometry(.48,.48,.25,32),
+black
+);
+
+wheel.rotation.z=Math.PI/2;
+
+wheel.position.set(x,.55,z);
+
+wheel.castShadow=true;
+
+bus.add(wheel);
+
+wheels.push(wheel);
+
+}
+
+}
+
+/* Headlights */
+
+for(let x of [-.95,.95]){
+
+let light=new THREE.Mesh(
+new THREE.BoxGeometry(.4,.25,.08),
+material(0xffffff,.2)
+);
+
+light.position.set(x,1.45,-3.04);
+
+bus.add(light);
+
+}
+
+scene.add(bus);
+
+bus.position.set(0,0,0);
+
+}
+
+/* ROAD */
+
+function createRoad(){
+
+let grass=new THREE.Mesh(
+new THREE.PlaneGeometry(300,300),
+material(worldType==='Desert'?0xc8a16b:0x467b42)
+);
+
+grass.rotation.x=-Math.PI/2;
+
+grass.position.y=-.05;
+
+scene.add(grass);
+
+road=new THREE.Group();
+
+let asphalt=new THREE.Mesh(
+new THREE.PlaneGeometry(14,300),
+material(0x303338)
+);
+
+asphalt.rotation.x=-Math.PI/2;
+
+asphalt.position.y=.01;
+
+road.add(asphalt);
+
+/* Road lines */
+
+for(let z=-145;z<150;z+=12){
+
+let line=new THREE.Mesh(
+new THREE.BoxGeometry(.15,.03,5),
+material(0xffffff)
+);
+
+line.position.set(0,.05,z);
+
+road.add(line);
+
+}
+
+scene.add(road);
+
+}
+
+/* BUILDINGS */
+
+function createEnvironment(){
+
+for(let i=0;i<35;i++){
+
+let height=5+Math.random()*15;
+
+let building=new THREE.Mesh(
+new THREE.BoxGeometry(5,height,6),
+material([
+0x9babb8,
+0x9d8069,
+0x758a9c,
+0xc0b6a1
+][i%4])
+);
+
+building.position.set(
+i%2===0?-13:13,
+height/2,
+-i*10-15
+);
+
+building.castShadow=true;
+
+scene.add(building);
+
+}
+
+/* Trees */
+
+for(let i=0;i<40;i++){
+
+let tree=new THREE.Group();
+
+let trunk=new THREE.Mesh(
+new THREE.CylinderGeometry(.2,.3,2,8),
+material(0x654127)
+);
+
+trunk.position.y=1;
+
+tree.add(trunk);
+
+let leaves=new THREE.Mesh(
+new THREE.SphereGeometry(1.5,12,12),
+material(0x24783b)
+);
+
+leaves.position.y=3;
+
+tree.add(leaves);
+
+tree.position.set(
+i%2===0?-20:20,
+0,
+-i*9
+);
+
+scene.add(tree);
+
+}
+
+/* HUMAN PASSENGERS */
+
+for(let i=0;i<8;i++){
+
+let person=createHuman();
+
+person.position.set(
+Math.random()*12-6,
+0,
+-15-i*8
+);
+
+scene.add(person);
+
+people.push(person);
+
+}
+
+}
+
+/* 3D HUMAN CHARACTER */
+
+function createHuman(){
+
+let human=new THREE.Group();
+
+let skin=material(0x9b6849);
+
+let shirt=material(0x2875a7);
+
+let trousers=material(0x252b39);
+
+let head=new THREE.Mesh(
+new THREE.SphereGeometry(.23,20,20),
+skin
+);
+
+head.position.y=1.65;
+
+human.add(head);
+
+let body=new THREE.Mesh(
+new THREE.CapsuleGeometry(.28,.65,6,12),
+shirt
+);
+
+body.position.y=1.05;
+
+human.add(body);
+
+for(let x of [-.14,.14]){
+
+let leg=new THREE.Mesh(
+new THREE.CapsuleGeometry(.12,.65,4,8),
+trousers
+);
+
+leg.position.set(x,.38,0);
+
+human.add(leg);
+
+let arm=new THREE.Mesh(
+new THREE.CapsuleGeometry(.09,.55,4,8),
+skin
+);
+
+arm.position.set(x*2,1.1,0);
+
+arm.rotation.z=x>0?-.2:.2;
+
+human.add(arm);
+
+}
+
+return human;
 
 }
 
 /* GAME START */
 
-function startGame(place) {
+window.start=function(place){
 
-    destination = place;
+worldType=place;
 
-    passengers = 0;
-    speed = 0;
-    distance = 0;
-    steering = 0;
-    parked = true;
-    paused = false;
-    camera = 0;
+document.getElementById('location').innerText=place.toUpperCase();
 
-    document.getElementById("destination")
-    .innerText = place.toUpperCase();
+screen('environment');
 
-    document.getElementById("money")
-    .innerText = money;
+document.getElementById('environment').classList.remove('active');
 
-    document.getElementById("passengers")
-    .innerText = passengers;
+document.getElementById('hud').classList.add('active');
 
-    document.getElementById("task")
-    .innerText = "Find the bus stop";
+speed=0;
+passengers=0;
+gear='D';
+paused=false;
 
-    document.getElementById("dispute").style.display =
-    "none";
+notify('WELCOME. FIND YOUR PASSENGERS.');
 
-    document.getElementById("complete").style.display =
-    "none";
-
-    showScreen("driving");
-
-    render();
-
-}
+};
 
 /* CONTROLS */
 
-function hold(id,callback) {
+function hold(id,callback){
 
-    let button = document.getElementById(id);
+let el=document.getElementById(id);
 
-    button.addEventListener("pointerdown",e => {
+el.addEventListener('pointerdown',e=>{
 
-        e.preventDefault();
-        callback(true);
+e.preventDefault();
 
-    });
+callback(true);
 
-    button.addEventListener("pointerup",() => {
-        callback(false);
-    });
+});
 
-    button.addEventListener("pointerleave",() => {
-        callback(false);
-    });
-
-    button.addEventListener("pointercancel",() => {
-        callback(false);
-    });
+['pointerup','pointerleave','pointercancel']
+.forEach(event=>el.addEventListener(event,()=>callback(false)));
 
 }
 
-hold("accelerator",v => acceleration=v);
-hold("brake",v => braking=v);
-hold("reverse",v => reversing=v);
-hold("left",v => steering=v?-1:0);
-hold("right",v => steering=v?1:0);
+hold('accelerator',v=>accelerate=v);
 
-function changeCamera() {
+hold('brake',v=>braking=v);
 
-    camera++;
+hold('left',v=>steering=v?-1:0);
 
-    if(camera>2) camera=0;
+hold('right',v=>steering=v?1:0);
 
-    notify(
-        camera===0 ? "OUTSIDE CAMERA" :
-        camera===1 ? "SIDE VIEW" :
-        "ORTHOGRAPHIC VIEW"
-    );
+/* CAMERA */
 
-}
+window.changeCamera=function(){
 
-function toggleParking() {
+cameraMode=(cameraMode+1)%3;
 
-    if(speed < 3) {
+notify(
+cameraMode===0?'OUTSIDE VIEW':
+cameraMode===1?'SIDE VIEW':
+'TOP VIEW'
+);
 
-        parked = !parked;
+};
 
-        notify(parked ?
-        "PARKING BRAKE ON" :
-        "PARKING BRAKE OFF");
+/* PASSENGERS */
 
-    }
+window.boardPassenger=function(){
 
-}
+if(Math.abs(speed)>2){
 
-/* DRAWING WORLD */
+notify('STOP THE BUS FIRST');
 
-let trees = [];
-let buildings = [];
-
-function createWorld() {
-
-    trees=[];
-    buildings=[];
-
-    for(let i=0;i<30;i++) {
-
-        trees.push({
-            x:Math.random()*canvas.width,
-            y:Math.random()*canvas.height
-        });
-
-    }
-
-    for(let i=0;i<15;i++) {
-
-        buildings.push({
-            x:Math.random()*canvas.width,
-            h:40+Math.random()*100
-        });
-
-    }
+return;
 
 }
 
-createWorld();
+if(gear!=='P'){
 
-function drawRoad() {
+notify('SELECT PARK BEFORE PICKUP');
 
-    let w=canvas.width;
-    let h=canvas.height;
-
-    let sky = ctx.createLinearGradient(0,0,0,h);
-
-    if(destination==="Desert") {
-
-        sky.addColorStop(0,"#e6a34b");
-        sky.addColorStop(1,"#f2d48a");
-
-    } else {
-
-        sky.addColorStop(0,"#73b4e0");
-        sky.addColorStop(1,"#d8e9d6");
-
-    }
-
-    ctx.fillStyle=sky;
-    ctx.fillRect(0,0,w,h);
-
-    if(destination==="Desert") {
-
-        ctx.fillStyle="#c69b56";
-        ctx.fillRect(0,h*.43,w,h*.57);
-
-    } else {
-
-        ctx.fillStyle="#508c46";
-        ctx.fillRect(0,h*.43,w,h*.57);
-
-    }
-
-    if(destination==="City") {
-
-        buildings.forEach((b,i)=>{
-
-            ctx.fillStyle=["#8996a3","#657889","#a7a4a0"][i%3];
-
-            ctx.fillRect(
-                b.x,
-                h*.43-b.h,
-                65,
-                b.h
-            );
-
-            ctx.fillStyle="#d9dfce";
-
-            for(let y=0;y<b.h-10;y+=18) {
-
-                ctx.fillRect(b.x+12,h*.43-b.h+y,10,8);
-                ctx.fillRect(b.x+35,h*.43-b.h+y,10,8);
-
-            }
-
-        });
-
-    }
-
-    // Road
-
-    ctx.fillStyle="#363a3e";
-
-    ctx.beginPath();
-
-    ctx.moveTo(w*.32,h*.43);
-    ctx.lineTo(w*.68,h*.43);
-    ctx.lineTo(w*.95,h);
-    ctx.lineTo(w*.05,h);
-
-    ctx.closePath();
-    ctx.fill();
-
-    ctx.strokeStyle="#eee";
-    ctx.lineWidth=4;
-
-    ctx.beginPath();
-    ctx.moveTo(w*.32,h*.43);
-    ctx.lineTo(w*.05,h);
-    ctx.stroke();
-
-    ctx.beginPath();
-    ctx.moveTo(w*.68,h*.43);
-    ctx.lineTo(w*.95,h);
-    ctx.stroke();
-
-    // Road markings
-
-    ctx.strokeStyle="#e6dba9";
-    ctx.lineWidth=4;
-    ctx.setLineDash([30,25]);
-
-    ctx.beginPath();
-    ctx.moveTo(w*.5,h*.45);
-    ctx.lineTo(w*.5,h);
-    ctx.stroke();
-
-    ctx.setLineDash([]);
+return;
 
 }
 
-/* HUMAN PASSENGER */
+if(passengers>=20){
 
-function drawPerson(x,y,scale=1) {
+notify('BUS IS FULL');
 
-    ctx.save();
-
-    ctx.translate(x,y);
-    ctx.scale(scale,scale);
-
-    // legs
-
-    ctx.strokeStyle="#252b38";
-    ctx.lineWidth=7;
-
-    ctx.beginPath();
-    ctx.moveTo(-5,0);
-    ctx.lineTo(-7,25);
-    ctx.moveTo(5,0);
-    ctx.lineTo(8,25);
-    ctx.stroke();
-
-    // body
-
-    ctx.fillStyle="#2873a8";
-
-    ctx.fillRect(-12,-38,24,38);
-
-    // arms
-
-    ctx.strokeStyle="#b77b51";
-    ctx.lineWidth=6;
-
-    ctx.beginPath();
-    ctx.moveTo(-12,-32);
-    ctx.lineTo(-20,-8);
-    ctx.moveTo(12,-32);
-    ctx.lineTo(20,-8);
-    ctx.stroke();
-
-    // head
-
-    ctx.fillStyle="#9c6847";
-
-    ctx.beginPath();
-    ctx.arc(0,-48,12,0,Math.PI*2);
-    ctx.fill();
-
-    // hair
-
-    ctx.fillStyle="#242020";
-
-    ctx.beginPath();
-    ctx.arc(0,-54,11,Math.PI,Math.PI*2);
-    ctx.fill();
-
-    ctx.restore();
+return;
 
 }
 
-/* BUS */
+passengers++;
 
-function drawBus() {
+notify('PASSENGER BOARDED');
 
-    let w=canvas.width;
-    let h=canvas.height;
+if(passengers===1){
 
-    ctx.save();
+setTimeout(()=>{
 
-    let busX=w*.5+steering*35;
-    let busY=h*.68;
+notify('DRIVE TO YOUR DESTINATION');
 
-    if(camera===1) {
-
-        busX=w*.5;
-        busY=h*.58;
-
-    }
-
-    if(camera===2) {
-
-        busX=w*.5;
-        busY=h*.55;
-
-    }
-
-    ctx.translate(busX,busY);
-
-    let bw=camera===1?280:camera===2?180:250;
-    let bh=camera===1?100:camera===2?95:115;
-
-    // shadow
-
-    ctx.fillStyle="#0006";
-    ctx.beginPath();
-    ctx.ellipse(0,bh*.55,bw*.65,18,0,0,Math.PI*2);
-    ctx.fill();
-
-    // wheels
-
-    ctx.fillStyle="#161616";
-
-    ctx.fillRect(-bw*.43,bh*.25,35,35);
-    ctx.fillRect(bw*.32,bh*.25,35,35);
-
-    // bus body
-
-    let gradient=ctx.createLinearGradient(0,-bh,0,bh);
-
-    gradient.addColorStop(0,"#f7d84b");
-    gradient.addColorStop(1,"#b97a13");
-
-    ctx.fillStyle=gradient;
-
-    ctx.beginPath();
-
-    ctx.roundRect(-bw/2,-bh*.5,bw,bh,12);
-    ctx.fill();
-
-    // windows
-
-    ctx.fillStyle="#243d50";
-
-    for(let i=0;i<5;i++) {
-
-        ctx.fillRect(
-            -bw*.42+i*bw*.17,
-            -bh*.38,
-            bw*.13,
-            bh*.36
-        );
-
-    }
-
-    // windshield
-
-    ctx.fillStyle="#142b40";
-
-    ctx.fillRect(-bw*.12,-bh*.38,bw*.27,bh*.36);
-
-    // headlights
-
-    ctx.fillStyle="#fff5a0";
-
-    ctx.fillRect(-bw*.48,bh*.22,15,13);
-    ctx.fillRect(bw*.43,bh*.22,15,13);
-
-    // bus name
-
-    ctx.fillStyle="#17283a";
-    ctx.font="bold 14px Arial";
-    ctx.textAlign="center";
-
-    ctx.fillText("CITY EXPRESS",0,bh*.05);
-
-    ctx.restore();
+},1000);
 
 }
 
-/* PASSENGER STOP */
+};
 
-function drawStop() {
+/* PAUSE */
 
-    let w=canvas.width;
-    let h=canvas.height;
+window.togglePause=function(){
 
-    ctx.fillStyle="#242b32";
+paused=!paused;
 
-    ctx.fillRect(w*.75,h*.44,5,85);
+notify(paused?'PAUSED':'RESUMED');
 
-    ctx.fillStyle="#f5d147";
+};
 
-    ctx.fillRect(w*.71,h*.43,90,40);
+/* UPDATE */
 
-    ctx.fillStyle="#17283a";
-    ctx.font="bold 13px Arial";
+function update(){
 
-    ctx.fillText("BUS STOP",w*.755,h*.455);
+if(paused)return;
 
-    drawPerson(w*.81,h*.68,.8);
-    drawPerson(w*.88,h*.68,.8);
+if(gear==='D' && accelerate){
+
+speed+=.025;
+
+}
+
+if(gear==='R' && accelerate){
+
+speed-=.02;
+
+}
+
+if(braking){
+
+speed*=.94;
+
+}
+
+if(gear==='P'||gear==='N'){
+
+speed*=.97;
+
+}
+
+speed=Math.max(-.5,Math.min(speed,.65));
+
+bus.position.z-=speed;
+
+bus.position.x+=steering*.06;
+
+bus.position.x=Math.max(-4,Math.min(4,bus.position.x));
+
+bus.rotation.y=steering*.08;
+
+wheels.forEach(w=>{
+
+w.rotation.x+=speed;
+
+});
+
+document.getElementById('speed').innerText=
+Math.round(Math.abs(speed)*160);
+
+document.getElementById('money').innerText=money;
+
+}
+
+/* CAMERA FOLLOW */
+
+function updateCamera(){
+
+if(cameraMode===0){
+
+camera.position.set(
+bus.position.x+5,
+7,
+bus.position.z+11
+);
+
+camera.lookAt(
+bus.position.x,
+1.5,
+bus.position.z-5
+);
+
+}
+
+else if(cameraMode===1){
+
+camera.position.set(
+bus.position.x+11,
+4,
+bus.position.z+1
+);
+
+camera.lookAt(bus.position);
+
+}
+
+else{
+
+camera.position.set(
+bus.position.x,
+22,
+bus.position.z+2
+);
+
+camera.lookAt(bus.position);
+
+}
 
 }
 
 /* RENDER */
 
-function render() {
+function animate(){
 
-    if(!document.getElementById("driving")
-    .classList.contains("active")) return;
+requestAnimationFrame(animate);
 
-    if(!paused) {
+if(bus && document.getElementById('hud').classList.contains('active')){
 
-        if(!parked) {
+update();
 
-            if(acceleration) speed+=0.12;
-
-            if(braking) speed-=0.3;
-
-            if(reversing) speed-=0.12;
-
-            if(!acceleration && !reversing) {
-                speed*=0.995;
-            }
-
-        } else {
-            speed=0;
-        }
-
-        speed=Math.max(-25,Math.min(speed,120));
-
-        if(Math.abs(speed)>2) {
-
-            distance+=Math.abs(speed)*0.0006;
-
-        }
-
-    }
-
-    document.getElementById("speed").innerText =
-    Math.abs(Math.round(speed));
-
-    drawRoad();
-
-    if(camera!==2) drawStop();
-
-    drawBus();
-
-    requestAnimationFrame(render);
+updateCamera();
 
 }
 
-/* PASSENGER PICKUP */
-
-function pickupPassengers() {
-
-    if(speed>3 || !parked) {
-
-        notify("STOP THE BUS FIRST!");
-
-        return;
-
-    }
-
-    if(passengers>=5) {
-
-        notify("BUS IS FULL!");
-
-        return;
-
-    }
-
-    passengers++;
-
-    document.getElementById("passengers")
-    .innerText=passengers;
-
-    document.getElementById("task")
-    .innerText="Transport passengers";
-
-    notify("PASSENGER BOARDED!");
-
-    if(Math.random()<0.22) {
-
-        setTimeout(()=>{
-
-            if(Math.random()<0.5) {
-
-                document.getElementById("dispute")
-                .style.display="flex";
-
-            }
-
-        },1500);
-
-    }
+renderer.render(scene,camera);
 
 }
 
-/* FARE SYSTEM */
+window.addEventListener('resize',()=>{
 
-function resolveDispute(report) {
+camera.aspect=innerWidth/innerHeight;
 
-    document.getElementById("dispute")
-    .style.display="none";
+camera.updateProjectionMatrix();
 
-    if(report) {
-
-        notify("DISPUTE REPORTED. CONTINUE SAFELY.");
-
-    } else {
-
-        notify("PASSENGER RELEASED.");
-
-    }
-
-}
-
-/* MONEY */
-
-function collectFare() {
-
-    if(passengers===0) {
-
-        notify("NO PASSENGERS ON BOARD!");
-
-        return;
-
-    }
-
-    let earned=passengers*fare;
-
-    money+=earned;
-
-    passengers=0;
-
-    document.getElementById("money").innerText=money;
-
-    document.getElementById("passengers").innerText=0;
-
-    notify("FARE COLLECTED: ₦"+earned);
-
-}
-
-/* NOTIFICATION */
-
-function notify(text) {
-
-    let box=document.getElementById("message");
-
-    box.innerText=text;
-
-    box.style.display="block";
-
-    setTimeout(()=>{
-        box.style.display="none";
-    },2500);
-
-}
-
-/* PAUSE */
-
-function pauseGame() {
-
-    paused=!paused;
-
-    notify(paused?"GAME PAUSED":"GAME RESUMED");
-
-}
-
-/* MISSION */
-
-function finishMission() {
-
-    if(passengers>0) {
-
-        collectFare();
-
-    }
-
-    speed=0;
-    parked=true;
-
-    let reward=2000+currentLevel*1000;
-
-    money+=reward;
-
-    document.getElementById("money").innerText=money;
-
-    document.getElementById("reward").innerText=reward;
-
-    unlockedLevel=Math.max(
-        unlockedLevel,
-        currentLevel+1
-    );
-
-    document.getElementById("complete")
-    .style.display="flex";
-
-}
-
-function nextLevel() {
-
-    currentLevel++;
-
-    if(currentLevel>20) currentLevel=20;
-
-    showScreen("environment");
-
-}
-
-/* AUTOMATIC JOURNEY */
-
-let journeyTimer=0;
-
-setInterval(()=>{
-
-    if(!document.getElementById("driving")
-    .classList.contains("active")) return;
-
-    if(paused || parked) return;
-
-    journeyTimer++;
-
-    if(journeyTimer>35) {
-
-        journeyTimer=0;
-
-        notify("DESTINATION APPROACHING!");
-
-    }
-
-},1000);
-
-/* MISSION COMPLETION BUTTON */
-
-document.getElementById("task")
-.addEventListener("click",()=>{
-
-    if(parked && speed===0) {
-
-        if(passengers===0) {
-
-            pickupPassengers();
-
-        } else {
-
-            collectFare();
-
-        }
-
-    }
-
-});
-
-/* FINISH JOURNEY */
-
-document.getElementById("park")
-.addEventListener("dblclick",()=>{
-
-    if(parked && passengers===0) {
-
-        finishMission();
-
-    }
+renderer.setSize(innerWidth,innerHeight);
 
 });
 
 /* INITIALIZE */
 
-showLevels();
-
-</script>
-
-</body>
-    </html>      12,
-            -i*40
-        );
-
-        scene.add(mountain);
-    }
-
-
-    const sun = new THREE.Mesh(
-        new THREE.SphereGeometry(5,24,24),
-        new THREE.MeshBasicMaterial({
-            color: 0xffe6a1
-        })
-    );
-
-    sun.position.set(35,40,-100);
-
-    scene.add(sun);
-}
-
-
-/* ---------------- HORSE ---------------- */
-
-function makePart(parent, geometry, material, position) {
-
-    const mesh = new THREE.Mesh(geometry,material);
-
-    mesh.position.set(...position);
-
-    mesh.castShadow = true;
-    mesh.receiveShadow = true;
-
-    parent.add(mesh);
-
-    return mesh;
-}
-
-
-function createHorse() {
-
-    horse = new THREE.Group();
-
-    const brown = new THREE.MeshStandardMaterial({
-        color: 0x704323,
-        roughness: .85
-    });
-
-    const dark = new THREE.MeshStandardMaterial({
-        color: 0x21150f
-    });
-
-    const saddle = new THREE.MeshStandardMaterial({
-        color: 0x362116
-    });
-
-    // Horse body
-    makePart(
-        horse,
-        new THREE.BoxGeometry(1.1,.85,2),
-        brown,
-        [0,1.45,0]
-    );
-
-    // Neck
-    const neck = makePart(
-        horse,
-        new THREE.CylinderGeometry(.35,.45,1.3,12),
-        brown,
-        [0,1.95,-.75]
-    );
-
-    neck.rotation.x = -.35;
-
-    // Head
-    makePart(
-        horse,
-        new THREE.SphereGeometry(.38,16,16),
-        brown,
-        [0,2.55,-1.2]
-    );
-
-    // Ears
-    for (const x of [-.2,.2]) {
-        const ear = makePart(
-            horse,
-            new THREE.ConeGeometry(.12,.5,8),
-            dark,
-            [x,2.95,-1.18]
-        );
-
-        ear.rotation.z = x > 0 ? -.2 : .2;
-    }
-
-    // Mane
-    makePart(
-        horse,
-        new THREE.BoxGeometry(.45,.85,.2),
-        dark,
-        [0,2.45,-.65]
-    );
-
-    // Saddle
-    makePart(
-        horse,
-        new THREE.BoxGeometry(.9,.2,.9),
-        saddle,
-        [0,1.95,.15]
-    );
-
-    // Legs
-    for (const x of [-.4,.4]) {
-
-        for (const z of [-.65,.65]) {
-
-            const leg = makePart(
-                horse,
-                new THREE.CylinderGeometry(.12,.15,.95,10),
-                brown,
-                [x,.85,z]
-            );
-
-            horseParts.push(leg);
-        }
-    }
-
-    horse.position.set(0,0,2);
-
-    horse.rotation.y = Math.PI;
-
-    scene.add(horse);
-
-
-    createRider();
-}
-
-
-/* ---------------- RIDER ---------------- */
-
-function createRider() {
-
-    rider = new THREE.Group();
-
-    const blue = new THREE.MeshStandardMaterial({
-        color: 0x203b71,
-        roughness: .8
-    });
-
-    const skin = new THREE.MeshStandardMaterial({
-        color: 0xb9825b
-    });
-
-    const gold = new THREE.MeshStandardMaterial({
-        color: 0xc79a37,
-        metalness: .6
-    });
-
-    // Body
-    makePart(
-        rider,
-        new THREE.CylinderGeometry(.3,.42,.9,12),
-        blue,
-        [0,0,0]
-    );
-
-    // Head
-    makePart(
-        rider,
-        new THREE.SphereGeometry(.25,16,16),
-        skin,
-        [0,.62,0]
-    );
-
-    // Helmet
-    makePart(
-        rider,
-        new THREE.SphereGeometry(.28,16,16,0,Math.PI*2,0,Math.PI/2),
-        gold,
-        [0,.75,0]
-    );
-
-    // Arms
-    for (const x of [-.38,.38]) {
-
-        const arm = makePart(
-            rider,
-            new THREE.CylinderGeometry(.1,.12,.65,8),
-            blue,
-            [x,.05,-.05]
-        );
-
-        arm.rotation.z = x > 0 ? -.6 : .6;
-    }
-
-    rider.position.set(0,2.2,2);
-
-    scene.add(rider);
-}
-
-
-/* ---------------- OBSTACLES ---------------- */
-
-function createObstacles() {
-
-    obstacles = [];
-
-    for (let i = 0; i < 25; i++) {
-
-        const obstacle = new THREE.Group();
-
-        const material = new THREE.MeshStandardMaterial({
-            color: 0x725033
-        });
-
-        const log = new THREE.Mesh(
-            new THREE.BoxGeometry(1.6,1.1,1.2),
-            material
-        );
-
-        log.position.y = .55;
-
-        log.castShadow = true;
-
-        obstacle.add(log);
-
-        obstacle.position.set(
-            Math.random()*8-4,
-            0,
-            -15-i*24
-        );
-
-        scene.add(obstacle);
-
-        obstacles.push({
-            object: obstacle,
-            hit: false
-        });
-    }
-}
-
-
-/* ---------------- COINS ---------------- */
-
-function createCoins() {
-
-    coinsObjects = [];
-
-    const material = new THREE.MeshStandardMaterial({
-        color: 0xffd12e,
-        metalness: .8,
-        roughness: .2
-    });
-
-    for (let i = 0; i < 40; i++) {
-
-        const coin = new THREE.Mesh(
-            new THREE.TorusGeometry(.4,.12,12,24),
-            material
-        );
-
-        coin.position.set(
-            Math.random()*7-3.5,
-            1.5,
-            -12-i*15
-        );
-
-        scene.add(coin);
-
-        coinsObjects.push(coin);
-    }
-}
-
-
-/* ---------------- CONTROLS ---------------- */
-
-function setupControls() {
-
-    function holdButton(id,key) {
-
-        const button = $(id);
-
-        button.addEventListener("pointerdown", e => {
-            e.preventDefault();
-            input[key] = true;
-        });
-
-        function release() {
-            input[key] = false;
-        }
-
-        button.addEventListener("pointerup",release);
-        button.addEventListener("pointercancel",release);
-        button.addEventListener("pointerleave",release);
-    }
-
-    holdButton("left","left");
-    holdButton("right","right");
-    holdButton("boost","boost");
-
-
-    $("jump").addEventListener("pointerdown",e => {
-        e.preventDefault();
-        jump();
-    });
-
-
-    window.addEventListener("keydown",e => {
-
-        if (e.key === "ArrowLeft" || e.key === "a")
-            input.left = true;
-
-        if (e.key === "ArrowRight" || e.key === "d")
-            input.right = true;
-
-        if (e.key === "ArrowUp" || e.key === " ")
-            jump();
-
-        if (e.key === "Shift")
-            input.boost = true;
-    });
-
-
-    window.addEventListener("keyup",e => {
-
-        if (e.key === "ArrowLeft" || e.key === "a")
-            input.left = false;
-
-        if (e.key === "ArrowRight" || e.key === "d")
-            input.right = false;
-
-        if (e.key === "Shift")
-            input.boost = false;
-    });
-}
-
-
-function jump() {
-
-    if (!playing || paused || jumping) return;
-
-    jumping = true;
-
-    jumpHeight = 2.8;
-}
-
-
-/* ---------------- UPDATE GAME ---------------- */
-
-function updateGame(delta) {
-
-    if (!playing || paused) return;
-
-    const normalSpeed = 13 * horseUpgrade;
-
-    speed = input.boost ? normalSpeed*1.6 : normalSpeed;
-
-    if (input.left) side -= 8*delta;
-
-    if (input.right) side += 8*delta;
-
-    side = THREE.MathUtils.clamp(side,-5,5);
-
-
-    if (jumping) {
-
-        jumpHeight -= 6*delta;
-
-        if (jumpHeight <= 0) {
-            jumpHeight = 0;
-            jumping = false;
-        }
-    }
-
-
-    // Horse movement
-    horse.position.x = THREE.MathUtils.lerp(
-        horse.position.x,
-        side,
-        .15
-    );
-
-    horse.position.y = jumpHeight;
-
-    horse.rotation.z = input.left ? .12 :
-                       input.right ? -.12 : 0;
-
-
-    // Rider follows horse
-    rider.position.x = horse.position.x;
-
-    rider.position.y = 2.2+jumpHeight;
-
-
-    // Leg movement
-    horseParts.forEach((leg,i) => {
-        leg.rotation.x =
-            Math.sin(performance.now()*.012+i*Math.PI)*.35;
-    });
-
-
-    // World movement
-    distance += speed*delta;
-
-
-    // Obstacles
-    obstacles.forEach(item => {
-
-        const o = item.object;
-
-        o.position.z += speed*delta;
-
-        if (o.position.z > 5) {
-            o.position.z -= 650;
-            o.position.x = Math.random()*8-4;
-            item.hit = false;
-        }
-
-        const near =
-            Math.abs(o.position.z-2)<1.5;
-
-        const across =
-            Math.abs(o.position.x-side)<1.25;
-
-        if (near && across && !item.hit && jumpHeight<1) {
-
-            item.hit = true;
-
-            health -= 10;
-
-            if (health <= 0) {
-                health = 0;
-                failLevel();
-            }
-        }
-    });
-
-
-    // Coins
-    coinsObjects.forEach(coin => {
-
-        coin.rotation.y += delta*3;
-
-        coin.position.z += speed*delta;
-
-        if (coin.position.z > 5) {
-            coin.position.z -= 650;
-            coin.position.x = Math.random()*7-3.5;
-            coin.visible = true;
-        }
-
-        if (
-            coin.visible &&
-            Math.abs(coin.position.z-2)<1.3 &&
-            Math.abs(coin.position.x-side)<1.5
-        ) {
-            coins++;
-            coin.visible = false;
-        }
-    });
-
-
-    // Progress and levels
-    progress = Math.min(
-        100,
-        Math.floor(distance/650*100)
-    );
-
-    if (distance >= 650) {
-
-        distance = 0;
-
-        level++;
-
-        health = Math.min(100,health+15);
-
-        obstacles.forEach((item,i) => {
-            item.object.position.z = -15-i*24;
-            item.hit = false;
-        });
-
-        coinsObjects.forEach((coin,i) => {
-            coin.position.z = -12-i*15;
-            coin.visible = true;
-        });
-    }
-
-
-    // Camera
-    camera.position.x = THREE.MathUtils.lerp(
-        camera.position.x,
-        side*.3,
-        .05
-    );
-
-    camera.position.y = 5+jumpHeight*.2;
-
-    camera.lookAt(side*.25,1.5+jumpHeight,-6);
-
-
-    updateHUD();
-}
-
-
-/* ---------------- HUD ---------------- */
-
-function updateHUD() {
-
-    $("level").textContent = level;
-
-    $("coins").textContent = coins;
-
-    $("health").textContent = health;
-
-    $("progress").textContent = progress;
-}
-
-
-/* ---------------- PAUSE ---------------- */
-
-$("pauseButton").addEventListener("click",pauseGame);
-
-function pauseGame() {
-
-    if (!playing) return;
-
-    paused = true;
-
-    $("menuTitle").textContent = "GAME PAUSED";
-
-    $("menu").style.display = "flex";
-}
-
-
-$("resume").addEventListener("click",() => {
-
-    paused = false;
-
-    $("menu").style.display = "none";
-});
-
-
-$("restart").addEventListener("click",() => {
-
-    distance = 0;
-    progress = 0;
-    health = 100;
-    side = 0;
-    jumpHeight = 0;
-    jumping = false;
-
-    horse.position.set(0,0,2);
-    rider.position.set(0,2.2,2);
-
-    obstacles.forEach((item,i) => {
-        item.object.position.z = -15-i*24;
-        item.hit = false;
-    });
-
-    coinsObjects.forEach((coin,i) => {
-        coin.position.z = -12-i*15;
-        coin.visible = true;
-    });
-
-    playing = true;
-    paused = false;
-
-    $("menu").style.display = "none";
-
-    updateHUD();
-});
-
-
-$("upgrade").addEventListener("click",() => {
-
-    if (coins < 20) {
-        $("menuTitle").textContent =
-            "YOU NEED 20 COINS!";
-        return;
-    }
-
-    coins -= 20;
-
-    horseUpgrade += .15;
-
-    $("menuTitle").textContent =
-        "HORSE UPGRADED!";
-
-    updateHUD();
-});
-
-
-/* ---------------- FAILED LEVEL ---------------- */
-
-function failLevel() {
-
-    playing = false;
-
-    paused = true;
-
-    $("menuTitle").textContent =
-        "CHALLENGE FAILED — RESTART LEVEL";
-
-    $("menu").style.display = "flex";
-}
-
-
-/* ---------------- RESIZE ---------------- */
-
-function resize() {
-
-    if (!camera || !renderer) return;
-
-    camera.aspect =
-        window.innerWidth/window.innerHeight;
-
-    camera.updateProjectionMatrix();
-
-    renderer.setSize(
-        window.innerWidth,
-        window.innerHeight
-    );
-}
-
-
-/* ---------------- GAME LOOP ---------------- */
-
-function animate(now) {
-
-    animationId = requestAnimationFrame(animate);
-
-    const delta = Math.min(
-        (now-lastTime)/1000,
-        .05
-    );
-
-    lastTime = now;
-
-    updateGame(delta);
-
-    renderer.render(scene,camera);
-}
-
-</script>
-
-</body>
-</html>0; i < 22; i++) {
-
-        const mountain = new THREE.Mesh(
-            new THREE.ConeGeometry(
-                9 + Math.random() * 10,
-                20 + Math.random() * 25,
-                5
-            ),
-            new THREE.MeshStandardMaterial({
-                color: i % 2 ? 0x657d72 : 0x829080
-            })
-        );
-
-        mountain.position.set(
-            (Math.random() > .5 ? 1 : -1) *
-            (35 + Math.random() * 65),
-            7,
-            -i * 16
-        );
-
-        scene.add(mountain);
-    }
-
-
-    /* TREES */
-
-    for (let i = 0; i < 90; i++) {
-
-        const x = Math.random() > .5 ? 13 : -13;
-
-        const z = -Math.random() * 650;
-
-        createTree(x, z);
-    }
-
-
-    /* SUN */
-
-    const sun = new THREE.Mesh(
-        new THREE.SphereGeometry(5, 24, 24),
-        new THREE.MeshBasicMaterial({
-            color: 0xffe7a1
-        })
-    );
-
-    sun.position.set(40, 40, -120);
-
-    scene.add(sun);
-}
-
-
-function createTree(x, z) {
-
-    const tree = new THREE.Group();
-
-    const trunk = new THREE.Mesh(
-        new THREE.CylinderGeometry(.25, .4, 3, 8),
-        new THREE.MeshStandardMaterial({
-            color: 0x604026
-        })
-    );
-
-    trunk.position.y = 1.5;
-
-    tree.add(trunk);
-
-    const leaves = new THREE.Mesh(
-        new THREE.ConeGeometry(2, 5, 8),
-        new THREE.MeshStandardMaterial({
-            color: 0x245b30
-        })
-    );
-
-    leaves.position.y = 4;
-
-    tree.add(leaves);
-
-    tree.position.set(x, 0, z);
-
-    scene.add(tree);
-}
-
-
-/* TRACK */
-
-function createTrack() {
-
-    const road = new THREE.Mesh(
-        new THREE.PlaneGeometry(13, 1000),
-        new THREE.MeshStandardMaterial({
-            color: 0x9a8058
-        })
-    );
-
-    road.rotation.x = -Math.PI / 2;
-    road.position.set(0, .01, -300);
-
-    scene.add(road);
-
-
-    /* ROAD EDGES */
-
-    for (let x of [-6.5, 6.5]) {
-
-        const edge = new THREE.Mesh(
-            new THREE.BoxGeometry(.2, .15, 1000),
-            new THREE.MeshStandardMaterial({
-                color: 0xd6b36a
-            })
-        );
-
-        edge.position.set(x, .1, -300);
-
-        scene.add(edge);
-    }
-}
-
-
-/* HORSE AND RIDER */
-
-function createHorse() {
-
-    const loader = new GLTFLoader();
-
-    document.getElementById("loadingText").textContent =
-        "Loading 3D horse...";
-
-
-    loader.load(
-        "https://threejs.org/examples/models/gltf/Horse.glb",
-
-        (gltf) => {
-
-            horse = gltf.scene;
-
-            horse.scale.set(1.25, 1.25, 1.25);
-
-            horse.position.set(0, 0, 2);
-
-            horse.rotation.y = Math.PI;
-
-            horse.traverse(obj => {
-                if (obj.isMesh) {
-                    obj.castShadow = true;
-                    obj.receiveShadow = true;
-                }
-            });
-
-            scene.add(horse);
-
-            if (gltf.animations.length) {
-                mixer = new THREE.AnimationMixer(horse);
-                mixer.clipAction(gltf.animations[0]).play();
-            }
-
-            loadRider();
-        },
-
-        undefined,
-
-        () => {
-            createFallbackHorse();
-            loadRider();
-        }
-    );
-}
-
-
-/* FALLBACK HORSE */
-
-function createFallbackHorse() {
-
-    horse = new THREE.Group();
-
-    const bodyMaterial = new THREE.MeshStandardMaterial({
-        color: 0x704222,
-        roughness: .8
-    });
-
-    const body = new THREE.Mesh(
-        new THREE.BoxGeometry(1.2, .8, 2),
-        bodyMaterial
-    );
-
-    body.position.y = 1.5;
-
-    horse.add(body);
-
-
-    const head = new THREE.Mesh(
-      mountain < 1.5;
-
-        if (close && horizontal && coin.visible) {
-
-            coins += 1;
-
-            coin.visible = false;
-
-            setTimeout(() => {
-                coin.visible = true;
-            }, 2500);
-
-            updateHUD();
-        }
-    });
-
-
-    /* LEVEL PROGRESS */
-
-    progress = Math.min(
-        100,
-        Math.floor((distance % levelDistance) /
-        levelDistance * 100)
-    );
-
-    if (progress >= 100) {
-
-        level++;
-
-        distance = 0;
-
-        horseHealth = Math.min(100, horseHealth + 10);
-
-        levelDistance += 100;
-
-        document.getElementById("loadingText").textContent =
-            "Welcome to Level " + level;
-
-        updateHUD();
-    }
-
-
-    /* CAMERA FOLLOW */
-
-    camera.position.x = THREE.MathUtils.lerp(
-        camera.position.x,
-        side * .35,
-        .04
-    );
-
-    camera.position.y = 5 + jumpHeight * .3;
-
-    camera.lookAt(
-        side * .3,
-        1.5 + jumpHeight,
-        -6
-    );
-
-
-    /* HORSE ANIMATION */
-
-    if (mixer) {
-        mixer.update(delta);
-    }
-
-    updateHUD();
-}
-
-
-/* HUD */
-
-function updateHUD() {
-
-    document.getElementById("level").textContent = level;
-
-    document.getElementById("coins").textContent = coins;
-
-    document.getElementById("horseHealth").textContent =
-        Math.max(0, Math.floor(horseHealth));
-
-    document.getElementById("progress").textContent =
-        progress;
-}
-
-
-/* PAUSE */
-
-window.pauseGame = function() {
-
-    if (!playing) return;
-
-    paused = true;
-
-    document.getElementById("menuTitle").textContent =
-        "GAME PAUSED";
-
-    document.getElementById("menu").style.display = "flex";
-};
-
-
-window.resumeGame = function() {
-
-    paused = false;
-
-    document.getElementById("menu").style.display = "none";
-};
-
-
-window.restartLevel = function() {
-
-    distance = 0;
-
-    progress = 0;
-
-    horseHealth = 100;
-
-    side = 0;
-
-    if (horse) {
-        horse.position.set(0, 0, 2);
-    }
-
-    if (rider) {
-        rider.position.set(0, 1.4, 2);
-    }
-
-    obstacles.forEach((o, i) => {
-        o.position.z = -15 - i * 18;
-    });
-
-    collectables.forEach((c, i) => {
-        c.visible = true;
-        c.position.z = -10 - i * 10;
-    });
-
-    paused = false;
-
-    playing = true;
-
-    document.getElementById("menu").style.display = "none";
-
-    updateHUD();
-};
-
-
-/* UPGRADE HORSE */
-
-window.upgradeHorse = function() {
-
-    if (coins < 20) {
-
-        document.getElementById("menuTitle").textContent =
-            "YOU NEED 20 COINS TO UPGRADE!";
-
-        return;
-    }
-
-    coins -= 20;
-
-    horseUpgrade += .15;
-
-    document.getElementById("menuTitle").textContent =
-        "HORSE UPGRADED!";
-
-    updateHUD();
-};
-
-
-/* LEVEL FAILED */
-
-function endLevel() {
-
-    playing = false;
-
-    paused = true;
-
-    document.getElementById("menuTitle").textContent =
-        "CHALLENGE FAILED — TRY AGAIN";
-
-    document.getElementById("menu").style.display = "flex";
-}
-
-
-/* RESIZE */
-
-function resizeGame() {
-
-    if (!camera || !renderer) return;
-
-    camera.aspect =
-        window.innerWidth / window.innerHeight;
-
-    camera.updateProjectionMatrix();
-
-    renderer.setSize(
-        window.innerWidth,
-        window.innerHeight
-    );
-}
-
-
-/* MAIN GAME LOOP */
-
-function animate() {
-
-    requestAnimationFrame(animate);
-
-    const delta = Math.min(clock.getDelta(), .05);
-
-    if (playing && !paused) {
-        updateGame(delta);
-    }
-
-    if (renderer && scene && camera) {
-        renderer.render(scene, camera);
-    }
-}
-
-</script>
-
-</body>
- </html>
-  coinCount-=15;staminaUpgrade++;
-  stamina=Math.min(100+staminaUpgrade*15,stamina+25);
-  message("Horse stamina increased!");
- }else message("You need 15 coins!");
- hud();
-};
-
-/* LEVELS */
-function nextLevel(){
- paused=true;
- message("LEVEL COMPLETED!");
- setTimeout(()=>{
-  level++;
-  player.position.set(0,0,5);
-  player.rotation.y=0;
-  stamina=100+staminaUpgrade*15;
-  elapsed=0;
-  speed=0;
-  buildCourse();
-  paused=false;
-  message("LEVEL "+level+" UNLOCKED!");
-  hud();
- },1800);
-}
-
-/* PAUSE AND REPLAY */
-function pause(){
- paused=true;
- document.getElementById("pause").style.display="flex";
-}
-function resume(){
- paused=false;
- document.getElementById("pause").style.display="none";
-}
-document.getElementById("pauseBtn").onclick=pause;
-document.getElementById("resume").onclick=resume;
-
-function restart(){
- player.position.set(0,0,5);
- player.rotation.y=0;
- stamina=100+staminaUpgrade*15;
- speed=0;elapsed=0;
- buildCourse();resume();
-}
-document.getElementById("restart").onclick=restart;
-document.getElementById("retry").onclick=()=>{
- document.getElementById("gameover").style.display="none";
- restart();
-};
-
-/* UPDATE */
-const clock=new THREE.Clock();
-
-function update(dt){
- if(!playing||paused)return;
-
- elapsed+=dt;
-
- const moving=go||keys["w"]||keys["arrowup"];
- const turnLeft=left||keys["a"]||keys["arrowleft"];
- const turnRight=right||keys["d"]||keys["arrowright"];
- const boosting=boost||keys["shift"];
-
- const maxSpeed=12+speedUpgrade*2;
- if(moving){
-  speed=THREE.MathUtils.lerp(speed,maxSpeed,dt*2);
- }else{
-  speed=THREE.MathUtils.lerp(speed,0,dt*3);
- }
-
- if(boosting&&moving&&stamina>0){
-  speed=maxSpeed*1.7;
-  stamina=Math.max(0,stamina-20*dt);
- }else{
-  stamina=Math.min(100+staminaUpgrade*15,stamina+7*dt);
- }
-
- if(moving)player.position.z-=speed*dt;
- if(turnLeft)player.position.x-=7*dt;
- if(turnRight)player.position.x+=7*dt;
-
- player.position.x=THREE.MathUtils.clamp(player.position.x,-5,5);
-
- player.rotation.y=turnLeft?.2:turnRight?-.2:0;
-
- if(jumping){
-  jumpTime+=dt;
-  player.position.y=Math.sin(Math.min(jumpTime/.8,1)*Math.PI)*2.3;
-  if(jumpTime>=.8){
-   jumping=false;player.position.y=0;
-  }
- }
-
- if(horseMixer)horseMixer.update(dt);
-
- for(const c of coins){
-  c.rotation.y+=dt*2;
-  if(!c.userData.taken&&player.position.distanceTo(c.position)<2){
-   c.userData.taken=true;c.visible=false;
-   coinCount++;hud();
-  }
- }
-
- for(const o of obstacles){
-  if(!o.userData.hit&&
-     Math.abs(player.position.x-o.position.x)<1.5&&
-     Math.abs(player.position.z-o.position.z)<1.5&&
-     player.position.y<.8){
-   o.userData.hit=true;
-   stamina=Math.max(0,stamina-25);
-   player.position.z+=3;
-   message("Obstacle! Jump over it next time.");
-  }
- }
-
- if(stamina<=0){
-  speed=Math.min(speed,4);
- }
-
- if(player.position.z<-(120+level*20)){
-  nextLevel();
- }
-
- camera.position.lerp(
-  new THREE.Vector3(player.position.x,6,player.position.z+12),
-  dt*4
- );
- camera.lookAt(player.position.x,2,player.position.z-5);
-
- hud();
-}
-
-/* RENDER */
-camera.position.set(0,6,17);
-camera.lookAt(0,2,0);
-
-function animate(){
- requestAnimationFrame(animate);
- const dt=Math.min(clock.getDelta(),.04);
- update(dt);
- renderer.render(scene,camera);
-}
-animate();
-
-addEventListener("resize",()=>{
- camera.aspect=innerWidth/innerHeight;
- camera.updateProjectionMatrix();
- renderer.setSize(innerWidth,innerHeight);
-});
-</script>
-</body>
-</html>aponIndex);
-  currentWeaponIndex = next;
-  updateWeaponUI();
-}
-function upgradeWeapon(){
-  const w = getWeapon();
-  const cost = 180 + w.level * 120;
-  if(score >= cost){
-    score -= cost;
-    w.level++;
-    w.damage = Math.floor(w.damage * 1.18);
-    showMessage(w.name + " UPGRADED!", 70);
-    updateWeaponUI();
-    updateHUD();
-  } else {
-    showMessage("Need " + cost + " score", 60);
-  }
-}
-
-// ========== DRAWING (more realistic style) ==========
-function drawHorseRider(x, y, facing, isPlayer, attacking, animFrame, weapon){
-  ctx.save();
-  ctx.translate(x + (facing===-1 ? 100 : 0), y);
-  ctx.scale(facing, 1);
-
-  const legPhase = Math.sin(animFrame * 0.35) * 0.4;
-
-  // ===== HORSE =====
-  // Body
-  ctx.fillStyle = isPlayer ? '#3a2510' : '#2c1a0a';
-  ctx.beginPath();
-  ctx.ellipse(50, 48, 42, 24, 0, 0, Math.PI*2);
-  ctx.fill();
-
-  // Muscle shading
-  ctx.fillStyle = isPlayer ? '#2a1a08' : '#1e1206';
-  ctx.beginPath();
-  ctx.ellipse(48, 52, 30, 12, 0, 0, Math.PI*2);
-  ctx.fill();
-
-  // Neck
-  ctx.fillStyle = isPlayer ? '#3a2510' : '#2c1a0a';
-  ctx.beginPath();
-  ctx.moveTo(78, 38);
-  ctx.quadraticCurveTo(102, 12, 96, 2);
-  ctx.lineTo(86, 5);
-  ctx.quadraticCurveTo(88, 28, 72, 42);
-  ctx.fill();
-
-  // Head
-  ctx.beginPath();
-  ctx.ellipse(98, 5, 16, 11, -0.2, 0, Math.PI*2);
-  ctx.fill();
-
-  // Eye
-  ctx.fillStyle = '#111';
-  ctx.beginPath(); ctx.arc(104, 3, 2.2, 0, Math.PI*2); ctx.fill();
-
-  // Mane
-  ctx.fillStyle = '#1a1005';
-  ctx.beginPath();
-  ctx.moveTo(78, 20);
-  ctx.quadraticCurveTo(70, 0, 90, -6);
-  ctx.quadraticCurveTo(100, 0, 95, 12);
-  ctx.fill();
-
-  // Legs with animation
-  ctx.strokeStyle = '#2a1a08';
-  ctx.lineWidth = 8;
-  ctx.lineCap = 'round';
-
-  // Front legs
-  ctx.beginPath();
-  ctx.moveTo(68, 62); ctx.lineTo(62 + legPhase*12, 86);
-  ctx.moveTo(78, 62); ctx.lineTo(86 - legPhase*12, 86);
-  // Back legs
-  ctx.moveTo(28, 62); ctx.lineTo(20 - legPhase*10, 86);
-  ctx.moveTo(40, 62); ctx.lineTo(48 + legPhase*10, 86);
-  ctx.stroke();
-
-  // Hooves
-  ctx.fillStyle = '#0d0d0d';
-  [[62+legPhase*12,88],[86-legPhase*12,88],[20-legPhase*10,88],[48+legPhase*10,88]].forEach(p=>{
-    ctx.beginPath(); ctx.ellipse(p[0], p[1], 6, 3.5, 0, 0, Math.PI*2); ctx.fill();
-  });
-
-  // Tail
-  ctx.strokeStyle = '#1a1005';
-  ctx.lineWidth = 6;
-  ctx.beginPath();
-  ctx.moveTo(10, 44);
-  ctx.quadraticCurveTo(-12, 55, -16, 78);
-  ctx.stroke();
-
-  // ===== RIDER (more human proportions) =====
-  // Torso
-  ctx.fillStyle = isPlayer ? '#1a355e' : '#4a1515';
-  ctx.fillRect(40, 16, 22, 28);
-
-  // Head
-  ctx.fillStyle = '#e0b090';
-  ctx.beginPath(); ctx.arc(51, 10, 11, 0, Math.PI*2); ctx.fill();
-
-  // Hair / Helmet
-  ctx.fillStyle = '#1a1a1a';
-  ctx.beginPath(); ctx.arc(51, 6, 11, Math.PI*1.1, -0.1); ctx.fill();
-
-  // Arms + Weapon
-  ctx.strokeStyle = '#e0b090';
-  ctx.lineWidth = 5;
-  ctx.lineCap = 'round';
-
-  if(attacking && weapon){
-    if(weapon.type === 'melee'){
-      ctx.beginPath();
-      ctx.moveTo(60, 28);
-      ctx.lineTo(60 + weapon.range*0.48, 8);
-      ctx.stroke();
-      // blade
-      ctx.strokeStyle = weapon.color;
-      ctx.lineWidth = 4;
-      ctx.beginPath();
-      ctx.moveTo(60 + weapon.range*0.48, 8);
-      ctx.lineTo(60 + weapon.range*0.48 + 18, 2);
-      ctx.stroke();
-    } else {
-      // ranged pose
-      ctx.beginPath();
-      ctx.moveTo(42, 28); ctx.lineTo(32, 42);
-      ctx.moveTo(60, 26); ctx.lineTo(78, 20);
-      ctx.stroke();
-    }
-  } else {
-    ctx.beginPath();
-    ctx.moveTo(42, 28); ctx.lineTo(32, 44);
-    ctx.moveTo(60, 28); ctx.lineTo(70, 40);
-    ctx.stroke();
-  }
-
-  ctx.restore();
-}
-
-// ========== SPAWN ==========
-function spawnEnemy(isBoss=false){
-  const hp = isBoss ? 170 + level*32 : 40 + level*13;
-  enemies.push({
-    x: cameraX + W + 70 + Math.random()*100,
-    y: groundY() - 78,
-    w:100, h:78,
-    health: hp, maxHealth: hp,
-    facing: -1, attackCooldown: 50,
-    attacking:0, speed: isBoss ? 2.5 : 1.9 + Math.min(level*0.11, 2.4),
-    isBoss, hitTimer:0,
-    damage: isBoss ? 14+Math.floor(level*0.7) : 8+Math.floor(level*0.4),
-    frame: Math.random()*20
-  });
-}
-
-function startLevel(){
-  enemies = [];
-  projectiles = [];
-  player.health = Math.min(player.maxHealth, player.health + 28); // health regen
-  player.x = 150; player.y = groundY()-player.h;
-  player.vx=0; player.vy=0; cameraX=0; player.invincible=45;
-
-  // auto select best unlocked
-  for(let i=WEAPONS.length-1;i>=0;i--){
-    if(WEAPONS[i].unlock <= level){ currentWeaponIndex=i; break; }
-  }
-  updateWeaponUI();
-
-  const isBoss = level % 5 === 0;
-  if(isBoss){
-    spawnEnemy(true);
-    if(level >= 10) setTimeout(()=>spawnEnemy(false), 900);
-    if(level >= 20) setTimeout(()=>spawnEnemy(false), 1600);
-    showMessage(`BOSS LEVEL ${level}`, 140);
-  } else {
-    const count = Math.min(1 + Math.floor(level/2), 6);
-    for(let i=0;i<count;i++) setTimeout(()=>spawnEnemy(false), i*650);
-    showMessage(`LEVEL ${level}`, 70);
-  }
-  updateHUD();
-}
-
-function showMessage(txt, frames){
-  const el = document.getElementById('message');
-  el.textContent = txt;
-  el.style.opacity = 1;
-  clearTimeout(el._t);
-  el._t = setTimeout(()=>el.style.opacity=0, frames*16);
-}
-
-function updateHUD(){
-  document.getElementById('playerHealthFill').style.width = Math.max(0, player.health/player.maxHealth*100)+'%';
-  document.getElementById('levelInfo').textContent = `Level ${level}` + (level%5===0 ? ' • BOSS' : '');
-  document.getElementById('scoreInfo').textContent = `Score: ${score}`;
-  if(enemies.length){
-    const e = enemies[0];
-    document.getElementById('enemyBox').style.display = 'block';
-    document.getElementById('enemyLabel').textContent = e.isBoss ? 'BOSS' : 'ENEMY';
-    document.getElementById('enemyHealthFill').style.width = Math.max(0, e.health/e.maxHealth*100)+'%';
-  } else document.getElementById('enemyBox').style.display = 'none';
-}
-function updateWeaponUI(){
-  const w = getWeapon();
-  document.getElementById('weaponInfo').textContent = `Weapon: \( {w.name}  Lv. \){w.level}`;
-}
-
-// ========== UPDATE ==========
-function update(){
-  if(gameState !== 'playing') return;
-
-  player.frame += (Math.abs(player.vx)>0.5 || !player.onGround) ? 1 : 0.15;
-
-  // Move
-  player.vx = 0;
-  if(keys.left){ player.vx = -player.speed; player.facing = -1; }
-  if(keys.right){ player.vx = player.speed; player.facing = 1; }
-  if(keys.jump && player.onGround){ player.vy = player.jumpPower; player.onGround=false; }
-
-  player.vy += 0.70;
-  player.x += player.vx;
-  player.y += player.vy;
-
-  const gy = groundY() - player.h;
-  if(player.y >= gy){ player.y=gy; player.vy=0; player.onGround=true; }
-  if(player.x < cameraX+50) player.x = cameraX+50;
-
-  cameraX += ((player.x - W*0.33) - cameraX)*0.1;
-  if(cameraX<0) cameraX=0;
-
-  // Attack
-  const weapon = getWeapon();
-  if(keys.attack && player.attackCooldown<=0){
-    player.attackCooldown = weapon.cooldown;
-
-    if(weapon.type === 'melee'){
-      enemies.forEach(e=>{
-        const dist = Math.abs((player.x+50)-(e.x+50));
-        if(dist < weapon.range && Math.abs(player.y-e.y)<60){
-          e.health -= weapon.damage;
-          e.hitTimer = 12;
-          e.vx = player.facing * 8;
-          createHit(e.x+50, e.y+35);
-        }
-      });
-    } else {
-      // ranged projectile
-      projectiles.push({
-        x: player.x + (player.facing===1 ? 90 : 10),
-        y: player.y + 28,
-        vx: player.facing * (weapon.name==='Gun' ? 14 : 11),
-        damage: weapon.damage,
-        life: 70,
-        color: weapon.color
-      });
-    }
-  }
-  if(player.attackCooldown>0) player.attackCooldown--;
-  if(player.invincible>0) player.invincible--;
-
-  // Projectiles
-  projectiles = projectiles.filter(p=>{
-    p.x += p.vx; p.life--;
-    let hit = false;
-    enemies.forEach(e=>{
-      if(!hit && Math.abs(p.x-(e.x+50))<40 && Math.abs(p.y-(e.y+35))<40){
-        e.health -= p.damage;
-        e.hitTimer = 10;
-        createHit(e.x+50, e.y+35);
-        hit = true;
-      }
-    });
-    return p.life>0 && !hit;
-  });
-
-  // Enemies
-  enemies.forEach(e=>{
-    e.frame += 0.8;
-    if(e.hitTimer>0){ e.hitTimer--; e.x+=e.vx; e.vx*=0.8; return; }
-
-    const dx = player.x - e.x;
-    e.facing = dx>0 ? 1 : -1;
-    if(Math.abs(dx)>100) e.x += Math.sign(dx)*e.speed;
-    else{
-      if(e.attackCooldown<=0){
-        e.attacking = 18;
-        e.attackCooldown = e.isBoss ? 38 : 52+Math.random()*20;
-        if(Math.abs(dx)<115 && player.invincible<=0){
-          player.health -= e.damage;
-          player.invincible = 36;
-          createHit(player.x+50, player.y+35);
-        }
-      }
-    }
-    if(e.attackCooldown>0) e.attackCooldown--;
-    if(e.attacking>0) e.attacking--;
-  });
-
-  enemies = enemies.filter(e=>{
-    if(e.health<=0){
-      score += e.isBoss ? 700 : 130;
-      createHit(e.x+50, e.y+35, 16);
-      return false;
-    }
-    return true;
-  });
-
-  if(enemies.length===0 && gameState==='playing'){
-    gameState = 'levelClear';
-    showMessage('LEVEL CLEAR!', 80);
-    setTimeout(()=>{
-      level++;
-      if(level%5===0) player.maxHealth += 10;
-      gameState = 'playing';
-      startLevel();
-    }, 1300);
-  }
-
-  if(player.health<=0){
-    player.health=0;
-    gameState='gameOver';
-    showMessage('DEFEATED\nTap to Restart', 9999);
-  }
-
-  updateHUD();
-
-  particles = particles.filter(p=>{
-    p.x+=p.vx; p.y+=p.vy; p.life--;
-    return p.life>0;
-  });
-}
-
-function createHit(x,y,n=9){
-  for(let i=0;i<n;i++){
-    particles.push({
-      x,y,
-      vx:(Math.random()-0.5)*10,
-      vy:(Math.random()-0.5)*10-2,
-      life:16+Math.random()*14,
-      color:`hsl(${10+Math.random()*25},80%,55%)`
-    });
-  }
-}
-
-// ========== DRAW ==========
-function draw(){
-  ctx.clearRect(0,0,W,H);
-
-  // Ground
-  ctx.fillStyle = '#243a0a';
-  ctx.fillRect(0, groundY(), W, H-groundY());
-
-  // Distant hills
-  ctx.fillStyle = '#2e4a14';
-  for(let i=0;i<8;i++){
-    const hx = ((i*240)-cameraX*0.22)%(W+260)-70;
-    ctx.beginPath();
-    ctx.moveTo(hx, groundY());
-    ctx.quadraticCurveTo(hx+65, groundY()-45-(i%3)*15, hx+130, groundY());
-    ctx.fill();
-  }
-
-  // Player
-  if(player.invincible<=0 || Math.floor(player.invincible/3)%2===0){
-    drawHorseRider(player.x-cameraX, player.y, player.facing, true,
-      player.attackCooldown > getWeapon().cooldown*0.5,
-      player.frame, getWeapon());
-  }
-
-  // Enemies
-  enemies.forEach(e=>{
-    drawHorseRider(e.x-cameraX, e.y, e.facing, false, e.attacking>0, e.frame, null);
-  });
-
-  // Projectiles
-  projectiles.forEach(p=>{
-    ctx.fillStyle = p.color;
-    ctx.beginPath();
-    ctx.arc(p.x-cameraX, p.y, p.color==='#555'?5:4, 0, Math.PI*2);
-    ctx.fill();
-  });
-
-  // Particles
-  particles.forEach(p=>{
-    ctx.globalAlpha = p.life/22;
-    ctx.fillStyle = p.color;
-    ctx.beginPath(); ctx.arc(p.x-cameraX, p.y, 3.5, 0, Math.PI*2); ctx.fill();
-    ctx.globalAlpha = 1;
-  });
-}
-
-function loop(){ update(); draw(); requestAnimationFrame(loop); }
-loop();
-
-// ========== START ==========
-document.getElementById('startBtn').onclick = ()=>{
-  const pass = document.getElementById('passInput').value.trim();
-  if(pass !== CORRECT_PASS){
-    document.getElementById('passError').textContent = 'Wrong password!';
-    return;
-  }
-  document.getElementById('passError').textContent = '';
-  document.getElementById('titleScreen').style.display = 'none';
-  document.getElementById('hud').style.display = 'flex';
-  document.getElementById('controls').style.display = 'flex';
-  document.getElementById('btnSizePanel').style.display = 'flex';
-  document.getElementById('levelInfo').style.display = 'block';
-  document.getElementById('weaponInfo').style.display = 'block';
-  document.getElementById('scoreInfo').style.display = 'block';
-  document.getElementById('weaponBtn').style.display = 'flex';
-  document.getElementById('upgradeBtn').style.display = 'flex';
-  gameState = 'playing';
-  level = 1; score = 0;
-  player.health = 100; player.maxHealth = 100;
-  currentWeaponIndex = 0;
-  // reset weapon levels
-  WEAPONS.forEach(w=>{ w.level=1; if(w.name==='Knife')w.damage=14; if(w.name==='Sword')w.damage=22; if(w.name==='Bow')w.damage=18; if(w.name==='Gun')w.damage=26; });
-  startLevel();
-};
-
-function restart(){
-  if(gameState!=='gameOver') return;
-  level=1; score=0;
-  player.health=100; player.maxHealth=100;
-  currentWeaponIndex=0;
-  WEAPONS.forEach(w=>{ w.level=1; if(w.name==='Knife')w.damage=14; if(w.name==='Sword')w.damage=22; if(w.name==='Bow')w.damage=18; if(w.name==='Gun')w.damage=26; });
-  gameState='playing';
-  document.getElementById('message').style.opacity=0;
-  startLevel();
-}
-canvas.addEventListener('click', restart);
-document.getElementById('message').addEventListener('click', restart);
-</script>
-</body>
-</html>tx.fillStyle = isPlayer ? '#3d2208' : '#2a1505';
-  ctx.beginPath();
-  ctx.ellipse(46, 46, 40, 23, 0, 0, Math.PI*2);
-  ctx.fill();
-
-  // Neck
-  ctx.beginPath();
-  ctx.moveTo(72, 36);
-  ctx.quadraticCurveTo(94, 14, 88, 4);
-  ctx.lineTo(78, 7);
-  ctx.quadraticCurveTo(80, 26, 66, 40);
-  ctx.fill();
-
-  // Head
-  ctx.beginPath();
-  ctx.ellipse(90, 7, 15, 10, -0.25, 0, Math.PI*2);
-  ctx.fill();
-
-  // Legs
-  ctx.strokeStyle = '#2a1805';
-  ctx.lineWidth = 7;
-  ctx.lineCap = 'round';
-  ctx.beginPath();
-  ctx.moveTo(62, 60); ctx.lineTo(56, 82);
-  ctx.moveTo(72, 60); ctx.lineTo(80, 82);
-  ctx.moveTo(26, 60); ctx.lineTo(18, 82);
-  ctx.moveTo(36, 60); ctx.lineTo(44, 82);
-  ctx.stroke();
-
-  // Hooves
-  ctx.fillStyle = '#111';
-  [[56,84],[80,84],[18,84],[44,84]].forEach(p => {
-    ctx.beginPath(); ctx.ellipse(p[0], p[1], 6, 3.5, 0, 0, Math.PI*2); ctx.fill();
-  });
-
-  // Tail
-  ctx.strokeStyle = '#1a1005';
-  ctx.lineWidth = 5;
-  ctx.beginPath();
-  ctx.moveTo(8, 42);
-  ctx.quadraticCurveTo(-10, 52, -14, 70);
-  ctx.stroke();
-
-  // Rider body
-  ctx.fillStyle = isPlayer ? '#1a3a6e' : '#5c1515';
-  ctx.fillRect(38, 18, 20, 24);
-
-  // Head
-  ctx.fillStyle = '#e8b890';
-  ctx.beginPath(); ctx.arc(48, 12, 10, 0, Math.PI*2); ctx.fill();
-
-  // Helmet
-  ctx.fillStyle = '#1a1a1a';
-  ctx.beginPath(); ctx.arc(48, 9, 10, Math.PI, 0); ctx.fill();
-
-  // Weapon / Attack
-  if (attacking) {
-    ctx.strokeStyle = weaponColor || '#ccc';
-    ctx.lineWidth = 4;
-    ctx.lineCap = 'round';
-    const w = getWeapon();
-    if (w.name === "Spear" || w.name === "Lance") {
-      ctx.beginPath();
-      ctx.moveTo(58, 28);
-      ctx.lineTo(58 + w.range * 0.55, 12);
-      ctx.stroke();
-      // tip
-      ctx.fillStyle = weaponColor;
-      ctx.beginPath();
-      ctx.moveTo(58 + w.range * 0.55, 12);
-      ctx.lineTo(58 + w.range * 0.55 + 12, 6);
-      ctx.lineTo(58 + w.range * 0.55 + 2, 18);
-      ctx.fill();
-    } else if (w.name === "Axe" || w.name === "Warhammer") {
-      ctx.beginPath();
-      ctx.moveTo(58, 26);
-      ctx.lineTo(95, 10);
-      ctx.stroke();
-      ctx.fillStyle = weaponColor;
-      ctx.beginPath();
-      ctx.arc(98, 8, 11, 0, Math.PI*2);
-      ctx.fill();
-    } else {
-      // Sword
-      ctx.beginPath();
-      ctx.moveTo(58, 26);
-      ctx.lineTo(105, 8);
-      ctx.stroke();
-      ctx.fillStyle = '#aaa';
-      ctx.fillRect(102, 4, 7, 10);
-    }
-  } else {
-    // Idle arms
-    ctx.strokeStyle = '#e8b890';
-    ctx.lineWidth = 4;
-    ctx.beginPath();
-    ctx.moveTo(40, 26); ctx.lineTo(30, 40);
-    ctx.moveTo(56, 26); ctx.lineTo(65, 38);
-    ctx.stroke();
-  }
-
-  ctx.restore();
-}
-
-function spawnEnemy(isBoss = false) {
-  const baseHp = isBoss ? 160 + level * 28 : 38 + level * 11;
-  const spd = isBoss ? 2.6 : 2.0 + Math.min(level * 0.12, 2.2);
-  enemies.push({
-    x: cameraX + W + 60 + Math.random() * 120,
-    y: groundY() - 72,
-    w: 92, h: 72,
-    vx: 0,
-    health: baseHp,
-    maxHealth: baseHp,
-    facing: -1,
-    attackCooldown: 40 + Math.random() * 30,
-    attacking: 0,
-    speed: spd,
-    isBoss: isBoss,
-    hitTimer: 0,
-    damage: isBoss ? 13 + Math.floor(level * 0.6) : 7 + Math.floor(level * 0.35)
-  });
-}
-
-function startLevel() {
-  enemies = [];
-  projectiles = [];
-  player.health = Math.min(player.maxHealth, player.health + 22);
-  player.x = 140;
-  player.y = groundY() - player.h;
-  player.vx = 0; player.vy = 0;
-  cameraX = 0;
-  player.invincible = 50;
-
-  // Auto unlock best available weapon
-  for (let i = WEAPONS.length - 1; i >= 0; i--) {
-    if (WEAPONS[i].unlock <= level) {
-      currentWeaponIndex = i;
-      break;
-    }
-  }
-  updateWeaponUI();
-
-  const isBoss = level % 5 === 0;
-  if (isBoss) {
-    spawnEnemy(true);
-    // extra minion on higher bosses
-    if (level >= 10) setTimeout(() => spawnEnemy(false), 1200);
-    showMessage(`BOSS  •  LEVEL ${level}`, 150);
-  } else {
-    const count = Math.min(1 + Math.floor((level - 1) / 2), 5);
-    for (let i = 0; i < count; i++) {
-      setTimeout(() => spawnEnemy(false), i * 700);
-    }
-    showMessage(`LEVEL ${level}`, 80);
-  }
-  updateHUD();
-}
-
-function showMessage(txt, frames) {
-  const el = document.getElementById('message');
-  el.textContent = txt;
-  el.style.opacity = 1;
-  clearTimeout(el._t);
-  el._t = setTimeout(() => el.style.opacity = 0, frames * 16);
-}
-
-function updateHUD() {
-  document.getElementById('playerHealthFill').style.width = Math.max(0, player.health / player.maxHealth * 100) + '%';
-  document.getElementById('levelInfo').textContent = `Level ${level}` + (level % 5 === 0 ? '  • BOSS' : '');
-  
-  if (enemies.length) {
-    const e = enemies[0];
-    document.getElementById('enemyBox').style.display = 'block';
-    document.getElementById('enemyLabel').textContent = e.isBoss ? 'BOSS' : 'ENEMY';
-    document.getElementById('enemyHealthFill').style.width = Math.max(0, e.health / e.maxHealth * 100) + '%';
-  } else {
-    document.getElementById('enemyBox').style.display = 'none';
-  }
-}
-
-function updateWeaponUI() {
-  const w = getWeapon();
-  document.getElementById('weaponInfo').textContent = `Weapon: ${w.name}`;
-}
-
-// ================== UPDATE ==================
-function update() {
-  if (gameState !== 'playing') return;
-
-  // Movement
-  player.vx = 0;
-  if (keys.left)  { player.vx = -player.speed; player.facing = -1; }
-  if (keys.right) { player.vx =  player.speed; player.facing =  1; }
-
-  if (keys.jump && player.onGround) {
-    player.vy = player.jumpPower;
-    player.onGround = false;
-  }
-
-  player.vy += 0.68;
-  player.x += player.vx;
-  player.y += player.vy;
-
-  const gy = groundY() - player.h;
-  if (player.y >= gy) {
-    player.y = gy;
-    player.vy = 0;
-    player.onGround = true;
-  }
-  if (player.x < cameraX + 40) player.x = cameraX + 40;
-
-  // Camera
-  cameraX += ((player.x - W * 0.32) - cameraX) * 0.09;
-  if (cameraX < 0) cameraX = 0;
-
-  // Attack
-  const weapon = getWeapon();
-  if (keys.attack && player.attackCooldown <= 0) {
-    player.attackCooldown = weapon.cooldown;
-
-    // Melee hit detection
-    enemies.forEach(e => {
-      const dist = Math.abs((player.x + 46) - (e.x + 46));
-      if (dist < weapon.range && Math.abs(player.y - e.y) < 55) {
-        e.health -= weapon.damage;
-        e.hitTimer = 12;
-        e.vx = player.facing * 7;
-        createHit(e.x + 46, e.y + 30);
-      }
-    });
-  }
-  if (player.attackCooldown > 0) player.attackCooldown--;
-  if (player.invincible > 0) player.invincible--;
-
-  // Enemies
-  enemies.forEach(e => {
-    if (e.hitTimer > 0) {
-      e.hitTimer--;
-      e.x += e.vx;
-      e.vx *= 0.82;
-      return;
-    }
-
-    const dx = player.x - e.x;
-    e.facing = dx > 0 ? 1 : -1;
-
-    if (Math.abs(dx) > 95) {
-      e.x += Math.sign(dx) * e.speed;
-    } else {
-      if (e.attackCooldown <= 0) {
-        e.attacking = 20;
-        e.attackCooldown = e.isBoss ? 42 : 55 + Math.random() * 25;
-        if (Math.abs(dx) < 110 && player.invincible <= 0) {
-          player.health -= e.damage;
-          player.invincible = 38;
-          createHit(player.x + 46, player.y + 30);
-        }
-      }
-    }
-    if (e.attackCooldown > 0) e.attackCooldown--;
-    if (e.attacking > 0) e.attacking--;
-  });
-
-  // Remove dead
-  enemies = enemies.filter(e => {
-    if (e.health <= 0) {
-      score += e.isBoss ? 600 : 120;
-      createHit(e.x + 46, e.y + 30, 14);
-      return false;
-    }
-    return true;
-  });
-
-  // Level clear
-  if (enemies.length === 0 && gameState === 'playing') {
-    gameState = 'levelClear';
-    showMessage('LEVEL CLEAR!', 90);
-    setTimeout(() => {
-      level++;
-      // small max health increase every few levels
-      if (level % 4 === 0) player.maxHealth += 8;
-      gameState = 'playing';
-      startLevel();
-    }, 1400);
-  }
-
-  // Death
-  if (player.health <= 0) {
-    player.health = 0;
-    gameState = 'gameOver';
-    showMessage('DEFEATED\nTap screen to restart', 9999);
-  }
-
-  updateHUD();
-
-  // Particles
-  particles = particles.filter(p => {
-    p.x += p.vx; p.y += p.vy; p.life--;
-    return p.life > 0;
-  });
-}
-
-function createHit(x, y, n = 8) {
-  for (let i = 0; i < n; i++) {
-    particles.push({
-      x, y,
-      vx: (Math.random()-0.5)*9,
-      vy: (Math.random()-0.5)*9 - 2,
-      life: 18 + Math.random()*14,
-      color: `hsl(${15+Math.random()*30},85%,55%)`
-    });
-  }
-}
-
-// ================== DRAW ==================
-function draw() {
-  ctx.clearRect(0, 0, W, H);
-
-  // Ground
-  ctx.fillStyle = '#2a4508';
-  ctx.fillRect(0, groundY(), W, H - groundY());
-
-  // Hills
-  ctx.fillStyle = '#3a5c1a';
-  for (let i = 0; i < 7; i++) {
-    const hx = ((i * 260) - cameraX * 0.25) % (W + 280) - 80;
-    ctx.beginPath();
-    ctx.moveTo(hx, groundY());
-    ctx.quadraticCurveTo(hx + 70, groundY() - 50 - (i%3)*18, hx + 140, groundY());
-    ctx.fill();
-  }
-
-  // Player
-  if (player.invincible <= 0 || Math.floor(player.invincible/3) % 2 === 0) {
-    drawHorseRider(player.x - cameraX, player.y, player.facing, true,
-                   player.attackCooldown > getWeapon().cooldown * 0.55,
-                   getWeapon().color);
-  }
-
-  // Enemies
-  enemies.forEach(e => {
-    drawHorseRider(e.x - cameraX, e.y, e.facing, false, e.attacking > 0, '#c44');
-  });
-
-  // Particles
-  particles.forEach(p => {
-    ctx.globalAlpha = p.life / 25;
-    ctx.fillStyle = p.color;
-    ctx.beginPath();
-    ctx.arc(p.x - cameraX, p.y, 3.5, 0, Math.PI*2);
-    ctx.fill();
-    ctx.globalAlpha = 1;
-  });
-}
-
-function loop() {
-  update();
-  draw();
-  requestAnimationFrame(loop);
-}
-loop();
-
-// ================== START / RESTART ==================
-document.getElementById('startBtn').onclick = () => {
-  document.getElementById('titleScreen').style.display = 'none';
-  document.getElementById('hud').style.display = 'flex';
-  document.getElementById('controls').style.display = 'flex';
-  document.getElementById('btnSizePanel').style.display = 'flex';
-  document.getElementById('levelInfo').style.display = 'block';
-  document.getElementById('weaponInfo').style.display = 'block';
-  document.getElementById('weaponBtn').style.display = 'flex';
-  gameState = 'playing';
-  level = 1;
-  player.health = 100;
-  player.maxHealth = 100;
-  currentWeaponIndex = 0;
-  startLevel();
-};
-
-function restartGame() {
-  if (gameState !== 'gameOver') return;
-  level = 1;
-  player.health = 100;
-  player.maxHealth = 100;
-  currentWeaponIndex = 0;
-  gameState = 'playing';
-  document.getElementById('message').style.opacity = 0;
-  startLevel();
-}
-canvas.addEventListener('click', restartGame);
-document.getElementById('message').addEventListener('click', restartGame);
-</script>
-</body>
- </html>.strokeStyle = '#e0b090';
-  ctx.lineWidth = 4;
-  if (attacking) {
-    // Sword arm extended
-    ctx.beginPath();
-    ctx.moveTo(55, 25);
-    ctx.lineTo(95, 15);
-    ctx.stroke();
-    // Sword
-    ctx.strokeStyle = '#ccc';
-    ctx.lineWidth = 3;
-    ctx.beginPath();
-    ctx.moveTo(95, 15);
-    ctx.lineTo(115, 5);
-    ctx.stroke();
-    ctx.fillStyle = '#888';
-    ctx.fillRect(112, 2, 6, 8);
-  } else {
-    ctx.beginPath();
-    ctx.moveTo(40, 25); ctx.lineTo(30, 38);
-    ctx.moveTo(54, 25); ctx.lineTo(62, 35);
-    ctx.stroke();
-  }
-
-  ctx.restore();
-}
-
-function drawEnemy(e) {
-  drawHorseAndRider(e.x - cameraX, e.y, e.facing, false, e.attacking > 0);
-}
-
-function spawnEnemy(isBoss = false) {
-  const baseHealth = isBoss ? 180 + level * 25 : 40 + level * 12;
-  enemies.push({
-    x: cameraX + W + 80 + Math.random() * 100,
-    y: groundY() - 70,
-    w: 90,
-    h: 70,
-    vx: 0,
-    health: baseHealth,
-    maxHealth: baseHealth,
-    facing: -1,
-    attackCooldown: 0,
-    attacking: 0,
-    speed: isBoss ? 2.8 : 2.2 + Math.random(),
-    isBoss: isBoss,
-    hitTimer: 0
-  });
-}
-
-function startLevel() {
-  enemies = [];
-  player.health = Math.min(player.maxHealth, player.health + 25);
-  player.x = 120;
-  player.y = groundY() - player.h;
-  player.vx = 0;
-  player.vy = 0;
-  cameraX = 0;
-  player.invincible = 60;
-
-  const isBossLevel = level % 5 === 0;
-  if (isBossLevel) {
-    spawnEnemy(true);
-    showMessage(`BOSS LEVEL ${level}!`, 180);
-  } else {
-    const count = 1 + Math.floor(level / 2);
-    for (let i = 0; i < count; i++) {
-      setTimeout(() => spawnEnemy(false), i * 800);
-    }
-    showMessage(`LEVEL ${level}`, 90);
-  }
-  updateHUD();
-}
-
-function showMessage(txt, frames) {
-  const el = document.getElementById('message');
-  el.textContent = txt;
-  el.style.opacity = 1;
-  setTimeout(() => el.style.opacity = 0, frames * 16);
-}
-
-function updateHUD() {
-  document.getElementById('playerHealthFill').style.width = (player.health / player.maxHealth * 100) + '%';
-  document.getElementById('levelInfo').textContent = `Level ${level}` + (level % 5 === 0 ? '  • BOSS' : '');
-
-  if (enemies.length > 0) {
-    const e = enemies[0];
-    document.getElementById('enemyBox').style.display = 'block';
-    document.getElementById('enemyLabel').textContent = e.isBoss ? 'BOSS' : 'ENEMY';
-    document.getElementById('enemyHealthFill').style.width = (e.health / e.maxHealth * 100) + '%';
-  } else {
-    document.getElementById('enemyBox').style.display = 'none';
-  }
-}
-
-// ========== GAME LOOP ==========
-function update() {
-  if (gameState !== 'playing') return;
-
-  // Player movement
-  player.vx = 0;
-  if (keys.left) { player.vx = -player.speed; player.facing = -1; }
-  if (keys.right) { player.vx = player.speed; player.facing = 1; }
-
-  if (keys.jump && player.onGround) {
-    player.vy = player.jumpPower;
-    player.onGround = false;
-  }
-
-  player.vy += 0.65; // gravity
-  player.x += player.vx;
-  player.y += player.vy;
-
-  // Ground collision
-  const gy = groundY() - player.h;
-  if (player.y >= gy) {
-    player.y = gy;
-    player.vy = 0;
-    player.onGround = true;
-  }
-
-  // Keep player in world
-  if (player.x < cameraX + 30) player.x = cameraX + 30;
-
-  // Camera follow
-  const targetCam = player.x - W * 0.35;
-  cameraX += (targetCam - cameraX) * 0.08;
-  if (cameraX < 0) cameraX = 0;
-
-  // Attack
-  if (keys.attack && player.attackCooldown <= 0) {
-    player.attackCooldown = 28;
-    // Check hit
-    enemies.forEach(e => {
-      const dist = Math.abs((player.x + player.w/2) - (e.x + e.w/2));
-      if (dist < 110 && Math.abs(player.y - e.y) < 50) {
-        e.health -= 18 + Math.floor(level * 1.5);
-        e.hitTimer = 10;
-        e.vx = player.facing * 6;
-        createHitParticles(e.x + e.w/2, e.y + 30);
-      }
-    });
-  }
-  if (player.attackCooldown > 0) player.attackCooldown--;
-  if (player.invincible > 0) player.invincible--;
-
-  // Enemies AI
-  enemies.forEach(e => {
-    if (e.hitTimer > 0) { e.hitTimer--; e.x += e.vx; e.vx *= 0.85; return; }
-
-    const dx = player.x - e.x;
-    e.facing = dx > 0 ? 1 : -1;
-
-    if (Math.abs(dx) > 90) {
-      e.x += Math.sign(dx) * e.speed;
-    } else {
-      // Attack
-      if (e.attackCooldown <= 0) {
-        e.attacking = 18;
-        e.attackCooldown = 50 + Math.random() * 30;
-        // Damage player
-        if (Math.abs(dx) < 100 && player.invincible <= 0) {
-          player.health -= e.isBoss ? 14 : 8;
-          player.invincible = 40;
-          createHitParticles(player.x + player.w/2, player.y + 30);
-        }
-      }
-    }
-    if (e.attackCooldown > 0) e.attackCooldown--;
-    if (e.attacking > 0) e.attacking--;
-  });
-
-  // Remove dead enemies
-  enemies = enemies.filter(e => {
-    if (e.health <= 0) {
-      score += e.isBoss ? 500 : 100;
-      createHitParticles(e.x + 40, e.y + 30, 12);
-      return false;
-    }
-    return true;
-  });
-
-  // Level clear
-  if (enemies.length === 0 && gameState === 'playing') {
-    gameState = 'levelClear';
-    showMessage('LEVEL CLEAR!', 100);
-    setTimeout(() => {
-      level++;
-      gameState = 'playing';
-      startLevel();
-    }, 1600);
-  }
-
-  // Player death
-  if (player.health <= 0) {
-    player.health = 0;
-    gameState = 'gameOver';
-    showMessage('YOU FELL...\nTap to Restart', 9999);
-  }
-
-  updateHUD();
-
-  // Particles
-  particles = particles.filter(p => {
-    p.x += p.vx; p.y += p.vy; p.life--;
-    return p.life > 0;
-  });
-}
-
-function createHitParticles(x, y, count = 7) {
-  for (let i = 0; i < count; i++) {
-    particles.push({
-      x, y,
-      vx: (Math.random() - 0.5) * 8,
-      vy: (Math.random() - 0.5) * 8 - 2,
-      life: 20 + Math.random() * 15,
-      color: `hsl(${Math.random()*40}, 80%, 55%)`
-    });
-  }
-}
-
-function draw() {
-  // Sky already set by CSS, clear only the canvas area needed
-  ctx.clearRect(0, 0, W, H);
-
-  // Simple ground decoration
-  ctx.fillStyle = '#2a4508';
-  ctx.fillRect(0, groundY(), W, H - groundY());
-
-  // Distant hills (parallax)
-  ctx.fillStyle = '#3d5c1a';
-  for (let i = 0; i < 6; i++) {
-    const hx = ((i * 280) - cameraX * 0.3) % (W + 300) - 100;
-    ctx.beginPath();
-    ctx.moveTo(hx, groundY());
-    ctx.quadraticCurveTo(hx + 80, groundY() - 60 - (i%3)*20, hx + 160, groundY());
-    ctx.fill();
-  }
-
-  // Player
-  if (player.invincible <= 0 || Math.floor(player.invincible / 4) % 2 === 0) {
-    drawHorseAndRider(player.x - cameraX, player.y, player.facing, true, player.attackCooldown > 18);
-  }
-
-  // Enemies
-  enemies.forEach(drawEnemy);
-
-  // Particles
-  particles.forEach(p => {
-    ctx.fillStyle = p.color;
-    ctx.globalAlpha = p.life / 30;
-    ctx.beginPath();
-    ctx.arc(p.x - cameraX, p.y, 4, 0, Math.PI*2);
-    ctx.fill();
-    ctx.globalAlpha = 1;
-  });
-}
-
-function loop() {
-  update();
-  draw();
-  requestAnimationFrame(loop);
-}
-loop();
-
-// ========== START ==========
-document.getElementById('startBtn').onclick = () => {
-  document.getElementById('titleScreen').style.display = 'none';
-  document.getElementById('hud').style.display = 'flex';
-  document.getElementById('controls').style.display = 'flex';
-  document.getElementById('btnSizePanel').style.display = 'flex';
-  document.getElementById('levelInfo').style.display = 'block';
-  gameState = 'playing';
-  level = 1;
-  player.health = 100;
-  startLevel();
-};
-
-// Restart on game over
-canvas.addEventListener('click', () => {
-  if (gameState === 'gameOver') {
-    level = 1;
-    player.health = 100;
-    gameState = 'playing';
-    document.getElementById('message').style.opacity = 0;
-    startLevel();
-  }
-});
-document.getElementById('message').addEventListener('click', () => {
-  if (gameState === 'gameOver') {
-    level = 1;
-    player.health = 100;
-    gameState = 'playing';
-    document.getElementById('message').style.opacity = 0;
-    startLevel();
-  }
-});
-</script>
-</body>
- </html>.strokeStyle = '#e0b090';
-  ctx.lineWidth = 4;
-  if (attacking) {
-    // Sword arm extended
-    ctx.beginPath();
-    ctx.moveTo(55, 25);
-    ctx.lineTo(95, 15);
-    ctx.stroke();
-    // Sword
-    ctx.strokeStyle = '#ccc';
-    ctx.lineWidth = 3;
-    ctx.beginPath();
-    ctx.moveTo(95, 15);
-    ctx.lineTo(115, 5);
-    ctx.stroke();
-    ctx.fillStyle = '#888';
-    ctx.fillRect(112, 2, 6, 8);
-  } else {
-    ctx.beginPath();
-    ctx.moveTo(40, 25); ctx.lineTo(30, 38);
-    ctx.moveTo(54, 25); ctx.lineTo(62, 35);
-    ctx.stroke();
-  }
-
-  ctx.restore();
-}
-
-function drawEnemy(e) {
-  drawHorseAndRider(e.x - cameraX, e.y, e.facing, false, e.attacking > 0);
-}
-
-function spawnEnemy(isBoss = false) {
-  const baseHealth = isBoss ? 180 + level * 25 : 40 + level * 12;
-  enemies.push({
-    x: cameraX + W + 80 + Math.random() * 100,
-    y: groundY() - 70,
-    w: 90,
-    h: 70,
-    vx: 0,
-    health: baseHealth,
-    maxHealth: baseHealth,
-    facing: -1,
-    attackCooldown: 0,
-    attacking: 0,
-    speed: isBoss ? 2.8 : 2.2 + Math.random(),
-    isBoss: isBoss,
-    hitTimer: 0
-  });
-}
-
-function startLevel() {
-  enemies = [];
-  player.health = Math.min(player.maxHealth, player.health + 25);
-  player.x = 120;
-  player.y = groundY() - player.h;
-  player.vx = 0;
-  player.vy = 0;
-  cameraX = 0;
-  player.invincible = 60;
-
-  const isBossLevel = level % 5 === 0;
-  if (isBossLevel) {
-    spawnEnemy(true);
-    showMessage(`BOSS LEVEL ${level}!`, 180);
-  } else {
-    const count = 1 + Math.floor(level / 2);
-    for (let i = 0; i < count; i++) {
-      setTimeout(() => spawnEnemy(false), i * 800);
-    }
-    showMessage(`LEVEL ${level}`, 90);
-  }
-  updateHUD();
-}
-
-function showMessage(txt, frames) {
-  const el = document.getElementById('message');
-  el.textContent = txt;
-  el.style.opacity = 1;
-  setTimeout(() => el.style.opacity = 0, frames * 16);
-}
-
-function updateHUD() {
-  document.getElementById('playerHealthFill').style.width = (player.health / player.maxHealth * 100) + '%';
-  document.getElementById('levelInfo').textContent = `Level ${level}` + (level % 5 === 0 ? '  • BOSS' : '');
-
-  if (enemies.length > 0) {
-    const e = enemies[0];
-    document.getElementById('enemyBox').style.display = 'block';
-    document.getElementById('enemyLabel').textContent = e.isBoss ? 'BOSS' : 'ENEMY';
-    document.getElementById('enemyHealthFill').style.width = (e.health / e.maxHealth * 100) + '%';
-  } else {
-    document.getElementById('enemyBox').style.display = 'none';
-  }
-}
-
-// ========== GAME LOOP ==========
-function update() {
-  if (gameState !== 'playing') return;
-
-  // Player movement
-  player.vx = 0;
-  if (keys.left) { player.vx = -player.speed; player.facing = -1; }
-  if (keys.right) { player.vx = player.speed; player.facing = 1; }
-
-  if (keys.jump && player.onGround) {
-    player.vy = player.jumpPower;
-    player.onGround = false;
-  }
-
-  player.vy += 0.65; // gravity
-  player.x += player.vx;
-  player.y += player.vy;
-
-  // Ground collision
-  const gy = groundY() - player.h;
-  if (player.y >= gy) {
-    player.y = gy;
-    player.vy = 0;
-    player.onGround = true;
-  }
-
-  // Keep player in world
-  if (player.x < cameraX + 30) player.x = cameraX + 30;
-
-  // Camera follow
-  const targetCam = player.x - W * 0.35;
-  cameraX += (targetCam - cameraX) * 0.08;
-  if (cameraX < 0) cameraX = 0;
-
-  // Attack
-  if (keys.attack && player.attackCooldown <= 0) {
-    player.attackCooldown = 28;
-    // Check hit
-    enemies.forEach(e => {
-      const dist = Math.abs((player.x + player.w/2) - (e.x + e.w/2));
-      if (dist < 110 && Math.abs(player.y - e.y) < 50) {
-        e.health -= 18 + Math.floor(level * 1.5);
-        e.hitTimer = 10;
-        e.vx = player.facing * 6;
-        createHitParticles(e.x + e.w/2, e.y + 30);
-      }
-    });
-  }
-  if (player.attackCooldown > 0) player.attackCooldown--;
-  if (player.invincible > 0) player.invincible--;
-
-  // Enemies AI
-  enemies.forEach(e => {
-    if (e.hitTimer > 0) { e.hitTimer--; e.x += e.vx; e.vx *= 0.85; return; }
-
-    const dx = player.x - e.x;
-    e.facing = dx > 0 ? 1 : -1;
-
-    if (Math.abs(dx) > 90) {
-      e.x += Math.sign(dx) * e.speed;
-    } else {
-      // Attack
-      if (e.attackCooldown <= 0) {
-        e.attacking = 18;
-        e.attackCooldown = 50 + Math.random() * 30;
-        // Damage player
-        if (Math.abs(dx) < 100 && player.invincible <= 0) {
-          player.health -= e.isBoss ? 14 : 8;
-          player.invincible = 40;
-          createHitParticles(player.x + player.w/2, player.y + 30);
-        }
-      }
-    }
-    if (e.attackCooldown > 0) e.attackCooldown--;
-    if (e.attacking > 0) e.attacking--;
-  });
-
-  // Remove dead enemies
-  enemies = enemies.filter(e => {
-    if (e.health <= 0) {
-      score += e.isBoss ? 500 : 100;
-      createHitParticles(e.x + 40, e.y + 30, 12);
-      return false;
-    }
-    return true;
-  });
-
-  // Level clear
-  if (enemies.length === 0 && gameState === 'playing') {
-    gameState = 'levelClear';
-    showMessage('LEVEL CLEAR!', 100);
-    setTimeout(() => {
-      level++;
-      gameState = 'playing';
-      startLevel();
-    }, 1600);
-  }
-
-  // Player death
-  if (player.health <= 0) {
-    player.health = 0;
-    gameState = 'gameOver';
-    showMessage('YOU FELL...\nTap to Restart', 9999);
-  }
-
-  updateHUD();
-
-  // Particles
-  particles = particles.filter(p => {
-    p.x += p.vx; p.y += p.vy; p.life--;
-    return p.life > 0;
-  });
-}
-
-function createHitParticles(x, y, count = 7) {
-  for (let i = 0; i < count; i++) {
-    particles.push({
-      x, y,
-      vx: (Math.random() - 0.5) * 8,
-      vy: (Math.random() - 0.5) * 8 - 2,
-      life: 20 + Math.random() * 15,
-      color: `hsl(${Math.random()*40}, 80%, 55%)`
-    });
-  }
-}
-
-function draw() {
-  // Sky already set by CSS, clear only the canvas area needed
-  ctx.clearRect(0, 0, W, H);
-
-  // Simple ground decoration
-  ctx.fillStyle = '#2a4508';
-  ctx.fillRect(0, groundY(), W, H - groundY());
-
-  // Distant hills (parallax)
-  ctx.fillStyle = '#3d5c1a';
-  for (let i = 0; i < 6; i++) {
-    const hx = ((i * 280) - cameraX * 0.3) % (W + 300) - 100;
-    ctx.beginPath();
-    ctx.moveTo(hx, groundY());
-    ctx.quadraticCurveTo(hx + 80, groundY() - 60 - (i%3)*20, hx + 160, groundY());
-    ctx.fill();
-  }
-
-  // Player
-  if (player.invincible <= 0 || Math.floor(player.invincible / 4) % 2 === 0) {
-    drawHorseAndRider(player.x - cameraX, player.y, player.facing, true, player.attackCooldown > 18);
-  }
-
-  // Enemies
-  enemies.forEach(drawEnemy);
-
-  // Particles
-  particles.forEach(p => {
-    ctx.fillStyle = p.color;
-    ctx.globalAlpha = p.life / 30;
-    ctx.beginPath();
-    ctx.arc(p.x - cameraX, p.y, 4, 0, Math.PI*2);
-    ctx.fill();
-    ctx.globalAlpha = 1;
-  });
-}
-
-function loop() {
-  update();
-  draw();
-  requestAnimationFrame(loop);
-}
-loop();
-
-// ========== START ==========
-document.getElementById('startBtn').onclick = () => {
-  document.getElementById('titleScreen').style.display = 'none';
-  document.getElementById('hud').style.display = 'flex';
-  document.getElementById('controls').style.display = 'flex';
-  document.getElementById('btnSizePanel').style.display = 'flex';
-  document.getElementById('levelInfo').style.display = 'block';
-  gameState = 'playing';
-  level = 1;
-  player.health = 100;
-  startLevel();
-};
-
-// Restart on game over
-canvas.addEventListener('click', () => {
-  if (gameState === 'gameOver') {
-    level = 1;
-    player.health = 100;
-    gameState = 'playing';
-    document.getElementById('message').style.opacity = 0;
-    startLevel();
-  }
-});
-document.getElementById('message').addEventListener('click', () => {
-  if (gameState === 'gameOver') {
-    level = 1;
-    player.health = 100;
-    gameState = 'playing';
-    document.getElementById('message').style.opacity = 0;
-    startLevel();
-  }
-});
-</script>
-</body>
-</html>("Model could not be loaded:", url, error);
-  });
-}
-
-loadModel(
-  "https://threejs.org/examples/models/gltf/Horse.glb",
-  gltf => {
-    horse.remove(horse.children[0]);
-
-    const model = gltf.scene;
-    model.scale.set(1.15,1.15,1.15);
-    model.position.set(0,0,0);
-    model.rotation.y=Math.PI;
-
-    model.traverse(obj => {
-      if(obj.isMesh) {
-        obj.castShadow=true;
-        obj.receiveShadow=true;
-      }
-    });
-
-    horse.add(model);
-    horseLoaded=true;
-
-    if(gltf.animations.length) {
-      horseMixer = new THREE.AnimationMixer(model);
-      horseMixer.clipAction(gltf.animations[0]).play();
-    }
-  }
-);
-
-loadModel(
-  "https://threejs.org/examples/models/gltf/Soldier.glb",
-  gltf => {
-    rider.remove(rider.children[0]);
-
-    const model = gltf.scene;
-    model.scale.set(.8,.8,.8);
-    model.position.set(0,1.1,-.15);
-
-    model.traverse(obj => {
-      if(obj.isMesh) obj.castShadow=true;
-    });
-
-    rider.add(model);
-    riderLoaded=true;
-
-    if(gltf.animations.length) {
-      riderMixer = new THREE.AnimationMixer(model);
-      const action = riderMixer.clipAction(gltf.animations[0]);
-      action.play();
-    }
-  }
-);
-
-/* COURSE OBJECTS */
-
-const coins=[];
-const obstacles=[];
-const checkpoints=[];
-
-const coinMaterial = new THREE.MeshStandardMaterial({
-  color:0xffd54f,
-  metalness:.7,
-  roughness:.25
-});
-
-function createCoin(x,z) {
-  const coin = new THREE.Mesh(
-    new THREE.TorusGeometry(.42,.12,10,24),
-    coinMaterial
-  );
-  coin.position.set(x,1.4,z);
-  coin.userData.collected=false;
-  scene.add(coin);
-  coins.push(coin);
-}
-
-function createObstacle(x,z) {
-  const box = new THREE.Mesh(
-    new THREE.BoxGeometry(2.3,1.2,1.1),
-    new THREE.MeshStandardMaterial({color:0x86532d})
-  );
-  box.position.set(x,.6,z);
-  box.castShadow=true;
-  scene.add(box);
-  obstacles.push(box);
-}
-
-function createCheckpoint(z) {
-  const ring = new THREE.Mesh(
-    new THREE.TorusGeometry(2.3,.18,12,40),
-    new THREE.MeshStandardMaterial({
-      color:0x42e7f5,
-      emissive:0x087b9a,
-      metalness:.4
-    })
-  );
-  ring.position.set(0,2.5,z);
-  scene.add(ring);
-  checkpoints.push(ring);
-}
-
-function buildCourse(level) {
-  coins.forEach(c=>scene.remove(c));
-  obstacles.forEach(o=>scene.remove(o));
-  checkpoints.forEach(c=>scene.remove(c));
-
-  coins.length=0;
-  obstacles.length=0;
-  checkpoints.length=0;
-
-  const distance = 100 + level*25;
-
-  for(let i=0;i<distance/9;i++) {
-    const z=-15-i*9;
-    createCoin((Math.random()-.5)*7,z);
-  }
-
-  for(let i=0;i<level+3;i++) {
-    const z=-30-i*20;
-    createObstacle((Math.random()>.5?1:-1)*3.5,z);
-  }
-
-  for(let i=1;i<=3;i++) {
-    createCheckpoint(-distance*i/4);
-  }
-}
-
-/* GAME STATE */
-
-let level=1;
-let coinsCount=0;
-let stamina=100;
-let horseSpeed=0;
-let speedUpgrade=0;
-let staminaUpgrade=0;
-let gameStarted=false;
-let paused=false;
-let elapsed=0;
-let courseProgress=0;
-let jumping=false;
-let jumpTime=0;
-let boostPressed=false;
-let forwardPressed=false;
-let leftPressed=false;
-let rightPressed=false;
-let messageTimer=0;
-let challengeMode=false;
-
-const baseSpeed=12;
-
-buildCourse(level);
-
-const cameraOffset = new THREE.Vector3(0,6,12);
-
-function showMessage(text) {
-  const box=document.getElementById("message");
-  box.textContent=text;
-  box.style.display="block";
-  messageTimer=2.5;
-}
-
-function updateHUD() {
-  document.getElementById("levelText").textContent=level;
-  document.getElementById("coinsText").textContent=coinsCount;
-  document.getElementById("staminaText").textContent=Math.round(stamina);
-  document.getElementById("timeText").textContent=Math.floor(elapsed);
-  document.getElementById("speedText").textContent=Math.round(horseSpeed);
-}
-
-/* CONTROL BUTTONS */
-
-function bindHold(id, setter) {
-  const el=document.getElementById(id);
-  el.addEventListener("pointerdown",e=>{
-    e.preventDefault();
-    setter(true);
-  });
-  ["pointerup","pointercancel","pointerleave"].forEach(event=>{
-    el.addEventListener(event,e=>{
-      e.preventDefault();
-      setter(false);
-    });
-  });
-}
-
-bindHold("forward",v=>forwardPressed=v);
-bindHold("left",v=>leftPressed=v);
-bindHold("right",v=>rightPressed=v);
-bindHold("boost",v=>boostPressed=v);
-
-document.getElementById("jump").addEventListener("pointerdown",()=>{
-  if(!jumping) {
-    jumping=true;
-    jumpTime=0;
-  }
-});
-
-/* KEYBOARD */
-
-const keys={};
-
-window.addEventListener("keydown",e=>{
-  keys[e.key.toLowerCase()]=true;
-  if(e.key===" " && !jumping) {
-    jumping=true;
-    jumpTime=0;
-  }
-});
-
-window.addEventListener("keyup",e=>{
-  keys[e.key.toLowerCase()]=false;
-});
-
-/* START */
-
-async function startGame() {
-  gameStarted=true;
-  paused=false;
-
-  document.getElementById("intro").style.display="none";
-  document.getElementById("hud").style.display="block";
-  document.getElementById("controls").style.display="flex";
-  document.getElementById("pauseButton").style.display="block";
-  document.getElementById("upgradePanel").style.display="block";
-
-  try {
-    if(document.documentElement.requestFullscreen) {
-      await document.documentElement.requestFullscreen();
-    }
-  } catch(e) {}
-
-  try {
-    if(screen.orientation && screen.orientation.lock) {
-      await screen.orientation.lock("landscape");
-    }
-  } catch(e) {}
-
-  showMessage("Adventure begins! Reach the checkpoints!");
-}
-
-document.getElementById("startButton").addEventListener("click",startGame);
-
-/* PAUSE */
-
-function pauseGame() {
-  paused=true;
-  document.getElementById("pauseScreen").style.display="flex";
-}
-
-function resumeGame() {
-  paused=false;
-  document.getElementById("pauseScreen").style.display="none";
-  clock.getDelta();
-}
-
-document.getElementById("pauseButton").addEventListener("click",pauseGame);
-document.getElementById("resumeButton").addEventListener("click",resumeGame);
-
-document.getElementById("restartButton").addEventListener("click",()=>{
-  player.position.set(0,0,5);
-  player.rotation.y=0;
-  elapsed=0;
-  courseProgress=0;
-  stamina=100+staminaUpgrade*10;
-  buildCourse(level);
-  resumeGame();
-  showMessage("Level restarted!");
-});
-
-/* UPGRADES */
-
-document.getElementById("speedUpgrade").addEventListener("click",()=>{
-  if(coinsCount>=20) {
-    coinsCount-=20;
-    speedUpgrade++;
-    showMessage("Horse speed upgraded!");
-    updateHUD();
-  } else {
-    showMessage("You need 20 coins!");
-  }
-});
-
-document.getElementById("staminaUpgrade").addEventListener("click",()=>{
-  if(coinsCount>=15) {
-    coinsCount-=15;
-    staminaUpgrade++;
-    stamina=Math.min(100+staminaUpgrade*10,stamina+25);
-    showMessage("Horse stamina upgraded!");
-    updateHUD();
-  } else {
-    showMessage("You need 15 coins!");
-  }
-});
-
-/* LEVEL FINISH */
-
-function finishLevel() {
-  paused=true;
-
-  const nextLevel=level+1;
-  const isChampion=level%5===0;
-
-  const box=document.getElementById("message");
-  box.innerHTML=isChampion
-    ? "🏆 CHAMPION COURSE COMPLETED!<br>Level "+level+" finished!"
-    : "LEVEL "+level+" COMPLETED!";
-
-  box.style.display="block";
-
-  setTimeout(()=>{
-    level=nextLevel;
-    player.position.set(0,0,5);
-    player.rotation.y=0;
-    courseProgress=0;
-    elapsed=0;
-    stamina=100+staminaUpgrade*10;
-    buildCourse(level);
-    box.style.display="none";
-    paused=false;
-    showMessage(isChampion
-      ? "New champion course unlocked!"
-      : "Level "+level+" unlocked!");
-    updateHUD();
-  },2200);
-}
-
-/* COLLISION */
-
-function collectObjects() {
-  for(const coin of coins) {
-    if(!coin.userData.collected &&
-       player.position.distanceTo(coin.position)<2) {
-      coin.userData.collected=true;
-      coin.visible=false;
-      coinsCount++;
-      updateHUD();
-    }
-  }
-
-  for(const obstacle of obstacles) {
-    const dx=Math.abs(player.position.x-obstacle.position.x);
-    const dz=Math.abs(player.position.z-obstacle.position.z);
-
-    if(dx<1.7 && dz<1.5 && player.position.y<.6) {
-      stamina=Math.max(0,stamina-25);
-      player.position.z+=3;
-      showMessage("Obstacle! Try jumping over it.");
-    }
-  }
-
-  for(const ring of checkpoints) {
-    if(!ring.userData.passed &&
-       Math.abs(player.position.z-ring.position.z)<2.5) {
-      ring.userData.passed=true;
-      showMessage("Checkpoint reached!");
-    }
-  }
-}
-
-/* GAME UPDATE */
-
-function update(dt) {
-  if(!gameStarted || paused) return;
-
-  elapsed+=dt;
-
-  const go=forwardPressed || keys["w"] || keys["arrowup"];
-  const left=leftPressed || keys["a"] || keys["arrowleft"];
-  const right=rightPressed || keys["d"] || keys["arrowright"];
-  const boost=boostPressed || keys["shift"];
-
-  const maxSpeed=baseSpeed+speedUpgrade*2;
-  const boosting=boost && stamina>0 && go;
-
-  if(go) {
-    horseSpeed=THREE.MathUtils.lerp(
-      horseSpeed,
-      maxSpeed*(boosting?1.8:1),
-      dt*2
-    );
-  } else {
-    horseSpeed=THREE.MathUtils.lerp(horseSpeed,0,dt*3);
-  }
-
-  if(boosting) {
-    stamina=Math.max(0,stamina-18*dt);
-  } else {
-    stamina=Math.min(100+staminaUpgrade*10,stamina+7*dt);
-  }
-
-  if(left) player.position.x-=7*dt;
-  if(right) player.position.x+=7*dt;
-
-  player.position.x=THREE.MathUtils.clamp(player.position.x,-5.2,5.2);
-
-  if(go) {
-    player.position.z-=horseSpeed*dt;
-    courseProgress+=horseSpeed*dt;
-  }
-
-  if(jumping) {
-    jumpTime+=dt;
-    player.position.y=Math.sin(Math.min(jumpTime/0.85,1)*Math.PI)*2.4;
-
-    if(jumpTime>=.85) {
-      jumping=false;
-      player.position.y=0;
-    }
-  }
-
-  player.rotation.y=THREE.MathUtils.lerp(
-    player.rotation.y,
-    left?.18:right?-.18:0,
-    dt*5
-  );
-
-  if(horseMixer) horseMixer.update(dt);
-  if(riderMixer) riderMixer.update(dt);
-
-  collectObjects();
-
-  const targetCamera=new THREE.Vector3(
-    player.position.x*.45,
-    6+player.position.y,
-    player.position.z+12
-  );
-
-  camera.position.lerp(targetCamera,dt*4);
-  camera.lookAt(
-    player.position.x,
-    2+player.position.y,
-    player.position.z-5
-  );
-
-  if(player.position.z<=-(100+level*25)) {
-    finishLevel();
-  }
-
-  if(stamina<=0) {
-    horseSpeed=Math.min(horseSpeed,5);
-  }
-
-  if(messageTimer>0) {
-    messageTimer-=dt;
-    if(messageTimer<=0) {
-      document.getElementById("message").style.display="none";
-    }
-  }
-
-  updateHUD();
-}
-
-/* INTRO CAMERA */
-
-let trailerTime=0;
-
-function updateTrailer(dt) {
-  if(gameStarted) return;
-
-  trailerTime+=dt;
-  const radius=10;
-
-  camera.position.set(
-    Math.sin(trailerTime*.25)*radius,
-    5+Math.sin(trailerTime*.5),
-    12+Math.cos(trailerTime*.25)*radius
-  );
-
-  camera.lookAt(0,2,0);
-
-  player.rotation.y=Math.sin(trailerTime*.4)*.2;
-
-  if(horseMixer) horseMixer.update(dt);
-  if(riderMixer) riderMixer.update(dt);
-}
-
-/* ANIMATION LOOP */
-
-function animate() {
-  requestAnimationFrame(animate);
-
-  const dt=Math.min(clock.getDelta(),.04);
-
-  coins.forEach((coin,i)=>{
-    if(coin.visible) {
-      coin.rotation.y+=dt*2.5;
-      coin.position.y=1.4+Math.sin(performance.now()*.002+i)*.15;
-    }
-  });
-
-  updateTrailer(dt);
-  update(dt);
-
-  renderer.render(scene,camera);
-}
-
-animate();
-
-/* RESIZE */
-
-window.addEventListener("resize",()=>{
-  camera.aspect=window.innerWidth/window.innerHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth,window.innerHeight);
-});
-
-/* MOBILE SAFETY */
-
-document.addEventListener("contextmenu",e=>e.preventDefault());
-
-</script>
-</body>
-    </html>     health:100+level*12,
-            maxHealth:100+level*12,
-            speed:0.55+Math.min(level*.025,.4),
-            attack:0,
-            cooldown:Math.random()*100,
-            boss:false
-        });
-
-    }
-
-    if(bossLevel) {
-
-        enemies.push({
-            x:1900+level*100,
-            health:900+level*120,
-            maxHealth:900+level*120,
-            speed:.8+Math.min(level*.02,.4),
-            attack:0,
-            cooldown:70,
-            boss:true
-        });
-
-    }
-
-    $("levelText").textContent=level;
-
-    $("enemyText").textContent=enemies.length;
-
-    $("bossHealth").style.display=bossLevel?"block":"none";
-
-    if(bossLevel) {
-        $("bossName").textContent="BOSS LEVEL "+level;
-    }
-
-    updateHUD();
-
-    finished=false;
-
-}
-
-/* =============================
-   BACKGROUND
-============================= */
-
-function drawBackground() {
-
-    let sky=ctx.createLinearGradient(0,0,0,H);
-
-    sky.addColorStop(0,"#607a7a");
-    sky.addColorStop(.5,"#a79e83");
-    sky.addColorStop(1,"#4b4b39");
-
-    ctx.fillStyle=sky;
-    ctx.fillRect(0,0,W,H);
-
-    // distant hills
-
-    ctx.fillStyle="#526253";
-
-    ctx.beginPath();
-    ctx.moveTo(0,H*.61);
-
-    for(let x=0;x<=W+50;x+=50) {
-        ctx.lineTo(x,H*.42+Math.sin(x*.012)*25);
-    }
-
-    ctx.lineTo(W,H);
-    ctx.lineTo(0,H);
-    ctx.fill();
-
-    // distant forest
-
-    for(let i=0;i<25;i++) {
-
-        let x=((i*120-camera*.25)%(W+120)+W+120)%(W+120);
-
-        ctx.fillStyle="#344739";
-
-        ctx.fillRect(x,H*.49,12,H*.25);
-
-        ctx.beginPath();
-        ctx.arc(x+6,H*.47,28,0,Math.PI*2);
-        ctx.fill();
-
-    }
-
-    // battlefield
-
-    ctx.fillStyle="#554a35";
-    ctx.fillRect(0,groundY(),W,H-groundY());
-
-    ctx.fillStyle="#77704d";
-    ctx.fillRect(0,groundY()+8,W,H-groundY());
-
-    for(let i=0;i<60;i++) {
-
-        let x=((i*100-camera)%(W+100)+W+100)%(W+100);
-
-        ctx.fillStyle="#938463";
-
-        ctx.fillRect(x,groundY()+35+(i%4)*15,22,3);
-
-    }
-
-}
-
-/* =============================
-   HORSE DRAWING
-   Detailed shaded 2D horse
-============================= */
-
-function drawHorse(x,y) {
-
-    ctx.save();
-
-    ctx.translate(x,y);
-
-    let movement=Math.sin(Date.now()*.012)*4;
-
-    // tail
-
-    ctx.strokeStyle="#281c16";
-    ctx.lineWidth=8;
-    ctx.lineCap="round";
-
-    ctx.beginPath();
-    ctx.moveTo(-54,-100);
-    ctx.quadraticCurveTo(-91,-82+movement,-94,-51);
-    ctx.stroke();
-
-    // legs
-
-    ctx.lineWidth=12;
-
-    ctx.strokeStyle="#493021";
-
-    ctx.beginPath();
-
-    ctx.moveTo(-37,-20);
-    ctx.lineTo(-42+movement,-72);
-
-    ctx.moveTo(-12,-20);
-    ctx.lineTo(-10-movement,-68);
-
-    ctx.moveTo(29,-20);
-    ctx.lineTo(39-movement,-72);
-
-    ctx.moveTo(51,-20);
-    ctx.lineTo(55+movement,-69);
-
-    ctx.stroke();
-
-    // hooves
-
-    ctx.fillStyle="#211c19";
-
-    for(let a of [-42,-10,39,55]) {
-
-        ctx.fillRect(a-6,-23,14,8);
-
-    }
-
-    // body shading
-
-    let body=ctx.createLinearGradient(0,-145,0,-20);
-
-    body.addColorStop(0,"#b7804c");
-    body.addColorStop(.3,"#966039");
-    body.addColorStop(.7,"#704328");
-    body.addColorStop(1,"#422a20");
-
-    ctx.fillStyle=body;
-
-    ctx.beginPath();
-    ctx.ellipse(0,-100,68,34,-.04,0,Math.PI*2);
-    ctx.fill();
-
-    // body highlight
-
-    ctx.strokeStyle="#c28c57";
-    ctx.lineWidth=2;
-
-    ctx.beginPath();
-    ctx.ellipse(-5,-111,52,19,0,Math.PI*1.1,Math.PI*1.85);
-    ctx.stroke();
-
-    // shoulder
-
-    ctx.fillStyle="#80512f";
-
-    ctx.beginPath();
-    ctx.ellipse(43,-100,29,31,-.4,0,Math.PI*2);
-    ctx.fill();
-
-    // neck
-
-    let neck=ctx.createLinearGradient(35,-170,80,-80);
-
-    neck.addColorStop(0,"#b17b48");
-    neck.addColorStop(1,"#704329");
-
-    ctx.fillStyle=neck;
-
-    ctx.beginPath();
-    ctx.moveTo(28,-120);
-    ctx.lineTo(54,-170);
-    ctx.lineTo(91,-169);
-    ctx.lineTo(70,-95);
-    ctx.lineTo(50,-78);
-    ctx.fill();
-
-    // head
-
-    ctx.fillStyle="#81512f";
-
-    ctx.beginPath();
-
-    ctx.moveTo(70,-171);
-    ctx.quadraticCurveTo(85,-199,119,-181);
-    ctx.lineTo(129,-157);
-    ctx.lineTo(108,-143);
-    ctx.lineTo(83,-149);
-    ctx.closePath();
-
-    ctx.fill();
-
-    // muzzle
-
-    ctx.fillStyle="#533627";
-
-    ctx.beginPath();
-    ctx.ellipse(119,-155,16,9,-.2,0,Math.PI*2);
-    ctx.fill();
-
-    // ears
-
-    ctx.fillStyle="#553322";
-
-    ctx.beginPath();
-    ctx.moveTo(83,-181);
-    ctx.lineTo(79,-204);
-    ctx.lineTo(97,-181);
-    ctx.fill();
-
-    ctx.beginPath();
-    ctx.moveTo(101,-181);
-    ctx.lineTo(111,-202);
-    ctx.lineTo(115,-178);
-    ctx.fill();
-
-    // mane
-
-    ctx.strokeStyle="#251b17";
-    ctx.lineWidth=8;
-
-    ctx.beginPath();
-    ctx.moveTo(75,-183);
-    ctx.quadraticCurveTo(52,-157,59,-126);
-    ctx.stroke();
-
-    // eye
-
-    ctx.fillStyle="#111";
-
-    ctx.beginPath();
-    ctx.arc(109,-176,3,0,Math.PI*2);
-    ctx.fill();
-
-    // bridle
-
-    ctx.strokeStyle="#28221b";
-    ctx.lineWidth=3;
-
-    ctx.beginPath();
-    ctx.moveTo(91,-176);
-    ctx.lineTo(113,-159);
-    ctx.lineTo(124,-157);
-    ctx.stroke();
-
-    // saddle
-
-    ctx.fillStyle="#30251c";
-
-    ctx.beginPath();
-    ctx.ellipse(-2,-125,39,13,0,Math.PI,Math.PI*2);
-    ctx.fill();
-
-    ctx.strokeStyle="#c5a36c";
-    ctx.lineWidth=3;
-
-    ctx.stroke();
-
-    ctx.restore();
-
-}
-
-/* =============================
-   RIDER
-============================= */
-
-function drawRider(x,y) {
-
-    ctx.save();
-
-    ctx.translate(x,y);
-
-    let bounce=Math.sin(Date.now()*.012)*2;
-
-    ctx.translate(0,bounce);
-
-    // legs
-
-    ctx.strokeStyle="#343b40";
-    ctx.lineWidth=13;
-
-    ctx.beginPath();
-
-    ctx.moveTo(-10,-123);
-    ctx.lineTo(-19,-85);
-
-    ctx.moveTo(13,-123);
-    ctx.lineTo(22,-86);
-
-    ctx.stroke();
-
-    // armour
-
-    let armour=ctx.createLinearGradient(-20,-180,20,-115);
-
-    armour.addColorStop(0,"#d5d7d5");
-    armour.addColorStop(.4,"#829092");
-    armour.addColorStop(1,"#354044");
-
-    ctx.fillStyle=armour;
-
-    ctx.beginPath();
-    ctx.roundRect(-23,-180,46,62,8);
-    ctx.fill();
-
-    ctx.strokeStyle="#b8a26b";
-    ctx.lineWidth=2;
-
-    ctx.stroke();
-
-    // helmet
-
-    let helmet=ctx.createLinearGradient(-20,-220,20,-180);
-
-    helmet.addColorStop(0,"#dce0dd");
-    helmet.addColorStop(1,"#69777b");
-
-    ctx.fillStyle=helmet;
-
-    ctx.beginPath();
-    ctx.arc(0,-199,21,0,Math.PI*2);
-    ctx.fill();
-
-    ctx.fillStyle="#171e20";
-
-    ctx.fillRect(7,-204,12,7);
-
-    // shield
-
-    ctx.fillStyle="#304b60";
-
-    ctx.beginPath();
-    ctx.moveTo(-27,-174);
-    ctx.lineTo(-56,-163);
-    ctx.lineTo(-52,-123);
-    ctx.lineTo(-36,-107);
-    ctx.lineTo(-20,-128);
-    ctx.closePath();
-    ctx.fill();
-
-    ctx.strokeStyle="#d4b56e";
-    ctx.lineWidth=3;
-    ctx.stroke();
-
-    // sword
-
-    if(player.attack>0) {
-
-        ctx.strokeStyle="#d6dbdc";
-        ctx.lineWidth=7;
-
-        ctx.beginPath();
-        ctx.moveTo(22,-160);
-        ctx.lineTo(75,-210);
-        ctx.stroke();
-
-    }
-
-    ctx.restore();
-
-}
-
-/* =============================
-   ENEMY DRAWING
-============================= */
-
-function drawEnemy(e) {
-
-    let x=e.x-camera;
-
-    if(x<-150 || x>W+150) return;
-
-    ctx.save();
-
-    ctx.translate(x,groundY());
-
-    let isBoss=e.boss;
-
-    let scale=isBoss?1.55:1;
-
-    ctx.scale(scale,scale);
-
-    // legs
-
-    ctx.strokeStyle="#292b29";
-    ctx.lineWidth=12;
-
-    ctx.beginPath();
-
-    ctx.moveTo(-12,-22);
-    ctx.lineTo(-16,-73);
-
-    ctx.moveTo(13,-22);
-    ctx.lineTo(19,-73);
-
-    ctx.stroke();
-
-    // armour
-
-    ctx.fillStyle=isBoss?"#672d2b":"#343d3d";
-
-    ctx.fillRect(-22,-130,44,58);
-
-    // helmet
-
-    ctx.fillStyle=isBoss?"#a34c3d":"#737c7b";
-
-    ctx.beginPath();
-    ctx.arc(0,-149,20,0,Math.PI*2);
-    ctx.fill();
-
-    // face opening
-
-    ctx.fillStyle="#171a18";
-    ctx.fillRect(4,-151,13,7);
-
-    // weapon
-
-    ctx.strokeStyle="#c7c7c2";
-    ctx.lineWidth=5;
-
-    ctx.beginPath();
-    ctx.moveTo(23,-125);
-    ctx.lineTo(48,-175);
-    ctx.stroke();
-
-    // health bar
-
-    ctx.restore();
-
-    if(isBoss) {
-
-        $("bossFill").style.width=
-        Math.max(0,e.health/e.maxHealth*100)+"%";
-
-    }
-
-}
-
-/* =============================
-   ARROWS
-============================= */
-
-function drawArrows() {
-
-    arrows.forEach(a=>{
-
-        ctx.save();
-
-        ctx.translate(a.x-camera,a.y);
-
-        ctx.rotate(a.angle);
-
-        ctx.strokeStyle="#e3d2a4";
-        ctx.lineWidth=4;
-
-        ctx.beginPath();
-        ctx.moveTo(-20,0);
-        ctx.lineTo(20,0);
-        ctx.stroke();
-
-        ctx.fillStyle="#e3d2a4";
-
-        ctx.beginPath();
-        ctx.moveTo(20,0);
-        ctx.lineTo(10,-7);
-        ctx.lineTo(10,7);
-        ctx.fill();
-
-        ctx.restore();
-
-    });
-
-}
-
-/* =============================
-   GAME RENDERING
-============================= */
-
-function render() {
-
-    drawBackground();
-
-    enemies.forEach(drawEnemy);
-
-    drawArrows();
-
-    let jumpHeight=player.jumping>0?
-    Math.sin(player.jumping/40*Math.PI)*90:0;
-
-    let py=groundY()-32-jumpHeight;
-
-    drawHorse(player.x,py);
-
-    drawRider(player.x,py-5);
-
-}
-
-/* =============================
-   ENEMY AI
-============================= */
-
-function enemyAI() {
-
-    enemies.forEach(e=>{
-
-        let distance=e.x-(camera+player.x);
-
-        if(distance>35) {
-
-            e.x-=e.speed;
-
-        }
-
-        if(distance<35 && distance>-100) {
-
-            e.cooldown--;
-
-            if(e.cooldown<=0) {
-
-                if(!keys.shield && player.invincible<=0) {
-
-                    player.health-=e.boss?12:6;
-
-                    player.invincible=45;
-
-                }
-
-                e.cooldown=e.boss?45:85;
-
-            }
-
-        }
-
-    });
-
-}
-
-/* =============================
-   SWORD ATTACK
-============================= */
-
-function swordAttack() {
-
-    if(player.cooldown>0 || paused || finished) return;
-
-    player.attack=18;
-    player.cooldown=30;
-
-    let target=enemies.find(e=>
-        e.x>camera+player.x &&
-        e.x<camera+player.x+145
-    );
-
-    if(target) {
-
-        target.health-=40*player.sword;
-
-        particles.push({
-            x:target.x,
-            y:groundY()-100,
-            life:20
-        });
-
-        checkEnemy(target);
-
-    }
-
-}
-
-/* =============================
-   MULTI ARROW SYSTEM
-============================= */
-
-function multiAttack() {
-
-    if(player.multiCooldown>0 || paused || finished) return;
-
-    let targets=enemies
-    .filter(e=>e.x>camera+player.x+40)
-    .sort((a,b)=>a.x-b.x)
-    .slice(0,4);
-
-    if(targets.length===0) return;
-
-    targets.forEach((e,i)=>{
-
-        arrows.push({
-
-            x:camera+player.x+50,
-            y:groundY()-150+i*5,
-            target:e,
-            speed:13,
-            angle:0
-
-        });
-
-    });
-
-    player.multiCooldown=120;
-
-}
-
-/* =============================
-   ARROW MOVEMENT
-============================= */
-
-function updateArrows() {
-
-    arrows.forEach(a=>{
-
-        let tx=a.target.x-camera;
-
-        let ty=groundY()-100;
-
-        let dx=tx-(a.x-camera);
-
-        let dy=ty-a.y;
-
-        a.angle=Math.atan2(dy,dx);
-
-        a.x+=Math.cos(a.angle)*a.speed;
-
-        a.y+=Math.sin(a.angle)*a.speed;
-
-        if(Math.abs(dx)<25) {
-
-            a.target.health-=35*player.arrow;
-
-            a.hit=true;
-
-            checkEnemy(a.target);
-
-        }
-
-    });
-
-    arrows=arrows.filter(a=>!a.hit);
-
-}
-
-/* =============================
-   ENEMY DEFEAT
-============================= */
-
-function checkEnemy(e) {
-
-    if(e.health<=0 && !e.dead) {
-
-        e.dead=true;
-
-        coins+=e.boss?200:15;
-
-        updateHUD();
-
-    }
-
-}
-
-/* =============================
-   COMPLETE LEVEL
-============================= */
-
-function checkComplete() {
-
-    if(enemies.every(e=>e.dead) && !finished) {
-
-        finished=true;
-
-        active=false;
-
-        levelReward=level%5===0?200:50;
-
-        coins+=levelReward;
-
-        $("rewardText").textContent=levelReward;
-
-        $("completeMessage").textContent=
-        bossLevel?
-        "You have defeated the battlefield boss!":
-        "You have successfully completed this level.";
-
-        $("completeScreen").style.display="flex";
-
-        updateHUD();
-
-    }
-
-}
-
-/* =============================
-   DEFEAT
-============================= */
-
-function defeat() {
-
-    if(finished) return;
-
-    finished=true;
-    active=false;
-
-    $("retryLevel").textContent=level;
-
-    $("defeatScreen").style.display="flex";
-
-}
-
-/* =============================
-   HUD
-============================= */
-
-function updateHUD() {
-
-    $("coinsText").textContent=coins;
-
-    $("enemyText").textContent=
-    enemies.filter(e=>!e.dead).length;
-
-    $("upgradeCoins").textContent=coins;
-
-    $("playerFill").style.width=
-    Math.max(0,player.health/player.maxHealth*100)+"%";
-
-}
-
-/* =============================
-   UPGRADE SYSTEM
-============================= */
-
-function buy(cost,property) {
-
-    if(coins<cost) {
-
-        alert("You need more coins!");
-
-        return;
-
-    }
-
-    coins-=cost;
-
-    player[property]++;
-
-    if(property==="horse") {
-
-        player.maxHealth+=30;
-
-        player.health=player.maxHealth;
-
-    }
-
-    updateHUD();
-
-}
-
-$("horseUpgrade").onclick=()=>buy(50,"horse");
-
-$("swordUpgrade").onclick=()=>buy(40,"sword");
-
-$("arrowUpgrade").onclick=()=>buy(45,"arrow");
-
-function openUpgrades() {
-
-    paused=true;
-
-    $("upgradePanel").style.display="block";
-
-    $("upgradeCoins").textContent=coins;
-
-}
-
-function closeUpgrades() {
-
-    $("upgradePanel").style.display="none";
-
-    paused=false;
-
-}
-
-$("upgradeOpen").onclick=openUpgrades;
-
-$("closeUpgrade").onclick=closeUpgrades;
-
-$("completeUpgrade").onclick=()=>{
-    $("completeScreen").style.display="none";
-    openUpgrades();
-};
-
-$("defeatUpgrade").onclick=()=>{
-    $("defeatScreen").style.display="none";
-    openUpgrades();
-};
-
-$("pauseUpgrade").onclick=()=>{
-    $("pauseScreen").style.display="none";
-    openUpgrades();
-};
-
-/* =============================
-   LEVEL TRANSITIONS
-============================= */
-
-$("nextLevel").onclick=()=>{
-
-    level++;
-
-    $("completeScreen").style.display="none";
-
-    createLevel();
-
-    active=true;
-
-};
-
-$("retry").onclick=()=>{
-
-    $("defeatScreen").style.display="none";
-
-    createLevel();
-
-    active=true;
-
-};
-
-/* =============================
-   PAUSE
-============================= */
-
-$("pauseBtn").onclick=()=>{
-
-    if(!active) return;
-
-    paused=true;
-
-    $("pauseScreen").style.display="flex";
-
-};
-
-$("resume").onclick=()=>{
-
-    paused=false;
-
-    $("pauseScreen").style.display="none";
-
-};
-
-/* =============================
-   TOUCH CONTROLS
-============================= */
-
-function hold(id,callback) {
-
-    let b=$(id);
-
-    b.addEventListener("pointerdown",e=>{
-
-        e.preventDefault();
-
-        callback(true);
-
-    });
-
-    ["pointerup","pointercancel","pointerleave"].forEach(ev=>{
-
-        b.addEventListener(ev,()=>callback(false));
-
-    });
-
-}
-
-hold("left",v=>keys.left=v);
-
-hold("right",v=>keys.right=v);
-
-hold("shield",v=>keys.shield=v);
-
-$("fire").addEventListener("pointerdown",e=>{
-    e.preventDefault();
-    swordAttack();
-});
-
-$("multi").addEventListener("pointerdown",e=>{
-    e.preventDefault();
-    multiAttack();
-});
-
-$("jump").addEventListener("pointerdown",e=>{
-
-    e.preventDefault();
-
-    if(player.jumping===0) {
-        player.jumping=40;
-    }
-
-});
-
-/* KEYBOARD */
-
-window.addEventListener("keydown",e=>{
-
-    if(e.key==="ArrowLeft") keys.left=true;
-
-    if(e.key==="ArrowRight") keys.right=true;
-
-    if(e.key==="j") swordAttack();
-
-    if(e.key==="k") multiAttack();
-
-});
-
-window.addEventListener("keyup",e=>{
-
-    if(e.key==="ArrowLeft") keys.left=false;
-
-    if(e.key==="ArrowRight") keys.right=false;
-
-});
-
-/* =============================
-   UPDATE
-============================= */
-
-function update() {
-
-    if(!active || paused || finished) return;
-
-    if(keys.left) {
-        camera=Math.max(0,camera-4);
-    }
-
-    if(keys.right) {
-        camera+=4;
-    }
-
-    if(player.attack>0) player.attack--;
-
-    if(player.cooldown>0) player.cooldown--;
-
-    if(player.multiCooldown>0) player.multiCooldown--;
-
-    if(player.invincible>0) player.invincible--;
-
-    if(player.jumping>0) player.jumping--;
-
-    enemyAI();
-
-    updateArrows();
-
-    if(player.health<=0) {
-        defeat();
-    }
-
-    updateHUD();
-
-    checkComplete();
-
-}
-
-/* =============================
-   MAIN GAME LOOP
-============================= */
-
-function loop() {
-
-    update();
-
-    render();
-
-    requestAnimationFrame(loop);
-
-}
-
-/* =============================
-   START
-============================= */
-
-$("startBtn").onclick=async()=>{
-
-    $("intro").style.display="none";
-
-    $("hud").style.display="flex";
-
-    $("controls").style.display="flex";
-
-    $("playerBox").style.display="block";
-
-    $("upgradeOpen").style.display="block";
-
-    try {
-
-        if(game.requestFullscreen) {
-            await game.requestFullscreen();
-        }
-
-    } catch(e) {}
-
-    createLevel();
-
-    active=true;
-
-};
-
-loop();
+init3D();
 
 </script>
 
