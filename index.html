@@ -7,13 +7,15 @@
 <title>Al-Noor Islamic Learning Centre</title>
 
 <style>
-:root {
+:root{
 --green:#064e3b;
 --lightgreen:#087c59;
 --gold:#d4af37;
 --cream:#f4f8f5;
---white:#ffffff;
+--white:#fff;
 --text:#173c2e;
+--muted:#65766b;
+--red:#dc2626;
 }
 
 *{margin:0;padding:0;box-sizing:border-box}
@@ -21,14 +23,14 @@
 body{
 font-family:Arial,sans-serif;
 background:var(--cream);
-color:var(--text)
+color:var(--text);
 }
 
 header{
 background:linear-gradient(135deg,#033b2b,#087c59);
 color:white;
 padding:28px 15px;
-text-align:center
+text-align:center;
 }
 
 header h1{font-size:27px;margin-bottom:10px}
@@ -42,7 +44,8 @@ padding:13px;
 background:#033b2b;
 position:sticky;
 top:0;
-z-index:100
+z-index:100;
+scrollbar-width:thin;
 }
 
 nav button{
@@ -53,11 +56,9 @@ padding:13px 17px;
 border-radius:25px;
 font-weight:bold;
 white-space:nowrap;
-cursor:pointer
 }
 
 main{max-width:1100px;margin:auto;padding:17px}
-
 .section{display:none}
 .section.active{display:block}
 
@@ -67,7 +68,7 @@ color:white;
 padding:30px 18px;
 border-radius:18px;
 text-align:center;
-margin-bottom:20px
+margin-bottom:20px;
 }
 
 .hero h2{margin-bottom:12px}
@@ -78,7 +79,7 @@ padding:20px;
 border-radius:17px;
 margin-bottom:17px;
 box-shadow:0 4px 15px #0000000c;
-border:1px solid #e1e9e3
+border:1px solid #e1e9e3;
 }
 
 .card h3{color:var(--lightgreen);margin-bottom:13px}
@@ -86,7 +87,7 @@ border:1px solid #e1e9e3
 .grid{
 display:grid;
 grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
-gap:13px
+gap:13px;
 }
 
 .tile{
@@ -95,7 +96,7 @@ padding:24px 12px;
 border-radius:15px;
 text-align:center;
 border:1px solid #dce9df;
-cursor:pointer
+cursor:pointer;
 }
 
 .tile span{display:block;font-size:32px;margin-bottom:12px}
@@ -109,11 +110,12 @@ border:0;
 padding:13px 17px;
 border-radius:10px;
 margin:5px 3px;
-font-weight:bold
+font-weight:bold;
 }
 
 .gold{background:var(--gold);color:#173c2e}
 .dark{background:#173c2e;color:white}
+.red-button{background:#dc2626;color:white}
 
 input,select{
 width:100%;
@@ -122,7 +124,7 @@ border:1px solid #ccd9cf;
 border-radius:10px;
 margin:9px 0;
 font-size:15px;
-background:white
+background:white;
 }
 
 .arabic{
@@ -131,7 +133,7 @@ line-height:2.2;
 direction:rtl;
 text-align:right;
 color:var(--green);
-margin:15px 0
+margin:15px 0;
 }
 
 .translation{line-height:1.9;color:#52635a;margin:10px 0}
@@ -141,7 +143,7 @@ background:#eaf5ed;
 padding:14px;
 border-radius:10px;
 margin:12px 0;
-line-height:1.7
+line-height:1.7;
 }
 
 footer{
@@ -150,38 +152,17 @@ color:white;
 text-align:center;
 padding:30px;
 margin-top:30px;
-line-height:2
+line-height:2;
 }
 
 /* CALENDAR */
-
-.calendar-switch{
-display:flex;
-gap:10px;
-margin:15px 0
-}
-
-.calendar-switch button{
-flex:1;
-padding:14px 8px;
-border:0;
-border-radius:10px;
-background:#e3eee5;
-color:var(--green);
-font-weight:bold
-}
-
-.calendar-switch button.selected{
-background:var(--green);
-color:white
-}
 
 .calendar-head{
 display:flex;
 justify-content:space-between;
 align-items:center;
 gap:8px;
-margin-bottom:17px
+margin-bottom:17px;
 }
 
 .calendar-head button{
@@ -189,161 +170,396 @@ padding:12px 15px;
 border:0;
 border-radius:9px;
 background:var(--green);
-color:white
+color:white;
 }
 
-.calendar-grid{
-display:grid;
-grid-template-columns:repeat(7,1fr);
-gap:5px
-}
-
-.day-name{
-background:#e3efe6;
-padding:11px 2px;
-text-align:center;
-font-size:12px;
-font-weight:bold
-}
-
+.calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
+.day-name{background:#e3efe6;padding:11px 2px;text-align:center;font-size:12px;font-weight:bold}
 .calendar-day{
 background:#f7faf7;
 border:1px solid #e2eae3;
-min-height:78px;
+min-height:75px;
 padding:7px 2px;
 text-align:center;
 border-radius:8px;
-font-size:13px
+font-size:13px;
 }
-
-.calendar-day.today{
-background:#d5f0dc;
-border:2px solid var(--lightgreen);
-font-weight:bold
-}
-
-.calendar-day .hijri{
-font-size:10px;
-color:#9b771a;
-margin-top:8px
-}
-
-.calendar-day.empty{
-background:transparent;
-border:0
-}
+.calendar-day.today{background:#d5f0dc;border:2px solid var(--lightgreen);font-weight:bold}
+.calendar-day .hijri{font-size:10px;color:#9b771a;margin-top:8px}
+.calendar-day.empty{background:transparent;border:0}
 
 /* TASBIH */
 
 .tasbih-panel{
 text-align:center;
-padding:25px 15px;
-background:linear-gradient(145deg,#064e3b,#087c59);
-border-radius:20px;
-color:white
+padding:27px 15px;
+background:linear-gradient(145deg,#033b2b,#087c59);
+border-radius:22px;
+color:white;
 }
 
+.tasbih-panel h3{color:white}
+
 .tasbih-number{
-font-size:75px;
+font-size:78px;
 font-weight:bold;
-margin:20px 0
+margin:15px 0;
+font-variant-numeric:tabular-nums;
 }
 
 .tasbih-button{
-width:190px;
-height:190px;
+width:185px;
+height:185px;
 border-radius:50%;
-background:var(--gold);
-border:10px solid #f0d982;
+background:linear-gradient(145deg,#f6df91,#d4af37);
+border:9px solid #f7e7b0;
 color:#173c2e;
-font-size:22px;
+font-size:23px;
 font-weight:bold;
-box-shadow:0 8px 20px #0003
+box-shadow:0 9px 25px #0004,inset 0 3px 8px #fff8;
 }
 
 .tasbih-button:active{transform:scale(.95)}
 
 .progress{
-height:12px;
+height:13px;
 background:#dce9df;
 border-radius:20px;
 overflow:hidden;
-margin:15px 0
+margin:18px 0;
 }
 
 .progress-fill{
 height:100%;
 width:0%;
 background:var(--gold);
-transition:.2s
+transition:.25s;
 }
 
 .counter-info{
 display:grid;
 grid-template-columns:1fr 1fr;
 gap:12px;
-margin-top:20px
+margin-top:20px;
 }
 
-.counter-info div{
-background:#ffffff22;
-padding:15px;
-border-radius:12px
-}
+.counter-info div{background:#ffffff22;padding:15px;border-radius:12px}
+.counter-info h2{margin-top:7px}
+
+.checkbox-row{display:flex;align-items:center;gap:10px;margin:13px 0}
+.checkbox-row input{width:20px;height:20px;margin:0}
 
 /* PRAYER */
 
-.prayer-row{
-display:flex;
-justify-content:space-between;
-padding:15px;
-border-bottom:1px solid #e5eee7
-}
-
-.checkbox-row{
-display:flex;
-align-items:center;
-gap:10px;
-margin:13px 0
-}
-
-.checkbox-row input{
-width:20px;
-height:20px
-}
+.prayer-row{display:flex;justify-content:space-between;padding:15px;border-bottom:1px solid #e5eee7}
+.prayer-row.next{background:#e4f5e9;border-radius:10px;font-weight:bold}
 
 /* QIBLA */
 
+.compass-wrap{
+display:flex;
+flex-direction:column;
+align-items:center;
+padding:15px 5px;
+}
+
 .compass{
-height:230px;
-width:230px;
+height:275px;
+width:275px;
 border:9px solid var(--gold);
 border-radius:50%;
-margin:20px auto;
+position:relative;
 display:flex;
 align-items:center;
 justify-content:center;
-background:#e9f7ef
+background:radial-gradient(circle,#fff 0%,#e7f6ed 68%,#c9e6d2 100%);
+box-shadow:0 8px 25px #0002,inset 0 0 15px #0001;
 }
 
-.arrow{font-size:85px;color:var(--green)}
+.compass:before{
+content:"";
+position:absolute;
+inset:13px;
+border:2px dashed #a9c7b3;
+border-radius:50%;
+}
 
-audio{width:100%;margin:12px 0}
+.compass-label{
+position:absolute;
+font-weight:bold;
+color:var(--green);
+font-size:15px;
+}
 
-.voice-option{
-padding:13px;
+.compass-label.north{top:18px}
+.compass-label.south{bottom:18px}
+.compass-label.east{right:19px}
+.compass-label.west{left:19px}
+
+.compass-needle{
+position:absolute;
+width:8px;
+height:190px;
+display:flex;
+flex-direction:column;
+align-items:center;
+transform:rotate(0deg);
+transform-origin:center;
+transition:transform .2s;
+}
+
+.needle-top{
+width:0;height:0;
+border-left:13px solid transparent;
+border-right:13px solid transparent;
+border-bottom:90px solid #087c59;
+}
+
+.needle-bottom{
+width:0;height:0;
+border-left:13px solid transparent;
+border-right:13px solid transparent;
+border-top:90px solid #b6c5ba;
+}
+
+.needle-center{
+position:absolute;
+width:20px;height:20px;
+background:var(--gold);
+border:3px solid white;
+border-radius:50%;
+}
+
+.compass-center{position:absolute;font-size:20px;z-index:2}
+.compass-degree{font-size:31px;font-weight:bold;text-align:center;color:var(--green);margin:15px 0 5px}
+.compass-note{text-align:center;color:var(--muted);font-size:13px}
+
+/* MUDHARASAH */
+
+.lesson-toolbar{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+gap:10px;
+}
+
+.lesson-card{
+border:1px solid #dce9df;
+border-radius:13px;
+padding:15px;
+margin:12px 0;
+background:#fbfdfb;
+}
+
+.lesson-card .arabic{font-size:29px}
+.lesson-number{color:#a17a18;font-weight:bold;margin-bottom:8px}
+
+.lesson-controls{
+display:flex;
+flex-wrap:wrap;
+gap:8px;
+margin-top:12px;
+}
+
+.lesson-controls button{
+border:0;
+padding:12px 14px;
+border-radius:9px;
+background:var(--green);
+color:white;
+font-weight:bold;
+}
+
+.lesson-controls button:disabled{opacity:.4}
+
+.lesson-progress{
+height:9px;
+background:#e3ece5;
+border-radius:20px;
+overflow:hidden;
+margin:12px 0;
+}
+
+.lesson-progress div{
+height:100%;
+width:0%;
+background:var(--gold);
+}
+
+/* RECITATION EXAMINER */
+
+.exam-panel{
+background:#f5faf6;
+border:1px solid #dce9df;
+border-radius:15px;
+padding:17px;
+margin-top:18px;
+}
+
+.exam-header{
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:10px;
+flex-wrap:wrap;
+}
+
+.exam-light{
+width:30px;
+height:30px;
+border-radius:50%;
+background:#aeb8b1;
+border:4px solid #dfe7e1;
+box-shadow:0 0 0 2px #c8d4cb;
+display:inline-block;
+flex-shrink:0;
+}
+
+.exam-light.green{
+background:#16a34a;
+box-shadow:0 0 15px #16a34a,0 0 0 2px #bbf7d0;
+}
+
+.exam-light.red{
+background:#dc2626;
+box-shadow:0 0 15px #dc2626,0 0 0 2px #fecaca;
+}
+
+.exam-light.amber{
+background:#eab308;
+box-shadow:0 0 12px #eab308;
+}
+
+.exam-status{
+display:flex;
+align-items:center;
+gap:12px;
+padding:14px;
+border-radius:12px;
+background:#edf2ee;
+margin:14px 0;
+font-weight:bold;
+}
+
+.exam-status.good{background:#dcfce7;color:#166534}
+.exam-status.bad{background:#fee2e2;color:#991b1b}
+.exam-status.wait{background:#fef3c7;color:#854d0e}
+
+.exam-transcript{
+background:white;
 border:1px solid #dce9df;
 border-radius:10px;
-margin:9px 0;
-background:#f8fbf8
+padding:13px;
+min-height:55px;
+line-height:1.8;
+margin:12px 0;
+}
+
+.exam-arabic{
+direction:rtl;
+text-align:right;
+font-size:25px;
+line-height:2.2;
+padding:15px;
+background:white;
+border-radius:12px;
+margin:12px 0;
+}
+
+.exam-arabic .wrong-word{
+color:#dc2626;
+background:#fee2e2;
+border-radius:5px;
+padding:2px 4px;
+}
+
+.exam-arabic .correct-word{
+color:#15803d;
+}
+
+.exam-attempts{
+display:flex;
+gap:9px;
+margin:12px 0;
+}
+
+.attempt-dot{
+width:19px;
+height:19px;
+border-radius:50%;
+background:#d1d5db;
+border:2px solid #9ca3af;
+}
+
+.attempt-dot.used{background:#dc2626;border-color:#991b1b}
+.attempt-dot.success{background:#16a34a;border-color:#166534}
+
+.exam-stats{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:10px;
+margin:15px 0;
+}
+
+.exam-stat{
+background:white;
+border:1px solid #e1e9e3;
+border-radius:12px;
+padding:14px;
+text-align:center;
+}
+
+.exam-stat strong{
+display:block;
+font-size:24px;
+color:var(--green);
+margin-top:6px;
+}
+
+.exam-controls{
+display:flex;
+flex-wrap:wrap;
+gap:8px;
+margin:12px 0;
+}
+
+.exam-controls button{
+border:0;
+padding:13px 16px;
+border-radius:10px;
+font-weight:bold;
+}
+
+.mic-button{background:#087c59;color:white}
+.stop-button{background:#dc2626;color:white}
+.next-button{background:var(--gold);color:#173c2e}
+.secondary-button{background:#e4eee6;color:#173c2e}
+
+.exam-report{
+background:linear-gradient(145deg,#033b2b,#087c59);
+color:white;
+padding:22px;
+border-radius:16px;
+margin-top:15px;
+}
+
+.exam-report h3{color:#f6df91}
+.exam-report .exam-stat{color:var(--text)}
+
+.word-note{
+font-size:13px;
+color:#65766b;
+line-height:1.7;
 }
 
 @media(max-width:550px){
 header h1{font-size:22px}
-.calendar-day{min-height:65px;font-size:11px}
+.calendar-day{min-height:60px;font-size:11px}
 .calendar-day .hijri{font-size:9px}
 main{padding:10px}
-.tasbih-button{width:170px;height:170px}
+.tasbih-button{width:165px;height:165px}
+.compass{width:255px;height:255px}
+.exam-stats{grid-template-columns:1fr 1fr}
+.exam-controls button{flex:1 1 130px}
 }
 </style>
 </head>
@@ -359,6 +575,7 @@ main{padding:10px}
 <nav>
 <button onclick="show('home')">Home</button>
 <button onclick="show('quran')">Qur'an</button>
+<button onclick="show('madrasah')">Mudharasah</button>
 <button onclick="show('hadith')">Hadith</button>
 <button onclick="show('dua')">Hisnul Muslim</button>
 <button onclick="show('calendar')">Calendar</button>
@@ -374,7 +591,6 @@ main{padding:10px}
 <!-- HOME -->
 
 <section id="home" class="section active">
-
 <div class="hero">
 <h2>Welcome to Al-Noor</h2>
 <p>Read. Listen. Learn. Remember Allah.</p>
@@ -384,8 +600,8 @@ main{padding:10px}
 </div>
 
 <div class="grid">
-
 <div class="tile" onclick="show('quran')"><span>📖</span>Holy Qur'an</div>
+<div class="tile" onclick="show('madrasah')"><span>🎓</span>Mudharasah</div>
 <div class="tile" onclick="show('hadith')"><span>📚</span>Hadith</div>
 <div class="tile" onclick="show('dua')"><span>🤲</span>Hisnul Muslim</div>
 <div class="tile" onclick="show('calendar')"><span>📅</span>Islamic Calendar</div>
@@ -393,7 +609,6 @@ main{padding:10px}
 <div class="tile" onclick="show('prayer')"><span>🕌</span>Prayer Times</div>
 <div class="tile" onclick="show('qibla')"><span>🕋</span>Qibla Compass</div>
 <div class="tile" onclick="show('names')"><span>✨</span>99 Names of Allah</div>
-
 </div>
 
 <div class="card">
@@ -402,21 +617,17 @@ main{padding:10px}
 <p class="translation">"So remember Me; I will remember you."</p>
 <p>Qur'an 2:152</p>
 </div>
-
 </section>
-
 
 <!-- QURAN -->
 
 <section id="quran" class="section">
-
 <div class="hero">
 <h2>📖 The Holy Qur'an</h2>
-<p>Read and listen to the words of Allah.</p>
+<p>Read, listen and test your Qur'an recitation.</p>
 </div>
 
 <div class="card">
-
 <label>Select Surah</label>
 <select id="surahSelect"></select>
 
@@ -430,19 +641,183 @@ main{padding:10px}
 
 <button class="action" onclick="loadSurah()">Read Surah</button>
 <button class="action gold" onclick="playSurah()">🎧 Play Recitation</button>
-
-<audio id="quranAudio" controls></audio>
-
+<audio id="quranAudio" controls style="width:100%"></audio>
 <div id="quranContent" class="status">Loading Qur'an...</div>
+</div>
 
+<!-- QURAN RECITATION EXAM -->
+
+<div class="card">
+<h3>🎙️ Qur'an Recitation Examiner</h3>
+<p class="translation">
+Choose a Surah and Ayah range. Recite the displayed verses using your microphone.
+The examiner compares the words recognised by your browser with the Qur'an text.
+</p>
+
+<label>Surah for recitation</label>
+<select id="examSurah"></select>
+
+<div class="lesson-toolbar">
+<div>
+<label>Starting Ayah</label>
+<input type="number" id="examStart" value="1" min="1">
+</div>
+<div>
+<label>Ending Ayah</label>
+<input type="number" id="examEnd" value="5" min="1">
+</div>
+</div>
+
+<button class="action" onclick="startQuranExam()">Start Recitation Examination</button>
+
+<div id="quranExamArea" class="exam-panel" style="display:none">
+<div class="exam-header">
+<h3 id="qExamTitle">Recitation</h3>
+<span id="qExamLight" class="exam-light"></span>
+</div>
+
+<p id="qExamProgress" class="translation"></p>
+<div id="qExamAyah" class="exam-arabic"></div>
+
+<div class="exam-status wait" id="qExamStatus">
+<span class="exam-light amber"></span>
+<span>Press Start Speaking when you are ready.</span>
+</div>
+
+<div class="exam-attempts" id="qExamAttempts">
+<span class="attempt-dot"></span>
+<span class="attempt-dot"></span>
+<span class="attempt-dot"></span>
+</div>
+
+<div class="exam-controls">
+<button class="mic-button" id="qExamStartBtn" onclick="beginSpeech('quran')">🎙️ Start Speaking</button>
+<button class="stop-button" id="qExamStopBtn" onclick="stopSpeech('quran')" disabled>Stop Recording</button>
+<button class="next-button" id="qExamNextBtn" onclick="nextExamAyah('quran')" style="display:none">Continue ❯</button>
+</div>
+
+<p class="word-note">Recognised speech:</p>
+<div id="qExamTranscript" class="exam-transcript">Your recognised words will appear here.</div>
+
+<div id="qExamCorrection" class="status" style="display:none"></div>
+
+<div class="exam-stats">
+<div class="exam-stat">Ayahs completed<strong id="qExamDone">0</strong></div>
+<div class="exam-stat">Correct Ayahs<strong id="qExamCorrect">0</strong></div>
+</div>
+
+<div id="quranExamReport" class="exam-report" style="display:none"></div>
+</div>
 </div>
 </section>
 
+<!-- MUDHARASAH -->
+
+<section id="madrasah" class="section">
+<div class="hero">
+<h2>🎓 Al-Noor Mudharasah</h2>
+<p>Study, memorise and test your Qur'an recitation.</p>
+</div>
+
+<div class="card">
+<h3>Qur'an Lesson Settings</h3>
+
+<label>Select Surah</label>
+<select id="madSurah"></select>
+
+<label>Choose how you want to study</label>
+<select id="studyMode">
+<option value="ayah">One Ayah at a time</option>
+<option value="page">One Safha (page) at a time</option>
+<option value="fivePages">Five Safhas at a time</option>
+<option value="hizb">One Hizb at a time</option>
+<option value="juz">One Juz at a time</option>
+<option value="ruku">One Ruku at a time</option>
+</select>
+
+<label>Select Reciter</label>
+<select id="madReciter">
+<option value="ar.alafasy">Mishary Rashid Alafasy</option>
+<option value="ar.abdurrahmaansudais">Abdurrahman As-Sudais</option>
+<option value="ar.husary">Mahmoud Khalil Al-Husary</option>
+<option value="ar.minshawi">Mohamed Siddiq Al-Minshawi</option>
+</select>
+
+<button class="action" onclick="startMadrasah()">Open Qur'an Lesson</button>
+<div id="madStatus" class="status">Choose a Surah and study method to begin.</div>
+</div>
+
+<div class="card" id="madLessonCard" style="display:none">
+<h3 id="madLessonTitle">Your Lesson</h3>
+<p id="madLessonInfo" class="translation"></p>
+
+<div class="lesson-progress"><div id="madProgressFill"></div></div>
+<p id="madProgressText" class="translation"></p>
+
+<div id="madLessonContent"></div>
+
+<div class="lesson-controls">
+<button onclick="previousLesson()">❮ Previous</button>
+<button onclick="playLesson()">▶ Play Lesson</button>
+<button onclick="stopLesson()">■ Stop</button>
+<button onclick="nextLesson()">Next ❯</button>
+</div>
+
+<audio id="madAudio" controls style="width:100%;margin-top:15px"></audio>
+
+<div class="exam-panel">
+<h3>🎙️ Mudharasah Recitation Test</h3>
+<p class="translation">
+Recite the Ayahs in this lesson one after another. The system will listen,
+check your recognised words and give you three attempts for each Ayah.
+</p>
+
+<div class="exam-header">
+<h3 id="madExamTitle">Ready to recite?</h3>
+<span id="madExamLight" class="exam-light"></span>
+</div>
+
+<div id="madExamAyah" class="exam-arabic">
+Open a lesson to begin your recitation test.
+</div>
+
+<div id="madExamStatus" class="exam-status wait">
+<span class="exam-light amber"></span>
+<span>Start your Mudharasah recitation test.</span>
+</div>
+
+<div class="exam-attempts" id="madExamAttempts">
+<span class="attempt-dot"></span>
+<span class="attempt-dot"></span>
+<span class="attempt-dot"></span>
+</div>
+
+<div class="exam-controls">
+<button class="mic-button" id="madExamStartBtn" onclick="beginSpeech('mad')" disabled>🎙️ Start Speaking</button>
+<button class="stop-button" id="madExamStopBtn" onclick="stopSpeech('mad')" disabled>Stop Recording</button>
+<button class="next-button" id="madExamNextBtn" onclick="nextExamAyah('mad')" style="display:none">Continue ❯</button>
+</div>
+
+<p class="word-note">Recognised speech:</p>
+<div id="madExamTranscript" class="exam-transcript">Your recognised words will appear here.</div>
+
+<div id="madExamCorrection" class="status" style="display:none"></div>
+
+<div class="exam-stats">
+<div class="exam-stat">Ayahs completed<strong id="madExamDone">0</strong></div>
+<div class="exam-stat">Correct Ayahs<strong id="madExamCorrect">0</strong></div>
+</div>
+
+<button class="action gold" id="startMadExamBtn" onclick="startMadExam()">Start Mudharasah Examination</button>
+
+<div id="madExamReport" class="exam-report" style="display:none"></div>
+</div>
+</div>
+</section>
 
 <!-- HADITH -->
 
 <section id="hadith" class="section">
-
 <div class="hero">
 <h2>📚 Hadith Collections</h2>
 <p>Study the teachings of Prophet Muhammad ﷺ.</p>
@@ -450,14 +825,12 @@ main{padding:10px}
 
 <div class="card">
 <div class="grid">
-
 <div class="tile">📗<h3>Bukhari</h3><a href="https://sunnah.com/bukhari" target="_blank">Open Collection</a></div>
 <div class="tile">📘<h3>Muslim</h3><a href="https://sunnah.com/muslim" target="_blank">Open Collection</a></div>
 <div class="tile">📙<h3>Abu Dawud</h3><a href="https://sunnah.com/abudawud" target="_blank">Open Collection</a></div>
 <div class="tile">📕<h3>Tirmidhi</h3><a href="https://sunnah.com/tirmidhi" target="_blank">Open Collection</a></div>
 <div class="tile">📒<h3>An-Nasa'i</h3><a href="https://sunnah.com/nasai" target="_blank">Open Collection</a></div>
 <div class="tile">📔<h3>Ibn Majah</h3><a href="https://sunnah.com/ibnmajah" target="_blank">Open Collection</a></div>
-
 </div>
 </div>
 
@@ -465,104 +838,68 @@ main{padding:10px}
 <h3>Forty Hadith of Imam Nawawi</h3>
 <a href="https://sunnah.com/nawawi40" target="_blank">Read Forty Hadith</a>
 </div>
-
 </section>
-
 
 <!-- HISNUL MUSLIM -->
 
 <section id="dua" class="section">
-
 <div class="hero">
 <h2>🤲 Hisnul Muslim</h2>
 <p>Fortress of the Muslim</p>
 </div>
-
 <div class="card">
 <h3>Supplication Collection</h3>
 <p class="translation">
 Explore authentic supplications for morning and evening,
 prayer, sleeping, travelling, eating and other daily activities.
 </p>
-
-<a href="https://sunnah.com/hisn" target="_blank">
-<button class="action">Open Hisnul Muslim</button>
-</a>
-
-<a href="https://opendua.org/" target="_blank">
-<button class="action gold">Explore Du'a Library</button>
-</a>
+<a href="https://sunnah.com/hisn" target="_blank"><button class="action">Open Hisnul Muslim</button></a>
+<a href="https://opendua.org/" target="_blank"><button class="action gold">Explore Du'a Library</button></a>
 </div>
-
 </section>
 
-
-<!-- CALENDAR: BOTH GREGORIAN AND HIJRI -->
+<!-- CALENDAR -->
 
 <section id="calendar" class="section">
-
 <div class="hero">
 <h2>📅 Islamic Calendar</h2>
-<p>Gregorian and Hijri Calendar</p>
+<p>Hijri and Gregorian Calendar</p>
 </div>
 
 <div class="card">
-
-<h3>Today's Date</h3>
-<p id="todayDate" class="status"></p>
+<h3 id="todayDate"></h3>
 <p id="todayHijri" class="status">Loading Hijri date...</p>
 
-<div class="calendar-switch">
-<button id="gregorianButton" class="selected" onclick="setCalendarMode('gregorian')">
-Gregorian
-</button>
-
-<button id="hijriButton" onclick="setCalendarMode('hijri')">
-Hijri
-</button>
-</div>
-
 <div class="calendar-head">
-<button onclick="changeCalendarMonth(-1)">❮</button>
+<button onclick="changeMonth(-1)">❮</button>
 <h3 id="monthTitle"></h3>
-<button onclick="changeCalendarMonth(1)">❯</button>
+<button onclick="changeMonth(1)">❯</button>
 </div>
 
 <div class="calendar-grid" id="calendarGrid"></div>
-
-<div class="status">
-🟢 Green: Today's date<br>
-The smaller gold date shows the corresponding Hijri date.
-</div>
-
+<div class="status">🟢 Today's date<br>🟡 Hijri date</div>
 <button class="action" onclick="goToday()">Go to Today</button>
-
 </div>
 
 <div class="card">
 <h3>Important Islamic Dates</h3>
 <p class="translation">
-Islamic dates follow the lunar calendar. Dates may differ
-according to moon sighting and the decisions of local Islamic authorities.
+Islamic dates depend on the lunar calendar and local moon sighting.
+Check with your local Islamic authority for confirmed dates.
 </p>
 </div>
-
 </section>
-
 
 <!-- TASBIH -->
 
 <section id="tasbih" class="section">
-
 <div class="hero">
 <h2>📿 Digital Tasbih</h2>
 <p>Your Personal Dhikr Counter</p>
 </div>
 
 <div class="card">
-
 <label>Select Dhikr</label>
-
 <select id="dhikr" onchange="changeDhikr()">
 <option value="سُبْحَانَ اللَّهِ">Subhanallah</option>
 <option value="الْحَمْدُ لِلَّهِ">Alhamdulillah</option>
@@ -574,28 +911,20 @@ according to moon sighting and the decisions of local Islamic authorities.
 </select>
 
 <div class="tasbih-panel">
-
-<h3 id="selectedDhikr" style="color:white">سُبْحَانَ اللَّهِ</h3>
-
+<h3 id="selectedDhikr">سُبْحَانَ اللَّهِ</h3>
 <div class="tasbih-number" id="count">0</div>
-
 <button class="tasbih-button" onclick="increment()">TAP<br>📿</button>
 
-<div class="progress">
-<div class="progress-fill" id="progressFill"></div>
-</div>
-
+<div class="progress"><div class="progress-fill" id="progressFill"></div></div>
 <div id="progressText">0 / 33</div>
 
 <div class="counter-info">
 <div><p>Target</p><h2 id="targetDisplay">33</h2></div>
 <div><p>Completed Sets</p><h2 id="setsDisplay">0</h2></div>
 </div>
-
 </div>
 
 <label>Choose Target</label>
-
 <select id="target" onchange="changeTarget()">
 <option value="33">33 repetitions</option>
 <option value="99">99 repetitions</option>
@@ -610,239 +939,99 @@ according to moon sighting and the decisions of local Islamic authorities.
 <input type="checkbox" id="vibration" checked>
 <label for="vibration">Vibration feedback</label>
 </div>
-
 <div class="checkbox-row">
 <input type="checkbox" id="sound" checked>
 <label for="sound">Sound feedback</label>
 </div>
-
+<p class="translation">Your counter is saved automatically on this device.</p>
 </div>
 </section>
 
-
-<!-- PRAYER TIMES AND ADHAN -->
+<!-- PRAYER -->
 
 <section id="prayer" class="section">
-
 <div class="hero">
 <h2>🕌 Prayer Times & Adhan</h2>
 <p>Never miss your Salah.</p>
 </div>
 
 <div class="card">
-
 <h3>Location</h3>
-
 <input id="city" value="Keffi" placeholder="Enter your city">
-
 <button class="action" onclick="getPrayerTimes()">Get Prayer Times</button>
-
-<div id="prayerContent" class="status">
-Prayer times have not been loaded.
+<div id="prayerContent" class="status">Prayer times have not been loaded.</div>
 </div>
-
-</div>
-
-
-<!-- NEW BUILT-IN ADHAN VOICE SELECTOR -->
 
 <div class="card">
-
-<h3>🎙️ Choose Your Adhan Voice</h3>
-
-<p class="translation">
-Choose from different Adhan recordings. You can preview each
-recording before selecting it.
-</p>
-
-<label>General Adhan Voice</label>
-
-<select id="adhanVoice" onchange="selectAdhanVoice()">
-
-<option value="Ali_Ibn_Ahmad_Mala_1_-_Al_Haram_Al_Maki_(علي_بن_أحمد_ملا_-_الحرم_المكي).mp3">
-Makkah - Ali Ibn Ahmad Mala
-</option>
-
-<option value="Adhan_Al_Haram_Al_Madani_-_Al_Madinah_1_(أذان_الحرم_المدني_-_المدينة_المنورة).mp3">
-Madinah - Masjid An-Nabawi
-</option>
-
-<option value="Abdulbasit_Abdusamad_1_-_Egypt_(عبد_الباسط_عبد_الصمد_-_مصر).mp3">
-Egypt - Abdulbasit Abdusamad
-</option>
-
-<option value="Ahmd_At-Trablsy_1_(أحمد_الطرابلسي).mp3">
-Kuwait - Ahmad At-Trablsy
-</option>
-
-<option value="Adhan_Turkey_1_(أذان_تركيا).mp3">
-Turkey - Traditional Adhan
-</option>
-
-<option value="Adhan_Indonesia_(أذان_إندونيسيا).mp3">
-Indonesia - Adhan
-</option>
-
-<option value="Adhan_Pakistan_(أذان_باكستان).mp3">
-Pakistan - Adhan
-</option>
-
-<option value="Adhan_Al_Aqsa_-_Jerusalem_(أذان_المسجد_الأقصى_-_القدس).mp3">
-Jerusalem - Al-Aqsa Mosque
-</option>
-
-</select>
-
-<button class="action gold" onclick="previewAdhan()">
-▶ Preview Selected Voice
-</button>
-
-<label>Special Fajr Adhan Voice</label>
-
-<select id="fajrVoice" onchange="selectFajrVoice()">
-
-<option value="Adhan_Fajr_Al_Haram_Al_Maki_(أذان_الفجر_الحرم_المكي).mp3">
-Makkah - Fajr Adhan
-</option>
-
-<option value="Adhan_Fajr_Al_Haram_Al_Madani_(أذان_الفجر_الحرم_المدني).mp3">
-Madinah - Fajr Adhan
-</option>
-
-<option value="Abdulbasit_Abdusamad_6_-_Fajr_Egypt_(عبد_الباسط_عبد_الصمد_-_فجر_مصر).mp3">
-Egypt - Fajr Adhan
-</option>
-
-<option value="Ahmd_At-Trablsly_-_Fajr_Kuwait_(أحمد_الطرابلسي_-_فجر_الكويت).mp3">
-Kuwait - Fajr Adhan
-</option>
-
-</select>
-
-<button class="action gold" onclick="previewFajr()">
-▶ Preview Fajr Voice
-</button>
-
-<label>Adhan Audio Player</label>
-<audio id="adhanAudio" controls preload="none"></audio>
-
-<div class="status" id="voiceStatus">
-Select an Adhan voice and preview it.
-</div>
-
-<hr style="margin:20px 0;border:0;border-top:1px solid #ddd">
-
-<h3>Upload Your Own Adhan</h3>
-
-<input type="file" id="adhanFile" accept="audio/*">
-
-<p class="translation">
-You can upload your own MP3 recording instead of using
-the built-in recordings.
-</p>
-
-</div>
-
-
-<!-- AUTOMATIC ADHAN SETTINGS -->
-
-<div class="card">
-
 <h3>🔔 Automatic Adhan Settings</h3>
+<p class="translation">Choose which prayers should trigger an Adhan alert.</p>
 
-<p class="translation">
-Choose which prayers should trigger the Adhan.
-</p>
+<div class="checkbox-row"><input type="checkbox" id="enableFajr" checked><label for="enableFajr">Fajr</label></div>
+<div class="checkbox-row"><input type="checkbox" id="enableDhuhr" checked><label for="enableDhuhr">Dhuhr</label></div>
+<div class="checkbox-row"><input type="checkbox" id="enableAsr" checked><label for="enableAsr">Asr</label></div>
+<div class="checkbox-row"><input type="checkbox" id="enableMaghrib" checked><label for="enableMaghrib">Maghrib</label></div>
+<div class="checkbox-row"><input type="checkbox" id="enableIsha" checked><label for="enableIsha">Isha</label></div>
 
-<div class="checkbox-row">
-<input type="checkbox" id="enableFajr" checked>
-<label for="enableFajr">Fajr</label>
-</div>
-
-<div class="checkbox-row">
-<input type="checkbox" id="enableDhuhr" checked>
-<label for="enableDhuhr">Dhuhr</label>
-</div>
-
-<div class="checkbox-row">
-<input type="checkbox" id="enableAsr" checked>
-<label for="enableAsr">Asr</label>
-</div>
-
-<div class="checkbox-row">
-<input type="checkbox" id="enableMaghrib" checked>
-<label for="enableMaghrib">Maghrib</label>
-</div>
-
-<div class="checkbox-row">
-<input type="checkbox" id="enableIsha" checked>
-<label for="enableIsha">Isha</label>
-</div>
-
+<h3>Choose Adhan Voice</h3>
+<p class="translation">Upload an Adhan MP3 recording from your device.</p>
+<input type="file" id="adhanFile" accept="audio/*">
+<audio id="adhanAudio" controls></audio>
+<button class="action gold" onclick="testAdhan()">▶ Test Selected Voice</button>
 <button class="action" onclick="enableAdhan()">🔔 ENABLE AUTOMATIC ADHAN</button>
-
-<button class="action gold" onclick="stopAdhan()">STOP ADHAN</button>
-
-<div id="adhanStatus" class="status">
-Automatic Adhan is currently disabled.
-</div>
-
+<div id="adhanStatus" class="status">Automatic Adhan is currently disabled.</div>
 <p class="translation">
-Important: Keep this website open and your device awake.
-Mobile browsers may block automatic playback when the page
-is closed, suspended or the phone is locked.
+Browser restrictions may prevent automatic playback when the page is closed,
+suspended or the phone is locked.
 </p>
-
 </div>
-
 </section>
-
 
 <!-- QIBLA -->
 
 <section id="qibla" class="section">
-
 <div class="hero">
-<h2>🕋 Qibla Compass</h2>
+<h2>🕋 Advanced Qibla Compass</h2>
 <p>Find the direction of the Ka'bah.</p>
 </div>
 
 <div class="card">
-
-<div class="compass">
-<div class="arrow" id="compassArrow">⬆</div>
+<div class="compass-wrap">
+<div class="compass" id="compass">
+<div class="compass-label north">N</div>
+<div class="compass-label south">S</div>
+<div class="compass-label east">E</div>
+<div class="compass-label west">W</div>
+<div class="compass-needle" id="compassNeedle">
+<div class="needle-top"></div>
+<div class="needle-bottom"></div>
+</div>
+<div class="needle-center"></div>
+<div class="compass-center">🕋</div>
 </div>
 
-<h2 style="text-align:center" id="qiblaDegree">--°</h2>
-
-<button class="action" onclick="findQibla()">Find Qibla</button>
-
-<div id="qiblaStatus" class="status">
-Location permission required.
+<div class="compass-degree" id="qiblaDegree">--°</div>
+<p class="compass-note" id="compassDirection">Find your location to calculate Qibla.</p>
 </div>
 
+<button class="action" onclick="findQibla()">📍 Find Qibla Direction</button>
+<button class="action gold" onclick="enableCompass()">🧭 Activate Phone Compass</button>
+<div id="qiblaStatus" class="status">Allow location access to calculate the Qibla direction.</div>
 </div>
 </section>
-
 
 <!-- 99 NAMES -->
 
 <section id="names" class="section">
-
 <div class="hero">
 <h2>✨ Asma'ul Husna</h2>
 <p>The Beautiful Names of Allah</p>
 </div>
-
 <div class="grid" id="namesContent"></div>
-
 </section>
-
 
 <!-- LEARNING -->
 
 <section id="learn" class="section">
-
 <div class="hero">
 <h2>🎓 Islamic Learning Centre</h2>
 <p>Learn and increase your Islamic knowledge.</p>
@@ -851,26 +1040,17 @@ Location permission required.
 <div class="card">
 <h3>Five Pillars of Islam</h3>
 <ol style="line-height:2;padding-left:23px">
-<li>Shahadah</li>
-<li>Salah</li>
-<li>Zakah</li>
-<li>Sawm</li>
-<li>Hajj</li>
+<li>Shahadah</li><li>Salah</li><li>Zakah</li><li>Sawm</li><li>Hajj</li>
 </ol>
 </div>
 
 <div class="card">
 <h3>Six Articles of Faith</h3>
 <ol style="line-height:2;padding-left:23px">
-<li>Belief in Allah</li>
-<li>Belief in Angels</li>
-<li>Belief in Divine Books</li>
-<li>Belief in Messengers</li>
-<li>Belief in the Last Day</li>
-<li>Belief in Divine Decree</li>
+<li>Belief in Allah</li><li>Belief in Angels</li><li>Belief in Divine Books</li>
+<li>Belief in Messengers</li><li>Belief in the Last Day</li><li>Belief in Divine Decree</li>
 </ol>
 </div>
-
 </section>
 
 </main>
@@ -881,7 +1061,6 @@ Location permission required.
 <p>May Allah increase us in beneficial knowledge. Ameen.</p>
 </footer>
 
-
 <script>
 
 /* NAVIGATION */
@@ -889,12 +1068,12 @@ Location permission required.
 function show(id){
 document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
 document.getElementById(id).classList.add('active');
-if(id==='calendar')renderCalendar();
+if(id==='calendar')loadHijriMonth();
+if(id==='qibla'&&qiblaBearing!==null)updateCompassNeedle();
 window.scrollTo(0,0);
 }
 
-
-/* QURAN */
+/* QURAN INITIALIZATION */
 
 async function initializeQuran(){
 try{
@@ -902,25 +1081,26 @@ let r=await fetch('https://api.alquran.cloud/v1/surah');
 let j=await r.json();
 if(j.code!==200)throw Error();
 
-let select=document.getElementById('surahSelect');
-
+['surahSelect','madSurah','examSurah'].forEach(id=>{
+let select=document.getElementById(id);
 j.data.forEach(s=>{
 let option=document.createElement('option');
 option.value=s.number;
 option.textContent=s.number+'. '+s.englishName+' - '+s.name;
 select.appendChild(option);
 });
+});
 
 loadSurah();
-
 }catch(e){
-document.getElementById('quranContent').textContent=
-'Unable to load Qur’an. Check your internet connection.';
+document.getElementById('quranContent').textContent='Unable to load Qur’an. Check your internet connection.';
+document.getElementById('madStatus').textContent='Unable to load Surahs. Check your internet connection.';
 }
 }
+
+/* READ QURAN */
 
 async function loadSurah(){
-
 let number=document.getElementById('surahSelect').value;
 let box=document.getElementById('quranContent');
 if(!number)return;
@@ -928,15 +1108,11 @@ if(!number)return;
 box.textContent='Loading Surah...';
 
 try{
-let r=await fetch(
-`https://api.alquran.cloud/v1/surah/${number}/editions/quran-uthmani,en.sahih`
-);
+let r=await fetch(`https://api.alquran.cloud/v1/surah/${number}/editions/quran-uthmani,en.sahih`);
 let j=await r.json();
 if(j.code!==200)throw Error();
 
-let ar=j.data[0];
-let en=j.data[1];
-
+let ar=j.data[0],en=j.data[1];
 box.innerHTML='';
 
 let heading=document.createElement('h3');
@@ -959,59 +1135,730 @@ div.appendChild(arabic);
 div.appendChild(translation);
 box.appendChild(div);
 });
-
 }catch(e){
 box.textContent='Unable to load Surah. Please try again.';
 }
 }
 
 function playSurah(){
-
 let n=document.getElementById('surahSelect').value;
 let reciter=document.getElementById('reciter').value;
 let audio=document.getElementById('quranAudio');
-
-audio.src=
-`https://cdn.islamic.network/quran/audio-surah/128/${reciter}/${n}.mp3`;
-
+audio.src=`https://cdn.islamic.network/quran/audio-surah/128/${reciter}/${n}.mp3`;
 audio.play().catch(()=>alert('Audio could not play. Check internet connection.'));
 }
 
+/* RECITATION EXAMINER ENGINE */
+
+const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;
+let speechRecognition=null;
+let activeExam=null;
+let speechTranscript='';
+let speechWasStopped=false;
+
+const examData={
+quran:{
+items:[],index:0,attempts:0,done:0,correct:0,errors:0,corrected:0,
+title:'Qur’an Recitation',active:false
+},
+mad:{
+items:[],index:0,attempts:0,done:0,correct:0,errors:0,corrected:0,
+title:'Mudharasah Recitation',active:false
+}
+};
+
+function normalizeArabic(text){
+return(text||'')
+.normalize('NFD')
+.replace(/[\u064B-\u065F\u0670\u06D6-\u06ED]/g,'')
+.replace(/[إأآٱ]/g,'ا')
+.replace(/ى/g,'ي')
+.replace(/[ـ۞۩،؛؟!.,:()\[\]{}]/g,' ')
+.replace(/\s+/g,' ')
+.trim();
+}
+
+function arabicWords(text){
+return normalizeArabic(text).split(' ').filter(Boolean);
+}
+
+function compareRecitation(expected,spoken){
+let expectedWords=arabicWords(expected);
+let spokenWords=arabicWords(spoken);
+
+if(!expectedWords.length||!spokenWords.length){
+return{percent:0,matched:0,total:expectedWords.length,correct:false};
+}
+
+let matched=0;
+let used=new Array(spokenWords.length).fill(false);
+
+expectedWords.forEach(word=>{
+let found=spokenWords.findIndex((spokenWord,i)=>!used[i]&&spokenWord===word);
+if(found!==-1){
+matched++;
+used[found]=true;
+}
+});
+
+let percent=Math.round((matched/expectedWords.length)*100);
+
+/* Allow small recognition differences, but do not treat a very incomplete
+   recitation as a successful answer. */
+return{
+percent,
+matched,
+total:expectedWords.length,
+correct:percent>=90&&spokenWords.length>=Math.max(1,expectedWords.length-1)
+};
+}
+
+function highlightExpected(expected,spoken){
+let expectedWords=arabicWords(expected);
+let spokenWords=arabicWords(spoken);
+let remaining=spokenWords.slice();
+
+return expectedWords.map(word=>{
+let index=remaining.indexOf(word);
+if(index!==-1){
+remaining.splice(index,1);
+return `<span class="correct-word">${escapeHTML(word)}</span>`;
+}
+return `<span class="wrong-word">${escapeHTML(word)}</span>`;
+}).join(' ');
+}
+
+function escapeHTML(text){
+return String(text).replace(/[&<>"']/g,c=>({
+'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+}[c]));
+}
+
+function examElements(type){
+let p=type==='quran'?'qExam':'madExam';
+return{
+title:document.getElementById(p+'Title'),
+light:document.getElementById(p+'Light'),
+ayah:document.getElementById(p+'Ayah'),
+status:document.getElementById(p+'Status'),
+attempts:document.getElementById(p+'Attempts'),
+start:document.getElementById(p+'StartBtn'),
+stop:document.getElementById(p+'StopBtn'),
+next:document.getElementById(p+'NextBtn'),
+transcript:document.getElementById(p+'Transcript'),
+correction:document.getElementById(p+'Correction'),
+done:document.getElementById(p+'Done'),
+correct:document.getElementById(p+'Correct'),
+report:document.getElementById(type==='quran'?'quranExamReport':'madExamReport'),
+progress:document.getElementById('qExamProgress')
+};
+}
+
+function setExamStatus(type,state,message){
+let el=examElements(type);
+let lightClass=state==='good'?'green':state==='bad'?'red':'amber';
+el.light.className='exam-light '+lightClass;
+el.status.className='exam-status '+(state==='good'?'good':state==='bad'?'bad':'wait');
+el.status.innerHTML=`<span class="exam-light ${lightClass}"></span><span>${escapeHTML(message)}</span>`;
+}
+
+function renderAttempts(type){
+let el=examElements(type);
+let data=examData[type];
+el.attempts.innerHTML='';
+for(let i=0;i<3;i++){
+let dot=document.createElement('span');
+dot.className='attempt-dot'+(i<data.attempts?' used':'');
+el.attempts.appendChild(dot);
+}
+}
+
+function updateExamStats(type){
+let data=examData[type];
+let el=examElements(type);
+el.done.textContent=data.done;
+el.correct.textContent=data.correct;
+}
+
+function prepareExamAyah(type){
+let data=examData[type];
+let el=examElements(type);
+
+if(data.index>=data.items.length){
+finishExam(type);
+return;
+}
+
+let item=data.items[data.index];
+data.attempts=0;
+
+el.title.textContent=data.title+' • Ayah '+item.numberInSurah;
+el.ayah.textContent=item.text;
+el.transcript.textContent='Your recognised words will appear here.';
+el.correction.style.display='none';
+el.next.style.display='none';
+el.start.style.display='inline-block';
+el.start.disabled=false;
+el.stop.disabled=true;
+
+renderAttempts(type);
+setExamStatus(type,'wait','Press Start Speaking and recite the displayed Ayah.');
+updateExamStats(type);
+
+if(type==='quran'){
+document.getElementById('qExamProgress').textContent=
+'Ayah '+(data.index+1)+' of '+data.items.length;
+}
+}
+
+function startQuranExam(){
+let surah=document.getElementById('examSurah').value;
+let start=Number(document.getElementById('examStart').value);
+let end=Number(document.getElementById('examEnd').value);
+
+if(!surah){alert('Please select a Surah.');return;}
+if(!start||!end||start<1||end<start){
+alert('Please enter a valid Ayah range.');
+return;
+}
+
+let area=document.getElementById('quranExamArea');
+area.style.display='block';
+document.getElementById('quranExamReport').style.display='none';
+
+fetch(`https://api.alquran.cloud/v1/surah/${surah}/editions/quran-uthmani,en.sahih`)
+.then(r=>r.json())
+.then(j=>{
+if(j.code!==200)throw Error();
+
+let all=j.data[0].ayahs;
+if(end>all.length){
+alert('This Surah has only '+all.length+' Ayahs.');
+return;
+}
+
+let data=examData.quran;
+data.items=all.slice(start-1,end).map(a=>({...a}));
+data.index=0;
+data.attempts=0;
+data.done=0;
+data.correct=0;
+data.errors=0;
+data.corrected=0;
+data.active=true;
+
+data.title='Qur’an Recitation';
+prepareExamAyah('quran');
+area.scrollIntoView({behavior:'smooth',block:'start'});
+})
+.catch(()=>alert('Unable to load the selected Surah. Check your internet connection.'));
+}
+
+function startMadExam(){
+if(!madGroups.length){
+alert('Please open a Mudharasah lesson first.');
+return;
+}
+
+let group=madGroups[madGroupIndex];
+let data=examData.mad;
+
+data.items=group.items.map(a=>({...a}));
+data.index=0;
+data.attempts=0;
+data.done=0;
+data.correct=0;
+data.errors=0;
+data.corrected=0;
+data.active=true;
+data.title='Mudharasah • '+group.title;
+
+document.getElementById('madExamReport').style.display='none';
+document.getElementById('madExamStartBtn').style.display='inline-block';
+
+prepareExamAyah('mad');
+document.getElementById('madExamAyah').scrollIntoView({behavior:'smooth',block:'center'});
+}
+
+function beginSpeech(type){
+let data=examData[type];
+
+if(!data.active||data.index>=data.items.length)return;
+
+if(!SpeechRecognition){
+alert('Your browser does not support speech recognition. Please use a supported browser such as Chrome.');
+return;
+}
+
+if(speechRecognition){
+try{speechRecognition.abort();}catch(e){}
+speechRecognition=null;
+}
+
+speechTranscript='';
+speechWasStopped=false;
+activeExam=type;
+
+let el=examElements(type);
+el.start.disabled=true;
+el.stop.disabled=false;
+el.next.style.display='none';
+el.correction.style.display='none';
+el.transcript.textContent='Listening...';
+
+setExamStatus(type,'wait','Listening. Recite the complete Ayah clearly.');
+
+speechRecognition=new SpeechRecognition();
+speechRecognition.lang='ar-SA';
+speechRecognition.continuous=true;
+speechRecognition.interimResults=true;
+speechRecognition.maxAlternatives=1;
+
+speechRecognition.onresult=function(event){
+let finalText='';
+let interimText='';
+
+for(let i=0;i<event.results.length;i++){
+let result=event.results[i];
+if(result.isFinal)finalText+=result[0].transcript+' ';
+else interimText+=result[0].transcript+' ';
+}
+
+speechTranscript=(finalText+' '+interimText).trim();
+el.transcript.textContent=speechTranscript||'Listening...';
+};
+
+speechRecognition.onerror=function(event){
+el.stop.disabled=true;
+el.start.disabled=false;
+
+if(event.error==='not-allowed'||event.error==='service-not-allowed'){
+setExamStatus(type,'bad','Microphone permission was denied. Allow microphone access in your browser settings.');
+}else if(event.error==='no-speech'){
+setExamStatus(type,'bad','No speech was detected. Please try again.');
+}else{
+setExamStatus(type,'bad','Speech recognition error: '+event.error+'. Please try again.');
+}
+
+speechRecognition=null;
+};
+
+speechRecognition.onend=function(){
+if(activeExam!==type)return;
+
+speechRecognition=null;
+el.stop.disabled=true;
+el.start.disabled=false;
+
+if(speechTranscript.trim()){
+evaluateAttempt(type,speechTranscript);
+}else{
+data.attempts++;
+renderAttempts(type);
+setExamStatus(type,'bad','No words were recognised. This attempt has been counted. Try again.');
+if(data.attempts>=3)showCorrection(type);
+}
+};
+
+try{
+speechRecognition.start();
+}catch(e){
+speechRecognition=null;
+el.stop.disabled=true;
+el.start.disabled=false;
+setExamStatus(type,'bad','Could not start the microphone. Please try again.');
+}
+}
+
+function stopSpeech(type){
+if(!speechRecognition||activeExam!==type)return;
+speechWasStopped=true;
+try{speechRecognition.stop();}catch(e){}
+}
+
+function evaluateAttempt(type,spoken){
+let data=examData[type];
+let el=examElements(type);
+let item=data.items[data.index];
+
+data.attempts++;
+let result=compareRecitation(item.text,spoken);
+
+el.transcript.textContent=spoken;
+renderAttempts(type);
+
+if(result.correct){
+data.done++;
+data.correct++;
+if(data.attempts>1)data.corrected++;
+
+el.ayah.innerHTML=highlightExpected(item.text,spoken);
+setExamStatus(type,'good','Excellent! Your recognised recitation matches the displayed Ayah.');
+el.correction.style.display='block';
+el.correction.textContent='Correctly recognised words: '+result.matched+' of '+result.total+'.';
+
+el.start.style.display='none';
+el.next.style.display='inline-block';
+el.next.textContent=data.index===data.items.length-1?'Finish Examination':'Next Ayah ❯';
+
+}else{
+data.errors++;
+el.ayah.innerHTML=highlightExpected(item.text,spoken);
+
+if(data.attempts<3){
+setExamStatus(type,'bad','A mistake was detected. You have '+(3-data.attempts)+' attempt(s) remaining.');
+el.correction.style.display='block';
+el.correction.textContent='Recognised '+result.matched+' of '+result.total+' words ('+result.percent+'%). Please try the Ayah again.';
+el.start.disabled=false;
+}else{
+showCorrection(type);
+}
+}
+
+updateExamStats(type);
+}
+
+function showCorrection(type){
+let data=examData[type];
+let el=examElements(type);
+let item=data.items[data.index];
+
+data.done++;
+el.ayah.innerHTML=highlightExpected(item.text,'');
+setExamStatus(type,'bad','Three attempts used. Study the correct Ayah before continuing.');
+
+el.correction.style.display='block';
+el.correction.innerHTML=
+'<strong>Correct Ayah:</strong><p class="arabic">'+escapeHTML(item.text)+'</p>'+
+'<p>You have used all three attempts. Review the Ayah and continue when ready.</p>';
+
+el.start.style.display='none';
+el.next.style.display='inline-block';
+el.next.textContent=data.index===data.items.length-1?'Finish Examination':'Continue to Next Ayah ❯';
+
+updateExamStats(type);
+}
+
+function nextExamAyah(type){
+let data=examData[type];
+let el=examElements(type);
+
+if(!data.active)return;
+
+if(speechRecognition&&activeExam===type){
+try{speechRecognition.abort();}catch(e){}
+speechRecognition=null;
+activeExam=null;
+}
+
+data.index++;
+
+if(data.index>=data.items.length){
+finishExam(type);
+}else{
+prepareExamAyah(type);
+}
+}
+
+function finishExam(type){
+let data=examData[type];
+let el=examElements(type);
+
+data.active=false;
+el.start.style.display='none';
+el.stop.disabled=true;
+el.next.style.display='none';
+
+let accuracy=data.done?Math.round((data.correct/data.done)*100):0;
+
+let achievement=
+accuracy>=90?'Excellent Achievement 🏆':
+accuracy>=75?'Very Good Achievement 🌟':
+accuracy>=50?'Good Effort 📘':
+'Keep Practising 📖';
+
+el.report.style.display='block';
+el.report.innerHTML=`
+<h3>🏆 ${achievement}</h3>
+<p style="margin:10px 0">You have completed your ${escapeHTML(data.title)} session.</p>
+<div class="exam-stats">
+<div class="exam-stat">Ayahs attempted<strong>${data.done}</strong></div>
+<div class="exam-stat">Correct Ayahs<strong>${data.correct}</strong></div>
+<div class="exam-stat">Ayahs needing review<strong>${data.done-data.correct}</strong></div>
+<div class="exam-stat">Accuracy<strong>${accuracy}%</strong></div>
+<div class="exam-stat">Corrected after retries<strong>${data.corrected}</strong></div>
+<div class="exam-stat">Mistake detections<strong>${data.errors}</strong></div>
+</div>
+<p style="margin-top:12px">May Allah increase you in beneficial knowledge. Keep practising.</p>
+`;
+
+setExamStatus(type,'good','Examination completed. Your achievement report is ready.');
+el.report.scrollIntoView({behavior:'smooth',block:'center'});
+}
+
+/* MUDHARASAH LESSON SYSTEM */
+
+let madGroups=[];
+let madGroupIndex=0;
+let madAyahs=[];
+let madQueue=[];
+let madQueueIndex=0;
+let madPlaying=false;
+
+async function startMadrasah(){
+let surah=document.getElementById('madSurah').value;
+let mode=document.getElementById('studyMode').value;
+let box=document.getElementById('madStatus');
+
+if(!surah){box.textContent='Please select a Surah.';return;}
+
+box.textContent='Preparing your Qur'an lesson...';
+document.getElementById('madLessonCard').style.display='none';
+stopLesson();
+
+try{
+let response=await fetch(`https://api.alquran.cloud/v1/surah/${surah}/editions/quran-uthmani,en.sahih`);
+let result=await response.json();
+if(result.code!==200)throw Error();
+
+let arabic=result.data[0];
+let english=result.data[1];
+
+madAyahs=arabic.ayahs.map((a,i)=>({
+...a,
+translation:english.ayahs[i].text,
+globalNumber:a.number
+}));
+
+madGroups=makeMadGroups(madAyahs,mode);
+madGroupIndex=0;
+
+if(!madGroups.length)throw Error();
+
+box.textContent='Your lesson is ready.';
+document.getElementById('madLessonCard').style.display='block';
+document.getElementById('madExamStartBtn').disabled=false;
+renderMadLesson();
+
+}catch(e){
+box.textContent='Unable to prepare the lesson. Please check your internet connection and try again.';
+}
+}
+
+function makeMadGroups(ayahs,mode){
+let groups=[];
+
+if(mode==='ayah'){
+return ayahs.map(a=>({title:'Ayah '+a.numberInSurah,items:[a]}));
+}
+
+if(mode==='page'||mode==='fivePages'){
+let pageGroups=[];
+
+ayahs.forEach(a=>{
+let key=a.page||'unknown';
+let last=pageGroups[pageGroups.length-1];
+if(!last||last.key!==key)pageGroups.push({key,items:[]});
+pageGroups[pageGroups.length-1].items.push(a);
+});
+
+if(mode==='page'){
+return pageGroups.map(p=>({
+title:'Safha '+p.key,items:p.items
+}));
+}
+
+for(let i=0;i<pageGroups.length;i+=5){
+let part=pageGroups.slice(i,i+5);
+groups.push({
+title:'Safhas '+part[0].key+'–'+part[part.length-1].key,
+items:part.flatMap(p=>p.items)
+});
+}
+return groups;
+}
+
+if(mode==='hizb'){
+ayahs.forEach(a=>{
+let key=Math.ceil((a.hizbQuarter||1)/4);
+let last=groups[groups.length-1];
+if(!last||last.key!==key)groups.push({key,title:'Hizb '+key,items:[]});
+groups[groups.length-1].items.push(a);
+});
+return groups;
+}
+
+if(mode==='juz'){
+ayahs.forEach(a=>{
+let key=a.juz||1;
+let last=groups[groups.length-1];
+if(!last||last.key!==key)groups.push({key,title:'Juz '+key,items:[]});
+groups[groups.length-1].items.push(a);
+});
+return groups;
+}
+
+if(mode==='ruku'){
+/* The Surah endpoint does not consistently supply Ruku metadata.
+   Until verified Ruku data is available, show the Surah as one lesson. */
+return[{title:'Ruku study • '+ayahs[0].surah?.englishName,items:ayahs}];
+}
+
+return groups;
+}
+
+function renderMadLesson(){
+if(!madGroups.length)return;
+
+let group=madGroups[madGroupIndex];
+let content=document.getElementById('madLessonContent');
+let surahName=document.getElementById('madSurah').selectedOptions[0].textContent;
+
+document.getElementById('madLessonTitle').textContent=group.title;
+document.getElementById('madLessonInfo').textContent=
+surahName+' • '+group.items.length+' Ayah(s) in this lesson';
+
+content.innerHTML='';
+
+group.items.forEach(a=>{
+let card=document.createElement('div');
+card.className='lesson-card';
+
+let number=document.createElement('div');
+number.className='lesson-number';
+number.textContent='Ayah '+a.numberInSurah;
+
+let arabic=document.createElement('p');
+arabic.className='arabic';
+arabic.textContent=a.text;
+
+let translation=document.createElement('p');
+translation.className='translation';
+translation.textContent=a.translation;
+
+card.appendChild(number);
+card.appendChild(arabic);
+card.appendChild(translation);
+content.appendChild(card);
+});
+
+let percent=((madGroupIndex+1)/madGroups.length)*100;
+document.getElementById('madProgressFill').style.width=percent+'%';
+document.getElementById('madProgressText').textContent=
+'Lesson '+(madGroupIndex+1)+' of '+madGroups.length;
+
+document.querySelector('.lesson-controls button:first-child').disabled=madGroupIndex===0;
+document.querySelector('.lesson-controls button:last-child').disabled=madGroupIndex===madGroups.length-1;
+
+document.getElementById('madExamStartBtn').disabled=false;
+document.getElementById('madExamReport').style.display='none';
+document.getElementById('madExamTitle').textContent='Ready to recite?';
+document.getElementById('madExamAyah').textContent='Start your Mudharasah examination to display the first Ayah.';
+document.getElementById('madExamTranscript').textContent='Your recognised words will appear here.';
+document.getElementById('madExamDone').textContent='0';
+document.getElementById('madExamCorrect').textContent='0';
+setExamStatus('mad','wait','Start your Mudharasah recitation test.');
+}
+
+function nextLesson(){
+if(madGroupIndex<madGroups.length-1){
+stopLesson();
+madGroupIndex++;
+renderMadLesson();
+}
+}
+
+function previousLesson(){
+if(madGroupIndex>0){
+stopLesson();
+madGroupIndex--;
+renderMadLesson();
+}
+}
+
+function playLesson(){
+if(!madGroups.length)return;
+
+let group=madGroups[madGroupIndex];
+let reciter=document.getElementById('madReciter').value;
+madQueue=group.items.map(a=>a.number);
+madQueueIndex=0;
+madPlaying=true;
+playNextMadAyah(reciter);
+}
+
+function playNextMadAyah(reciter){
+if(!madPlaying||madQueueIndex>=madQueue.length){
+madPlaying=false;
+return;
+}
+
+let number=madQueue[madQueueIndex];
+let audio=document.getElementById('madAudio');
+
+audio.src=`https://cdn.islamic.network/quran/audio/128/${reciter}/${number}.mp3`;
+audio.onended=()=>{
+madQueueIndex++;
+playNextMadAyah(reciter);
+};
+
+audio.onerror=()=>{
+madPlaying=false;
+document.getElementById('madStatus').textContent='Audio could not load. Check your connection and try again.';
+};
+
+audio.play().catch(()=>{
+madPlaying=false;
+document.getElementById('madStatus').textContent='Tap Play Lesson again to allow audio playback.';
+});
+}
+
+function stopLesson(){
+madPlaying=false;
+madQueue=[];
+madQueueIndex=0;
+let audio=document.getElementById('madAudio');
+if(audio){
+audio.pause();
+audio.currentTime=0;
+audio.onended=null;
+}
+}
 
 /* TASBIH */
 
-let count=0;
-let sets=0;
+let count=Number(localStorage.getItem('alnoor_count')||0);
+let sets=Number(localStorage.getItem('alnoor_sets')||0);
+
+function saveTasbih(){
+localStorage.setItem('alnoor_count',count);
+localStorage.setItem('alnoor_sets',sets);
+}
 
 function updateTasbih(){
-
 let target=Number(document.getElementById('target').value);
-
 document.getElementById('count').textContent=count;
 document.getElementById('targetDisplay').textContent=target;
 document.getElementById('setsDisplay').textContent=sets;
 
 let percent=Math.min((count/target)*100,100);
-
 document.getElementById('progressFill').style.width=percent+'%';
 document.getElementById('progressText').textContent=count+' / '+target;
+saveTasbih();
 }
 
 function changeDhikr(){
-document.getElementById('selectedDhikr').textContent=
-document.getElementById('dhikr').value;
+document.getElementById('selectedDhikr').textContent=document.getElementById('dhikr').value;
 }
 
 function changeTarget(){
-sets=0;
 count=0;
+sets=0;
 updateTasbih();
 }
 
 function increment(){
-
 count++;
-
 let target=Number(document.getElementById('target').value);
 
 if(document.getElementById('vibration').checked&&navigator.vibrate){
@@ -1020,15 +1867,15 @@ navigator.vibrate(35);
 
 if(document.getElementById('sound').checked){
 try{
-let ctx=new(window.AudioContext||window.webkitAudioContext)();
-let osc=ctx.createOscillator();
-let gain=ctx.createGain();
-osc.connect(gain);
-gain.connect(ctx.destination);
-osc.frequency.value=750;
-gain.gain.value=0.08;
-osc.start();
-osc.stop(ctx.currentTime+0.06);
+let context=new(window.AudioContext||window.webkitAudioContext)();
+let oscillator=context.createOscillator();
+let gain=context.createGain();
+oscillator.connect(gain);
+gain.connect(context.destination);
+oscillator.frequency.value=750;
+gain.gain.value=.08;
+oscillator.start();
+oscillator.stop(context.currentTime+.06);
 }catch(e){}
 }
 
@@ -1037,7 +1884,6 @@ sets++;
 count=0;
 alert('Alhamdulillah! You have completed one set.');
 }
-
 updateTasbih();
 }
 
@@ -1053,119 +1899,82 @@ function undoCount(){
 if(count>0){
 count--;
 updateTasbih();
+}else if(sets>0){
+sets--;
+count=Number(document.getElementById('target').value)-1;
+updateTasbih();
 }
 }
 
+/* HIJRI CALENDAR */
 
-/* GREGORIAN AND HIJRI CALENDAR */
-
-let calendarMode='gregorian';
 let calendarDate=new Date();
 let hijriDates={};
-let hijriMonthData=null;
 
-function setCalendarMode(mode){
-calendarMode=mode;
-
-document.getElementById('gregorianButton').classList.toggle(
-'selected',mode==='gregorian'
-);
-
-document.getElementById('hijriButton').classList.toggle(
-'selected',mode==='hijri'
-);
-
-renderCalendar();
+function parseGregorianDate(dateString){
+if(!dateString)return null;
+let parts=dateString.split('-').map(Number);
+if(parts.length!==3)return null;
+return{day:parts[0],month:parts[1],year:parts[2]};
 }
 
-function calendarKey(y,m,d){
-return y+'-'+m+'-'+d;
-}
-
-async function loadCalendarData(){
-
+async function loadHijriMonth(){
 let year=calendarDate.getFullYear();
 let month=calendarDate.getMonth()+1;
 
 try{
-
-let r=await fetch(
-`https://api.aladhan.com/v1/gToHCalendar/${month}/${year}`
-);
-
+let r=await fetch(`https://api.aladhan.com/v1/gToHCalendar/${month}/${year}`);
 let j=await r.json();
-
-if(j.code===200){
+if(j.code!==200)throw Error();
 
 hijriDates={};
 
 j.data.forEach(day=>{
-
-let date=day.gregorian.date.split('-');
-let key=calendarKey(
-Number(date[0]),
-Number(date[1]),
-Number(date[2])
-);
-
+let parsed=parseGregorianDate(day.gregorian.date);
+if(!parsed)return;
+let key=parsed.year+'-'+parsed.month+'-'+parsed.day;
 hijriDates[key]={
-day:Number(day.hijri.day),
-month:Number(day.hijri.month.number),
-monthName:day.hijri.month.en,
-year:Number(day.hijri.year),
-full:day.hijri.day+' '+day.hijri.month.en+' '+day.hijri.year
+day:day.hijri.day,
+month:day.hijri.month.en,
+year:day.hijri.year
 };
-
 });
 
-}
+let today=new Date();
+let todayKey=today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+let todayInfo=hijriDates[todayKey];
+
+document.getElementById('todayHijri').textContent=todayInfo?
+'Today: '+todayInfo.day+' '+todayInfo.month+' '+todayInfo.year+' AH':
+'Hijri date unavailable for today.';
 
 }catch(e){
-console.log('Calendar date service unavailable.');
+document.getElementById('todayHijri').textContent='Unable to load Hijri dates. Check your internet connection.';
 }
 
 renderCalendar();
 }
 
 function renderCalendar(){
-
-let grid=document.getElementById('calendarGrid');
-grid.innerHTML='';
-
-let today=new Date();
-
-document.getElementById('todayDate').textContent=
-'Gregorian: '+today.toDateString();
-
-let todayKey=calendarKey(
-today.getFullYear(),
-today.getMonth()+1,
-today.getDate()
-);
-
-document.getElementById('todayHijri').textContent=
-'Hijri: '+(hijriDates[todayKey]?.full||'Loading Hijri date...');
-
-if(calendarMode==='gregorian'){
-renderGregorian(grid);
-}else{
-renderHijri(grid);
-}
-
-}
-
-function renderGregorian(grid){
-
 let year=calendarDate.getFullYear();
 let month=calendarDate.getMonth();
+let first=new Date(year,month,1).getDay();
+let total=new Date(year,month+1,0).getDate();
 
 document.getElementById('monthTitle').textContent=
 calendarDate.toLocaleString('en-US',{month:'long',year:'numeric'});
 
-let first=new Date(year,month,1).getDay();
-let total=new Date(year,month+1,0).getDate();
+document.getElementById('todayDate').textContent=new Date().toDateString();
 
-addWeekDays(grid);
+let grid=document.getElementById('calendarGrid');
+grid.innerHTML='';
+
+['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].forEach(d=>{
+let el=document.createElement('div');
+el.className='day-name';
+el.textContent=d;
+grid.appendChild(el);
+});
 
 for(let i=0;i<first;i++){
 let empty=document.createElement('div');
@@ -1173,175 +1982,55 @@ empty.className='calendar-day empty';
 grid.appendChild(empty);
 }
 
-for(let day=1;day<=total;day++){
+let today=new Date();
 
+for(let day=1;day<=total;day++){
 let el=document.createElement('div');
+let key=year+'-'+(month+1)+'-'+day;
 el.className='calendar-day';
 
-if(
-day===new Date().getDate()&&
-month===new Date().getMonth()&&
-year===new Date().getFullYear()
-){
+if(day===today.getDate()&&month===today.getMonth()&&year===today.getFullYear()){
 el.classList.add('today');
 }
 
-let date=document.createElement('strong');
-date.textContent=day;
+let number=document.createElement('strong');
+number.textContent=day;
 
 let hijri=document.createElement('div');
 hijri.className='hijri';
+let info=hijriDates[key];
+hijri.textContent=info?info.day+' '+info.month:'';
 
-let data=hijriDates[calendarKey(year,month+1,day)];
-hijri.textContent=data?data.day+' '+data.monthName:'';
-
-el.appendChild(date);
+el.appendChild(number);
 el.appendChild(hijri);
 grid.appendChild(el);
 }
-
 }
 
-function renderHijri(grid){
-
-let currentHijri=null;
-
-let keys=Object.keys(hijriDates);
-
-if(keys.length){
-let middle=keys[Math.floor(keys.length/2)];
-currentHijri=hijriDates[middle];
-}
-
-if(!currentHijri){
-document.getElementById('monthTitle').textContent='Hijri dates unavailable';
-return;
-}
-
-let month=currentHijri.month;
-let year=currentHijri.year;
-let monthName=currentHijri.monthName;
-
-document.getElementById('monthTitle').textContent=
-monthName+' '+year+' AH';
-
-addWeekDays(grid);
-
-let dates=[];
-
-Object.values(hijriDates).forEach(item=>{
-if(item.month===month&&item.year===year){
-dates.push(item);
-}
-});
-
-dates.sort((a,b)=>a.day-b.day);
-
-let firstDate=keys.find(k=>{
-let item=hijriDates[k];
-return item.month===month&&item.year===year&&item.day===1;
-});
-
-let offset=0;
-
-if(firstDate){
-let parts=firstDate.split('-');
-offset=new Date(Number(parts[0]),Number(parts[1])-1,Number(parts[2])).getDay();
-}
-
-for(let i=0;i<offset;i++){
-let empty=document.createElement('div');
-empty.className='calendar-day empty';
-grid.appendChild(empty);
-}
-
-dates.forEach(item=>{
-
-let el=document.createElement('div');
-el.className='calendar-day';
-
-let number=document.createElement('strong');
-number.textContent=item.day;
-
-let greg=document.createElement('div');
-greg.className='hijri';
-
-let matchingKey=keys.find(k=>{
-let d=hijriDates[k];
-return d.day===item.day&&d.month===item.month&&d.year===item.year;
-});
-
-if(matchingKey){
-let p=matchingKey.split('-');
-greg.textContent=p[2]+'/'+p[1];
-}
-
-if(matchingKey===calendarKey(
-new Date().getFullYear(),
-new Date().getMonth()+1,
-new Date().getDate()
-)){
-el.classList.add('today');
-}
-
-el.appendChild(number);
-el.appendChild(greg);
-grid.appendChild(el);
-
-});
-
-}
-
-function addWeekDays(grid){
-
-['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].forEach(day=>{
-let el=document.createElement('div');
-el.className='day-name';
-el.textContent=day;
-grid.appendChild(el);
-});
-
-}
-
-function changeCalendarMonth(n){
-
-if(calendarMode==='gregorian'){
+function changeMonth(n){
 calendarDate.setMonth(calendarDate.getMonth()+n);
-loadCalendarData();
-}else{
-calendarDate.setMonth(calendarDate.getMonth()+n);
-loadCalendarData();
-}
-
+loadHijriMonth();
 }
 
 function goToday(){
 calendarDate=new Date();
-loadCalendarData();
+loadHijriMonth();
 }
-
 
 /* PRAYER TIMES */
 
 let prayerTimes={};
 let prayerDate='';
-let prayerDateKey='';
 
 async function getPrayerTimes(){
-
 let city=document.getElementById('city').value.trim();
 let box=document.getElementById('prayerContent');
-
 if(!city)return;
 
 box.textContent='Loading prayer times...';
 
 try{
-
-let r=await fetch(
-`https://api.aladhan.com/v1/timingsByCity?city=${encodeURIComponent(city)}&country=Nigeria&method=3`
-);
-
+let r=await fetch(`https://api.aladhan.com/v1/timingsByCity?city=${encodeURIComponent(city)}&country=Nigeria&method=3`);
 let j=await r.json();
 if(j.code!==200)throw Error();
 
@@ -1349,269 +2038,191 @@ prayerTimes=j.data.timings;
 prayerDate=j.data.date.gregorian.date;
 
 let names=['Fajr','Dhuhr','Asr','Maghrib','Isha'];
-
 box.innerHTML='';
 
 names.forEach(name=>{
-
 let row=document.createElement('div');
 row.className='prayer-row';
-
-let left=document.createElement('span');
-left.textContent=name;
-
-let right=document.createElement('span');
-right.textContent=prayerTimes[name];
-
-row.appendChild(left);
-row.appendChild(right);
+row.innerHTML='<span>'+name+'</span><span>'+prayerTimes[name]+'</span>';
 box.appendChild(row);
-
 });
 
-document.getElementById('adhanStatus').textContent=
-'Prayer timetable loaded. Select your Adhan voice and enable alerts.';
-
+document.getElementById('adhanStatus').textContent='Prayer timetable loaded. Enable automatic Adhan below.';
 scheduleCheck();
-
 }catch(e){
 box.textContent='Could not load prayer times. Check your location and internet connection.';
 }
 }
 
+/* ADHAN */
 
-/* BUILT-IN ADHAN VOICES */
-
-const adhanBase=
-'https://raw.githubusercontent.com/Kiwifu/adhan-mp3/main/';
-
-function adhanURLFor(filename){
-return adhanBase+encodeURIComponent(filename);
-}
-
-let selectedGeneralAdhan=
-document.getElementById('adhanVoice').value;
-
-let selectedFajrAdhan=
-document.getElementById('fajrVoice').value;
-
-let uploadedAdhanURL=null;
-
-function selectAdhanVoice(){
-
-selectedGeneralAdhan=
-document.getElementById('adhanVoice').value;
-
-uploadedAdhanURL=null;
-
-document.getElementById('voiceStatus').textContent=
-'Selected voice: '+document.getElementById('adhanVoice').selectedOptions[0].textContent;
-
-}
-
-function selectFajrVoice(){
-
-selectedFajrAdhan=
-document.getElementById('fajrVoice').value;
-
-document.getElementById('voiceStatus').textContent=
-'Selected Fajr voice: '+document.getElementById('fajrVoice').selectedOptions[0].textContent;
-
-}
-
-function previewAdhan(){
-
-let audio=document.getElementById('adhanAudio');
-
-audio.src=uploadedAdhanURL||adhanURLFor(selectedGeneralAdhan);
-
-audio.load();
-
-audio.play().then(()=>{
-document.getElementById('voiceStatus').textContent=
-'Playing your selected Adhan recording.';
-}).catch(()=>{
-document.getElementById('voiceStatus').textContent=
-'Could not play this recording. Check your internet connection.';
-});
-
-}
-
-function previewFajr(){
-
-let audio=document.getElementById('adhanAudio');
-
-audio.src=adhanURLFor(selectedFajrAdhan);
-audio.load();
-
-audio.play().catch(()=>{
-document.getElementById('voiceStatus').textContent=
-'Could not play the Fajr recording. Check your internet connection.';
-});
-
-}
-
-document.getElementById('adhanFile').addEventListener('change',function(){
-
-let file=this.files[0];
-
-if(!file)return;
-
-if(uploadedAdhanURL){
-URL.revokeObjectURL(uploadedAdhanURL);
-}
-
-uploadedAdhanURL=URL.createObjectURL(file);
-
-document.getElementById('adhanAudio').src=uploadedAdhanURL;
-
-document.getElementById('voiceStatus').textContent=
-'Your uploaded Adhan recording is selected.';
-
-});
-
-
-/* AUTOMATIC ADHAN */
-
+let adhanURL=null;
 let adhanEnabled=false;
 let alerted={};
 
-function enableAdhan(){
+document.getElementById('adhanFile').addEventListener('change',function(){
+let file=this.files[0];
+if(!file)return;
+if(adhanURL)URL.revokeObjectURL(adhanURL);
+adhanURL=URL.createObjectURL(file);
+document.getElementById('adhanAudio').src=adhanURL;
+document.getElementById('adhanStatus').textContent='Adhan voice selected successfully.';
+});
 
+function testAdhan(){
+let audio=document.getElementById('adhanAudio');
+if(!audio.src){
+alert('Please upload an Adhan audio recording first.');
+return;
+}
+audio.currentTime=0;
+audio.play().catch(()=>alert('Unable to play audio.'));
+}
+
+function enableAdhan(){
 if(!prayerTimes.Fajr){
 alert('Load your prayer times first.');
 return;
 }
-
+if(!adhanURL){
+alert('Please select an Adhan audio file first.');
+return;
+}
 adhanEnabled=true;
-
-document.getElementById('adhanStatus').textContent=
-'🔔 Automatic Adhan is ON. Your selected recordings will play at the enabled prayer times.';
-
-}
-
-function stopAdhan(){
-
-let audio=document.getElementById('adhanAudio');
-
-audio.pause();
-audio.currentTime=0;
-
-adhanEnabled=false;
-
-document.getElementById('adhanStatus').textContent=
-'Automatic Adhan has been stopped.';
-
-}
-
-function playAutomaticAdhan(prayer){
-
-let audio=document.getElementById('adhanAudio');
-
-if(prayer==='Fajr'){
-audio.src=adhanURLFor(selectedFajrAdhan);
-}else{
-audio.src=uploadedAdhanURL||adhanURLFor(selectedGeneralAdhan);
-}
-
-audio.load();
-
-audio.play().catch(()=>{
-document.getElementById('adhanStatus').textContent=
-'Prayer time reached. Tap the audio player to start the Adhan.';
-});
-
-document.getElementById('adhanStatus').textContent=
-'🕌 It is time for '+prayer+' prayer.';
+alert('Automatic Adhan alerts enabled. Browser restrictions may still prevent locked-screen playback.');
+document.getElementById('adhanStatus').textContent='🔔 Automatic Adhan is ON while the page remains active.';
+scheduleCheck();
 }
 
 function scheduleCheck(){
-
 if(!adhanEnabled)return;
 
 let now=new Date();
+let today=now.getFullYear()+'-'+(now.getMonth()+1)+'-'+now.getDate();
+let prayerDateParts=parseGregorianDate(prayerDate);
+
+if(prayerDateParts){
+let expected=prayerDateParts.year+'-'+prayerDateParts.month+'-'+prayerDateParts.day;
+if(today!==expected)return;
+}
 
 let names=['Fajr','Dhuhr','Asr','Maghrib','Isha'];
 
-let today=
-now.getFullYear()+'-'+
-(now.getMonth()+1)+'-'+
-now.getDate();
-
 names.forEach(name=>{
-
 let checkbox=document.getElementById('enable'+name);
-
 if(!checkbox.checked)return;
 
 let time=prayerTimes[name];
-
 if(!time)return;
 
 let parts=time.split(':');
-let hour=Number(parts[0]);
-let minute=Number(parts[1]);
-
 let key=today+'-'+name;
 
-if(
-now.getHours()===hour&&
-now.getMinutes()===minute&&
-!alerted[key]
-){
-
+if(now.getHours()===Number(parts[0])&&now.getMinutes()===Number(parts[1])&&!alerted[key]){
 alerted[key]=true;
-playAutomaticAdhan(name);
-
-}
-
+let audio=document.getElementById('adhanAudio');
+audio.currentTime=0;
+audio.play().catch(()=>{
+document.getElementById('adhanStatus').textContent='Prayer time reached. Tap play to start Adhan.';
 });
-
+document.getElementById('adhanStatus').textContent='🕌 It is time for '+name+' prayer.';
+}
+});
 }
 
 setInterval(scheduleCheck,5000);
 
-
 /* QIBLA */
 
-function findQibla(){
+let qiblaBearing=null;
+let deviceHeading=0;
 
-let status=document.getElementById('qiblaStatus');
+function toRad(value){return value*Math.PI/180}
 
-navigator.geolocation.getCurrentPosition(position=>{
+function calculateQibla(lat,lon){
+let kaabaLat=21.4225;
+let kaabaLon=39.8262;
 
-let lat=position.coords.latitude;
-let lon=position.coords.longitude;
+let y=Math.sin(toRad(kaabaLon-lon));
+let x=Math.cos(toRad(lat))*Math.tan(toRad(kaabaLat))-
+Math.sin(toRad(lat))*Math.cos(toRad(kaabaLon-lon));
 
-let toRad=n=>n*Math.PI/180;
-
-let y=Math.sin(toRad(39.8262-lon));
-
-let x=
-Math.cos(toRad(lat))*Math.tan(toRad(21.4225))-
-Math.sin(toRad(lat))*Math.cos(toRad(39.8262-lon));
-
-let bearing=(Math.atan2(y,x)*180/Math.PI+360)%360;
-
-document.getElementById('qiblaDegree').textContent=
-bearing.toFixed(1)+'°';
-
-document.getElementById('compassArrow').style.transform=
-`rotate(${bearing}deg)`;
-
-status.textContent='Qibla bearing calculated successfully.';
-
-},()=>{
-status.textContent='Please allow location access.';
-});
-
+return(Math.atan2(y,x)*180/Math.PI+360)%360;
 }
 
+function findQibla(){
+let status=document.getElementById('qiblaStatus');
+
+if(!navigator.geolocation){
+status.textContent='Your browser does not support location services.';
+return;
+}
+
+status.textContent='Finding your location...';
+
+navigator.geolocation.getCurrentPosition(position=>{
+let lat=position.coords.latitude;
+let lon=position.coords.longitude;
+qiblaBearing=calculateQibla(lat,lon);
+
+document.getElementById('qiblaDegree').textContent=qiblaBearing.toFixed(1)+'°';
+document.getElementById('compassDirection').textContent='Qibla bearing from true north: '+qiblaBearing.toFixed(1)+'°';
+updateCompassNeedle();
+
+status.textContent='Qibla direction calculated. Activate the phone compass for live direction tracking.';
+},()=>{
+status.textContent='Please allow location access and try again.';
+},{enableHighAccuracy:true,timeout:15000,maximumAge:60000});
+}
+
+function updateCompassNeedle(){
+if(qiblaBearing===null)return;
+document.getElementById('compassNeedle').style.transform='rotate('+(qiblaBearing-deviceHeading)+'deg)';
+}
+
+async function enableCompass(){
+let status=document.getElementById('qiblaStatus');
+
+if(qiblaBearing===null){
+status.textContent='Please find your Qibla direction first.';
+return;
+}
+
+if(!window.DeviceOrientationEvent){
+status.textContent='This device does not support the compass sensor.';
+return;
+}
+
+try{
+if(typeof DeviceOrientationEvent.requestPermission==='function'){
+let permission=await DeviceOrientationEvent.requestPermission();
+if(permission!=='granted'){
+status.textContent='Compass permission was not granted.';
+return;
+}
+}
+window.addEventListener('deviceorientation',handleOrientation,true);
+status.textContent='Live compass activated. Hold your phone flat and rotate slowly.';
+}catch(e){
+status.textContent='Unable to activate the compass. Check browser permissions.';
+}
+}
+
+function handleOrientation(event){
+let heading=null;
+if(typeof event.webkitCompassHeading==='number'){
+heading=event.webkitCompassHeading;
+}else if(typeof event.alpha==='number'){
+heading=360-event.alpha;
+}
+if(heading===null)return;
+deviceHeading=(heading+360)%360;
+updateCompassNeedle();
+}
 
 /* 99 NAMES OF ALLAH */
 
 const names=[
-
 ['الرَّحْمَٰنُ','Ar-Rahman','The Most Merciful'],
 ['الرَّحِيمُ','Ar-Raheem','The Especially Merciful'],
 ['الْمَلِكُ','Al-Malik','The King'],
@@ -1710,13 +2321,11 @@ const names=[
 ['الْوَارِثُ','Al-Warith','The Inheritor'],
 ['الرَّشِيدُ','Ar-Rashid','The Guide to the Right Path'],
 ['الصَّبُورُ','As-Sabur','The Patient']
-
 ];
 
 let namesBox=document.getElementById('namesContent');
 
 names.forEach((n,i)=>{
-
 let div=document.createElement('div');
 div.className='card';
 
@@ -1733,16 +2342,13 @@ meaning.textContent=n[2];
 div.appendChild(arabic);
 div.appendChild(heading);
 div.appendChild(meaning);
-
 namesBox.appendChild(div);
-
 });
-
 
 /* START WEBSITE */
 
 initializeQuran();
-loadCalendarData();
+loadHijriMonth();
 updateTasbih();
 
 </script>
