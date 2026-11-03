@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#064e3b">
-
 <title>Al-Noor Islamic Learning Centre</title>
 
 <style>
@@ -17,35 +16,25 @@
 --text:#173c2e;
 }
 
-* {
-margin:0;
-padding:0;
-box-sizing:border-box;
-}
+*{margin:0;padding:0;box-sizing:border-box}
 
-body {
+body{
 font-family:Arial,sans-serif;
 background:var(--cream);
-color:var(--text);
+color:var(--text)
 }
 
-header {
+header{
 background:linear-gradient(135deg,#033b2b,#087c59);
 color:white;
 padding:28px 15px;
-text-align:center;
+text-align:center
 }
 
-header h1 {
-font-size:27px;
-margin-bottom:10px;
-}
+header h1{font-size:27px;margin-bottom:10px}
+header p{line-height:1.8}
 
-header p {
-line-height:1.8;
-}
-
-nav {
+nav{
 display:flex;
 gap:9px;
 overflow-x:auto;
@@ -53,10 +42,10 @@ padding:13px;
 background:#033b2b;
 position:sticky;
 top:0;
-z-index:100;
+z-index:100
 }
 
-nav button {
+nav button{
 background:var(--gold);
 color:#173c2e;
 border:0;
@@ -64,213 +53,203 @@ padding:13px 17px;
 border-radius:25px;
 font-weight:bold;
 white-space:nowrap;
-cursor:pointer;
+cursor:pointer
 }
 
-main {
-max-width:1100px;
-margin:auto;
-padding:17px;
-}
+main{max-width:1100px;margin:auto;padding:17px}
 
-.section {
-display:none;
-}
+.section{display:none}
+.section.active{display:block}
 
-.section.active {
-display:block;
-}
-
-.hero {
+.hero{
 background:linear-gradient(135deg,#065f46,#0f766e);
 color:white;
 padding:30px 18px;
 border-radius:18px;
 text-align:center;
-margin-bottom:20px;
+margin-bottom:20px
 }
 
-.hero h2 {
-margin-bottom:12px;
-}
+.hero h2{margin-bottom:12px}
 
-.card {
+.card{
 background:white;
 padding:20px;
 border-radius:17px;
 margin-bottom:17px;
 box-shadow:0 4px 15px #0000000c;
-border:1px solid #e1e9e3;
+border:1px solid #e1e9e3
 }
 
-.card h3 {
-color:var(--lightgreen);
-margin-bottom:13px;
-}
+.card h3{color:var(--lightgreen);margin-bottom:13px}
 
-.grid {
+.grid{
 display:grid;
 grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
-gap:13px;
+gap:13px
 }
 
-.tile {
+.tile{
 background:white;
 padding:24px 12px;
 border-radius:15px;
 text-align:center;
 border:1px solid #dce9df;
-cursor:pointer;
+cursor:pointer
 }
 
-.tile span {
-display:block;
-font-size:32px;
-margin-bottom:12px;
-}
+.tile span{display:block;font-size:32px;margin-bottom:12px}
 
-button {
-cursor:pointer;
-}
+button{cursor:pointer}
 
-.action {
+.action{
 background:var(--lightgreen);
 color:white;
 border:0;
 padding:13px 17px;
 border-radius:10px;
 margin:5px 3px;
-font-weight:bold;
+font-weight:bold
 }
 
-.gold {
-background:var(--gold);
-color:#173c2e;
-}
+.gold{background:var(--gold);color:#173c2e}
+.dark{background:#173c2e;color:white}
 
-.dark {
-background:#173c2e;
-color:white;
-}
-
-input,select {
+input,select{
 width:100%;
 padding:14px;
 border:1px solid #ccd9cf;
 border-radius:10px;
 margin:9px 0;
 font-size:15px;
-background:white;
+background:white
 }
 
-.arabic {
+.arabic{
 font-size:27px;
 line-height:2.2;
 direction:rtl;
 text-align:right;
 color:var(--green);
-margin:15px 0;
+margin:15px 0
 }
 
-.translation {
-line-height:1.9;
-color:#52635a;
-margin:10px 0;
-}
+.translation{line-height:1.9;color:#52635a;margin:10px 0}
 
-.status {
+.status{
 background:#eaf5ed;
 padding:14px;
 border-radius:10px;
 margin:12px 0;
-line-height:1.7;
+line-height:1.7
 }
 
-footer {
+footer{
 background:#033b2b;
 color:white;
 text-align:center;
 padding:30px;
 margin-top:30px;
-line-height:2;
+line-height:2
 }
 
 /* CALENDAR */
 
-.calendar-head {
+.calendar-switch{
+display:flex;
+gap:10px;
+margin:15px 0
+}
+
+.calendar-switch button{
+flex:1;
+padding:14px 8px;
+border:0;
+border-radius:10px;
+background:#e3eee5;
+color:var(--green);
+font-weight:bold
+}
+
+.calendar-switch button.selected{
+background:var(--green);
+color:white
+}
+
+.calendar-head{
 display:flex;
 justify-content:space-between;
 align-items:center;
 gap:8px;
-margin-bottom:17px;
+margin-bottom:17px
 }
 
-.calendar-head button {
+.calendar-head button{
 padding:12px 15px;
 border:0;
 border-radius:9px;
 background:var(--green);
-color:white;
+color:white
 }
 
-.calendar-grid {
+.calendar-grid{
 display:grid;
 grid-template-columns:repeat(7,1fr);
-gap:5px;
+gap:5px
 }
 
-.day-name {
+.day-name{
 background:#e3efe6;
 padding:11px 2px;
 text-align:center;
 font-size:12px;
-font-weight:bold;
+font-weight:bold
 }
 
-.calendar-day {
+.calendar-day{
 background:#f7faf7;
 border:1px solid #e2eae3;
-min-height:75px;
+min-height:78px;
 padding:7px 2px;
 text-align:center;
 border-radius:8px;
-font-size:13px;
+font-size:13px
 }
 
-.calendar-day.today {
+.calendar-day.today{
 background:#d5f0dc;
 border:2px solid var(--lightgreen);
-font-weight:bold;
+font-weight:bold
 }
 
-.calendar-day .hijri {
+.calendar-day .hijri{
 font-size:10px;
 color:#9b771a;
-margin-top:8px;
+margin-top:8px
 }
 
-.calendar-day.empty {
+.calendar-day.empty{
 background:transparent;
-border:0;
+border:0
 }
 
 /* TASBIH */
 
-.tasbih-panel {
+.tasbih-panel{
 text-align:center;
 padding:25px 15px;
 background:linear-gradient(145deg,#064e3b,#087c59);
 border-radius:20px;
-color:white;
+color:white
 }
 
-.tasbih-number {
+.tasbih-number{
 font-size:75px;
 font-weight:bold;
-margin:20px 0;
+margin:20px 0
 }
 
-.tasbih-button {
+.tasbih-button{
 width:190px;
 height:190px;
 border-radius:50%;
@@ -279,71 +258,63 @@ border:10px solid #f0d982;
 color:#173c2e;
 font-size:22px;
 font-weight:bold;
-box-shadow:0 8px 20px #0003;
+box-shadow:0 8px 20px #0003
 }
 
-.tasbih-button:active {
-transform:scale(.95);
-}
+.tasbih-button:active{transform:scale(.95)}
 
-.progress {
+.progress{
 height:12px;
 background:#dce9df;
 border-radius:20px;
 overflow:hidden;
-margin:15px 0;
+margin:15px 0
 }
 
-.progress-fill {
+.progress-fill{
 height:100%;
 width:0%;
 background:var(--gold);
-transition:.2s;
+transition:.2s
 }
 
-.counter-info {
+.counter-info{
 display:grid;
 grid-template-columns:1fr 1fr;
 gap:12px;
-margin-top:20px;
+margin-top:20px
 }
 
-.counter-info div {
+.counter-info div{
 background:#ffffff22;
 padding:15px;
-border-radius:12px;
+border-radius:12px
 }
 
 /* PRAYER */
 
-.prayer-row {
+.prayer-row{
 display:flex;
 justify-content:space-between;
 padding:15px;
-border-bottom:1px solid #e5eee7;
+border-bottom:1px solid #e5eee7
 }
 
-.prayer-row.next {
-background:#e4f5e9;
-border-radius:10px;
-font-weight:bold;
-}
-
-.checkbox-row {
+.checkbox-row{
 display:flex;
 align-items:center;
 gap:10px;
-margin:13px 0;
+margin:13px 0
 }
 
-.checkbox-row input {
+.checkbox-row input{
 width:20px;
-height:20px;
+height:20px
 }
 
 /* QIBLA */
 
-.compass {
+.compass{
 height:230px;
 width:230px;
 border:9px solid var(--gold);
@@ -352,43 +323,27 @@ margin:20px auto;
 display:flex;
 align-items:center;
 justify-content:center;
-background:#e9f7ef;
+background:#e9f7ef
 }
 
-.arrow {
-font-size:85px;
-color:var(--green);
+.arrow{font-size:85px;color:var(--green)}
+
+audio{width:100%;margin:12px 0}
+
+.voice-option{
+padding:13px;
+border:1px solid #dce9df;
+border-radius:10px;
+margin:9px 0;
+background:#f8fbf8
 }
 
-/* AUDIO */
-
-audio {
-width:100%;
-margin:12px 0;
-}
-
-@media(max-width:550px) {
-header h1 {
-font-size:22px;
-}
-
-.calendar-day {
-min-height:60px;
-font-size:11px;
-}
-
-.calendar-day .hijri {
-font-size:9px;
-}
-
-main {
-padding:10px;
-}
-
-.tasbih-button {
-width:170px;
-height:170px;
-}
+@media(max-width:550px){
+header h1{font-size:22px}
+.calendar-day{min-height:65px;font-size:11px}
+.calendar-day .hijri{font-size:9px}
+main{padding:10px}
+.tasbih-button{width:170px;height:170px}
 }
 </style>
 </head>
@@ -430,46 +385,21 @@ height:170px;
 
 <div class="grid">
 
-<div class="tile" onclick="show('quran')">
-<span>📖</span>Holy Qur'an
-</div>
-
-<div class="tile" onclick="show('hadith')">
-<span>📚</span>Hadith
-</div>
-
-<div class="tile" onclick="show('dua')">
-<span>🤲</span>Hisnul Muslim
-</div>
-
-<div class="tile" onclick="show('calendar')">
-<span>📅</span>Islamic Calendar
-</div>
-
-<div class="tile" onclick="show('tasbih')">
-<span>📿</span>Digital Tasbih
-</div>
-
-<div class="tile" onclick="show('prayer')">
-<span>🕌</span>Prayer Times
-</div>
-
-<div class="tile" onclick="show('qibla')">
-<span>🕋</span>Qibla Compass
-</div>
-
-<div class="tile" onclick="show('names')">
-<span>✨</span>99 Names of Allah
-</div>
+<div class="tile" onclick="show('quran')"><span>📖</span>Holy Qur'an</div>
+<div class="tile" onclick="show('hadith')"><span>📚</span>Hadith</div>
+<div class="tile" onclick="show('dua')"><span>🤲</span>Hisnul Muslim</div>
+<div class="tile" onclick="show('calendar')"><span>📅</span>Islamic Calendar</div>
+<div class="tile" onclick="show('tasbih')"><span>📿</span>Digital Tasbih</div>
+<div class="tile" onclick="show('prayer')"><span>🕌</span>Prayer Times</div>
+<div class="tile" onclick="show('qibla')"><span>🕋</span>Qibla Compass</div>
+<div class="tile" onclick="show('names')"><span>✨</span>99 Names of Allah</div>
 
 </div>
 
 <div class="card">
 <h3>Daily Reminder</h3>
 <p class="arabic">فَاذْكُرُونِي أَذْكُرْكُمْ</p>
-<p class="translation">
-"So remember Me; I will remember you."
-</p>
+<p class="translation">"So remember Me; I will remember you."</p>
 <p>Qur'an 2:152</p>
 </div>
 
@@ -503,12 +433,9 @@ height:170px;
 
 <audio id="quranAudio" controls></audio>
 
-<div id="quranContent" class="status">
-Loading Qur'an...
-</div>
+<div id="quranContent" class="status">Loading Qur'an...</div>
 
 </div>
-
 </section>
 
 
@@ -524,38 +451,14 @@ Loading Qur'an...
 <div class="card">
 <div class="grid">
 
-<div class="tile">
-📗<h3>Bukhari</h3>
-<a href="https://sunnah.com/bukhari" target="_blank">Open Collection</a>
-</div>
-
-<div class="tile">
-📘<h3>Muslim</h3>
-<a href="https://sunnah.com/muslim" target="_blank">Open Collection</a>
-</div>
-
-<div class="tile">
-📙<h3>Abu Dawud</h3>
-<a href="https://sunnah.com/abudawud" target="_blank">Open Collection</a>
-</div>
-
-<div class="tile">
-📕<h3>Tirmidhi</h3>
-<a href="https://sunnah.com/tirmidhi" target="_blank">Open Collection</a>
-</div>
-
-<div class="tile">
-📒<h3>An-Nasa'i</h3>
-<a href="https://sunnah.com/nasai" target="_blank">Open Collection</a>
-</div>
-
-<div class="tile">
-📔<h3>Ibn Majah</h3>
-<a href="https://sunnah.com/ibnmajah" target="_blank">Open Collection</a>
-</div>
+<div class="tile">📗<h3>Bukhari</h3><a href="https://sunnah.com/bukhari" target="_blank">Open Collection</a></div>
+<div class="tile">📘<h3>Muslim</h3><a href="https://sunnah.com/muslim" target="_blank">Open Collection</a></div>
+<div class="tile">📙<h3>Abu Dawud</h3><a href="https://sunnah.com/abudawud" target="_blank">Open Collection</a></div>
+<div class="tile">📕<h3>Tirmidhi</h3><a href="https://sunnah.com/tirmidhi" target="_blank">Open Collection</a></div>
+<div class="tile">📒<h3>An-Nasa'i</h3><a href="https://sunnah.com/nasai" target="_blank">Open Collection</a></div>
+<div class="tile">📔<h3>Ibn Majah</h3><a href="https://sunnah.com/ibnmajah" target="_blank">Open Collection</a></div>
 
 </div>
-
 </div>
 
 <div class="card">
@@ -577,7 +480,6 @@ Loading Qur'an...
 
 <div class="card">
 <h3>Supplication Collection</h3>
-
 <p class="translation">
 Explore authentic supplications for morning and evening,
 prayer, sleeping, travelling, eating and other daily activities.
@@ -590,57 +492,65 @@ prayer, sleeping, travelling, eating and other daily activities.
 <a href="https://opendua.org/" target="_blank">
 <button class="action gold">Explore Du'a Library</button>
 </a>
-
 </div>
 
 </section>
 
 
-<!-- CALENDAR -->
+<!-- CALENDAR: BOTH GREGORIAN AND HIJRI -->
 
 <section id="calendar" class="section">
 
 <div class="hero">
 <h2>📅 Islamic Calendar</h2>
-<p>Hijri and Gregorian Calendar</p>
+<p>Gregorian and Hijri Calendar</p>
 </div>
 
 <div class="card">
 
-<h3 id="todayDate"></h3>
+<h3>Today's Date</h3>
+<p id="todayDate" class="status"></p>
 <p id="todayHijri" class="status">Loading Hijri date...</p>
 
+<div class="calendar-switch">
+<button id="gregorianButton" class="selected" onclick="setCalendarMode('gregorian')">
+Gregorian
+</button>
+
+<button id="hijriButton" onclick="setCalendarMode('hijri')">
+Hijri
+</button>
+</div>
+
 <div class="calendar-head">
-<button onclick="changeMonth(-1)">❮</button>
+<button onclick="changeCalendarMonth(-1)">❮</button>
 <h3 id="monthTitle"></h3>
-<button onclick="changeMonth(1)">❯</button>
+<button onclick="changeCalendarMonth(1)">❯</button>
 </div>
 
 <div class="calendar-grid" id="calendarGrid"></div>
 
 <div class="status">
-🟢 Today's date<br>
-🟡 Hijri date
+🟢 Green: Today's date<br>
+The smaller gold date shows the corresponding Hijri date.
 </div>
 
-<button class="action" onclick="goToday()">
-Go to Today
-</button>
+<button class="action" onclick="goToday()">Go to Today</button>
 
 </div>
 
 <div class="card">
 <h3>Important Islamic Dates</h3>
 <p class="translation">
-Islamic dates depend on the lunar calendar and local moon sighting.
-Check with your local Islamic authority for confirmed dates.
+Islamic dates follow the lunar calendar. Dates may differ
+according to moon sighting and the decisions of local Islamic authorities.
 </p>
 </div>
 
 </section>
 
 
-<!-- PROFESSIONAL TASBIH -->
+<!-- TASBIH -->
 
 <section id="tasbih" class="section">
 
@@ -665,15 +575,11 @@ Check with your local Islamic authority for confirmed dates.
 
 <div class="tasbih-panel">
 
-<h3 id="selectedDhikr" style="color:white">
-سُبْحَانَ اللَّهِ
-</h3>
+<h3 id="selectedDhikr" style="color:white">سُبْحَانَ اللَّهِ</h3>
 
 <div class="tasbih-number" id="count">0</div>
 
-<button class="tasbih-button" onclick="increment()">
-TAP<br>📿
-</button>
+<button class="tasbih-button" onclick="increment()">TAP<br>📿</button>
 
 <div class="progress">
 <div class="progress-fill" id="progressFill"></div>
@@ -682,17 +588,8 @@ TAP<br>📿
 <div id="progressText">0 / 33</div>
 
 <div class="counter-info">
-
-<div>
-<p>Target</p>
-<h2 id="targetDisplay">33</h2>
-</div>
-
-<div>
-<p>Completed Sets</p>
-<h2 id="setsDisplay">0</h2>
-</div>
-
+<div><p>Target</p><h2 id="targetDisplay">33</h2></div>
+<div><p>Completed Sets</p><h2 id="setsDisplay">0</h2></div>
 </div>
 
 </div>
@@ -720,7 +617,6 @@ TAP<br>📿
 </div>
 
 </div>
-
 </section>
 
 
@@ -739,9 +635,7 @@ TAP<br>📿
 
 <input id="city" value="Keffi" placeholder="Enter your city">
 
-<button class="action" onclick="getPrayerTimes()">
-Get Prayer Times
-</button>
+<button class="action" onclick="getPrayerTimes()">Get Prayer Times</button>
 
 <div id="prayerContent" class="status">
 Prayer times have not been loaded.
@@ -749,15 +643,116 @@ Prayer times have not been loaded.
 
 </div>
 
+
+<!-- NEW BUILT-IN ADHAN VOICE SELECTOR -->
+
+<div class="card">
+
+<h3>🎙️ Choose Your Adhan Voice</h3>
+
+<p class="translation">
+Choose from different Adhan recordings. You can preview each
+recording before selecting it.
+</p>
+
+<label>General Adhan Voice</label>
+
+<select id="adhanVoice" onchange="selectAdhanVoice()">
+
+<option value="Ali_Ibn_Ahmad_Mala_1_-_Al_Haram_Al_Maki_(علي_بن_أحمد_ملا_-_الحرم_المكي).mp3">
+Makkah - Ali Ibn Ahmad Mala
+</option>
+
+<option value="Adhan_Al_Haram_Al_Madani_-_Al_Madinah_1_(أذان_الحرم_المدني_-_المدينة_المنورة).mp3">
+Madinah - Masjid An-Nabawi
+</option>
+
+<option value="Abdulbasit_Abdusamad_1_-_Egypt_(عبد_الباسط_عبد_الصمد_-_مصر).mp3">
+Egypt - Abdulbasit Abdusamad
+</option>
+
+<option value="Ahmd_At-Trablsy_1_(أحمد_الطرابلسي).mp3">
+Kuwait - Ahmad At-Trablsy
+</option>
+
+<option value="Adhan_Turkey_1_(أذان_تركيا).mp3">
+Turkey - Traditional Adhan
+</option>
+
+<option value="Adhan_Indonesia_(أذان_إندونيسيا).mp3">
+Indonesia - Adhan
+</option>
+
+<option value="Adhan_Pakistan_(أذان_باكستان).mp3">
+Pakistan - Adhan
+</option>
+
+<option value="Adhan_Al_Aqsa_-_Jerusalem_(أذان_المسجد_الأقصى_-_القدس).mp3">
+Jerusalem - Al-Aqsa Mosque
+</option>
+
+</select>
+
+<button class="action gold" onclick="previewAdhan()">
+▶ Preview Selected Voice
+</button>
+
+<label>Special Fajr Adhan Voice</label>
+
+<select id="fajrVoice" onchange="selectFajrVoice()">
+
+<option value="Adhan_Fajr_Al_Haram_Al_Maki_(أذان_الفجر_الحرم_المكي).mp3">
+Makkah - Fajr Adhan
+</option>
+
+<option value="Adhan_Fajr_Al_Haram_Al_Madani_(أذان_الفجر_الحرم_المدني).mp3">
+Madinah - Fajr Adhan
+</option>
+
+<option value="Abdulbasit_Abdusamad_6_-_Fajr_Egypt_(عبد_الباسط_عبد_الصمد_-_فجر_مصر).mp3">
+Egypt - Fajr Adhan
+</option>
+
+<option value="Ahmd_At-Trablsly_-_Fajr_Kuwait_(أحمد_الطرابلسي_-_فجر_الكويت).mp3">
+Kuwait - Fajr Adhan
+</option>
+
+</select>
+
+<button class="action gold" onclick="previewFajr()">
+▶ Preview Fajr Voice
+</button>
+
+<label>Adhan Audio Player</label>
+<audio id="adhanAudio" controls preload="none"></audio>
+
+<div class="status" id="voiceStatus">
+Select an Adhan voice and preview it.
+</div>
+
+<hr style="margin:20px 0;border:0;border-top:1px solid #ddd">
+
+<h3>Upload Your Own Adhan</h3>
+
+<input type="file" id="adhanFile" accept="audio/*">
+
+<p class="translation">
+You can upload your own MP3 recording instead of using
+the built-in recordings.
+</p>
+
+</div>
+
+
+<!-- AUTOMATIC ADHAN SETTINGS -->
+
 <div class="card">
 
 <h3>🔔 Automatic Adhan Settings</h3>
 
 <p class="translation">
-Choose which prayers should trigger an Adhan alert.
+Choose which prayers should trigger the Adhan.
 </p>
-
-<div id="prayerChecks">
 
 <div class="checkbox-row">
 <input type="checkbox" id="enableFajr" checked>
@@ -784,26 +779,9 @@ Choose which prayers should trigger an Adhan alert.
 <label for="enableIsha">Isha</label>
 </div>
 
-</div>
+<button class="action" onclick="enableAdhan()">🔔 ENABLE AUTOMATIC ADHAN</button>
 
-<h3>Choose Adhan Voice</h3>
-
-<p class="translation">
-Upload an Adhan MP3 recording from your device.
-The recording will be used for your prayer alerts.
-</p>
-
-<input type="file" id="adhanFile" accept="audio/*">
-
-<audio id="adhanAudio" controls></audio>
-
-<button class="action gold" onclick="testAdhan()">
-▶ Test Selected Voice
-</button>
-
-<button class="action" onclick="enableAdhan()">
-🔔 ENABLE AUTOMATIC ADHAN
-</button>
+<button class="action gold" onclick="stopAdhan()">STOP ADHAN</button>
 
 <div id="adhanStatus" class="status">
 Automatic Adhan is currently disabled.
@@ -811,8 +789,8 @@ Automatic Adhan is currently disabled.
 
 <p class="translation">
 Important: Keep this website open and your device awake.
-Browser restrictions may prevent automatic playback when the
-page is closed, suspended or the phone is locked.
+Mobile browsers may block automatic playback when the page
+is closed, suspended or the phone is locked.
 </p>
 
 </div>
@@ -837,16 +815,13 @@ page is closed, suspended or the phone is locked.
 
 <h2 style="text-align:center" id="qiblaDegree">--°</h2>
 
-<button class="action" onclick="findQibla()">
-Find Qibla
-</button>
+<button class="action" onclick="findQibla()">Find Qibla</button>
 
 <div id="qiblaStatus" class="status">
 Location permission required.
 </div>
 
 </div>
-
 </section>
 
 
@@ -874,9 +849,7 @@ Location permission required.
 </div>
 
 <div class="card">
-
 <h3>Five Pillars of Islam</h3>
-
 <ol style="line-height:2;padding-left:23px">
 <li>Shahadah</li>
 <li>Salah</li>
@@ -884,13 +857,10 @@ Location permission required.
 <li>Sawm</li>
 <li>Hajj</li>
 </ol>
-
 </div>
 
 <div class="card">
-
 <h3>Six Articles of Faith</h3>
-
 <ol style="line-height:2;padding-left:23px">
 <li>Belief in Allah</li>
 <li>Belief in Angels</li>
@@ -899,7 +869,6 @@ Location permission required.
 <li>Belief in the Last Day</li>
 <li>Belief in Divine Decree</li>
 </ol>
-
 </div>
 
 </section>
@@ -917,74 +886,52 @@ Location permission required.
 
 /* NAVIGATION */
 
-function show(id) {
-
-document.querySelectorAll('.section').forEach(s=>{
-s.classList.remove('active');
-});
-
+function show(id){
+document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
 document.getElementById(id).classList.add('active');
-
-if(id==='calendar') renderCalendar();
-
+if(id==='calendar')renderCalendar();
 window.scrollTo(0,0);
-
 }
 
 
 /* QURAN */
 
-async function initializeQuran() {
-
-try {
-
+async function initializeQuran(){
+try{
 let r=await fetch('https://api.alquran.cloud/v1/surah');
 let j=await r.json();
-
-if(j.code!==200) throw Error();
+if(j.code!==200)throw Error();
 
 let select=document.getElementById('surahSelect');
 
 j.data.forEach(s=>{
-
 let option=document.createElement('option');
-
 option.value=s.number;
 option.textContent=s.number+'. '+s.englishName+' - '+s.name;
-
 select.appendChild(option);
-
 });
 
 loadSurah();
 
-} catch(e) {
-
+}catch(e){
 document.getElementById('quranContent').textContent=
 'Unable to load Qur’an. Check your internet connection.';
-
+}
 }
 
-}
-
-
-async function loadSurah() {
+async function loadSurah(){
 
 let number=document.getElementById('surahSelect').value;
 let box=document.getElementById('quranContent');
-
 if(!number)return;
 
 box.textContent='Loading Surah...';
 
-try {
-
+try{
 let r=await fetch(
 `https://api.alquran.cloud/v1/surah/${number}/editions/quran-uthmani,en.sahih`
 );
-
 let j=await r.json();
-
 if(j.code!==200)throw Error();
 
 let ar=j.data[0];
@@ -994,11 +941,9 @@ box.innerHTML='';
 
 let heading=document.createElement('h3');
 heading.textContent=ar.englishName+' - '+ar.name;
-
 box.appendChild(heading);
 
 ar.ayahs.forEach((a,i)=>{
-
 let div=document.createElement('div');
 div.className='card';
 
@@ -1008,172 +953,141 @@ arabic.textContent=a.text;
 
 let translation=document.createElement('p');
 translation.className='translation';
-translation.textContent=
-en.ayahs[i].text+' ('+a.numberInSurah+')';
+translation.textContent=en.ayahs[i].text+' ('+a.numberInSurah+')';
 
 div.appendChild(arabic);
 div.appendChild(translation);
-
 box.appendChild(div);
-
 });
 
-} catch(e) {
-
+}catch(e){
 box.textContent='Unable to load Surah. Please try again.';
-
+}
 }
 
-}
-
-
-function playSurah() {
+function playSurah(){
 
 let n=document.getElementById('surahSelect').value;
 let reciter=document.getElementById('reciter').value;
-
 let audio=document.getElementById('quranAudio');
 
 audio.src=
 `https://cdn.islamic.network/quran/audio-surah/128/${reciter}/${n}.mp3`;
 
 audio.play().catch(()=>alert('Audio could not play. Check internet connection.'));
-
 }
 
 
-/* PROFESSIONAL TASBIH */
+/* TASBIH */
 
 let count=0;
 let sets=0;
-let previousCount=0;
 
-function updateTasbih() {
+function updateTasbih(){
 
 let target=Number(document.getElementById('target').value);
 
 document.getElementById('count').textContent=count;
-
 document.getElementById('targetDisplay').textContent=target;
-
 document.getElementById('setsDisplay').textContent=sets;
 
 let percent=Math.min((count/target)*100,100);
 
 document.getElementById('progressFill').style.width=percent+'%';
-
-document.getElementById('progressText').textContent=
-count+' / '+target;
-
+document.getElementById('progressText').textContent=count+' / '+target;
 }
 
-function changeDhikr() {
-
+function changeDhikr(){
 document.getElementById('selectedDhikr').textContent=
 document.getElementById('dhikr').value;
-
 }
 
-function changeTarget() {
-
+function changeTarget(){
 sets=0;
 count=0;
 updateTasbih();
-
 }
 
-function increment() {
-
-previousCount=count;
+function increment(){
 
 count++;
 
 let target=Number(document.getElementById('target').value);
 
-if(document.getElementById('vibration').checked &&
-navigator.vibrate) {
-
+if(document.getElementById('vibration').checked&&navigator.vibrate){
 navigator.vibrate(35);
-
 }
 
-if(document.getElementById('sound').checked) {
-
-try {
-
-let audioContext=new (window.AudioContext||window.webkitAudioContext)();
-
-let oscillator=audioContext.createOscillator();
-
-let gain=audioContext.createGain();
-
-oscillator.connect(gain);
-gain.connect(audioContext.destination);
-
-oscillator.frequency.value=750;
-
+if(document.getElementById('sound').checked){
+try{
+let ctx=new(window.AudioContext||window.webkitAudioContext)();
+let osc=ctx.createOscillator();
+let gain=ctx.createGain();
+osc.connect(gain);
+gain.connect(ctx.destination);
+osc.frequency.value=750;
 gain.gain.value=0.08;
-
-oscillator.start();
-
-oscillator.stop(audioContext.currentTime+0.06);
-
-} catch(e) {}
-
+osc.start();
+osc.stop(ctx.currentTime+0.06);
+}catch(e){}
 }
 
-if(count>=target) {
-
+if(count>=target){
 sets++;
-
 count=0;
-
 alert('Alhamdulillah! You have completed one set.');
-
 }
 
 updateTasbih();
-
 }
 
-function resetCount() {
-
-if(confirm('Reset your Tasbih counter?')) {
-
+function resetCount(){
+if(confirm('Reset your Tasbih counter?')){
 count=0;
 sets=0;
-
 updateTasbih();
-
+}
 }
 
-}
-
-function undoCount() {
-
-if(count>0) {
-
+function undoCount(){
+if(count>0){
 count--;
-
 updateTasbih();
-
+}
 }
 
-}
 
+/* GREGORIAN AND HIJRI CALENDAR */
 
-/* ISLAMIC CALENDAR */
-
+let calendarMode='gregorian';
 let calendarDate=new Date();
-
 let hijriDates={};
+let hijriMonthData=null;
 
-async function loadHijriMonth() {
+function setCalendarMode(mode){
+calendarMode=mode;
+
+document.getElementById('gregorianButton').classList.toggle(
+'selected',mode==='gregorian'
+);
+
+document.getElementById('hijriButton').classList.toggle(
+'selected',mode==='hijri'
+);
+
+renderCalendar();
+}
+
+function calendarKey(y,m,d){
+return y+'-'+m+'-'+d;
+}
+
+async function loadCalendarData(){
 
 let year=calendarDate.getFullYear();
 let month=calendarDate.getMonth()+1;
 
-try {
+try{
 
 let r=await fetch(
 `https://api.aladhan.com/v1/gToHCalendar/${month}/${year}`
@@ -1181,130 +1095,229 @@ let r=await fetch(
 
 let j=await r.json();
 
-if(j.code===200) {
+if(j.code===200){
 
 hijriDates={};
 
 j.data.forEach(day=>{
 
-let date=day.gregorian.date;
+let date=day.gregorian.date.split('-');
+let key=calendarKey(
+Number(date[0]),
+Number(date[1]),
+Number(date[2])
+);
 
-let parts=date.split('-');
-
-let key=Number(parts[0])+'-'+
-Number(parts[1])+'-'+Number(parts[2]);
-
-hijriDates[key]=day.hijri.day+' '+
-day.hijri.month.en;
+hijriDates[key]={
+day:Number(day.hijri.day),
+month:Number(day.hijri.month.number),
+monthName:day.hijri.month.en,
+year:Number(day.hijri.year),
+full:day.hijri.day+' '+day.hijri.month.en+' '+day.hijri.year
+};
 
 });
 
 }
 
-} catch(e) {}
+}catch(e){
+console.log('Calendar date service unavailable.');
+}
 
 renderCalendar();
+}
+
+function renderCalendar(){
+
+let grid=document.getElementById('calendarGrid');
+grid.innerHTML='';
+
+let today=new Date();
+
+document.getElementById('todayDate').textContent=
+'Gregorian: '+today.toDateString();
+
+let todayKey=calendarKey(
+today.getFullYear(),
+today.getMonth()+1,
+today.getDate()
+);
+
+document.getElementById('todayHijri').textContent=
+'Hijri: '+(hijriDates[todayKey]?.full||'Loading Hijri date...');
+
+if(calendarMode==='gregorian'){
+renderGregorian(grid);
+}else{
+renderHijri(grid);
+}
 
 }
 
-function renderCalendar() {
+function renderGregorian(grid){
 
 let year=calendarDate.getFullYear();
 let month=calendarDate.getMonth();
 
+document.getElementById('monthTitle').textContent=
+calendarDate.toLocaleString('en-US',{month:'long',year:'numeric'});
+
 let first=new Date(year,month,1).getDay();
 let total=new Date(year,month+1,0).getDate();
 
-document.getElementById('monthTitle').textContent=
-calendarDate.toLocaleString('en-US',{
-month:'long',year:'numeric'
-});
+addWeekDays(grid);
 
-document.getElementById('todayDate').textContent=
-new Date().toDateString();
-
-let today=new Date();
-
-let keyToday=
-today.getFullYear()+'-'+
-(today.getMonth()+1)+'-'+today.getDate();
-
-document.getElementById('todayHijri').textContent=
-'Today: '+(hijriDates[keyToday]||'Hijri date loading...');
-
-let grid=document.getElementById('calendarGrid');
-
-grid.innerHTML='';
-
-['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].forEach(d=>{
-
-let el=document.createElement('div');
-
-el.className='day-name';
-el.textContent=d;
-
-grid.appendChild(el);
-
-});
-
-for(let i=0;i<first;i++) {
-
+for(let i=0;i<first;i++){
 let empty=document.createElement('div');
-
 empty.className='calendar-day empty';
-
 grid.appendChild(empty);
-
 }
 
-for(let day=1;day<=total;day++) {
+for(let day=1;day<=total;day++){
 
 let el=document.createElement('div');
-
-let key=year+'-'+(month+1)+'-'+day;
-
 el.className='calendar-day';
 
 if(
-day===today.getDate() &&
-month===today.getMonth() &&
-year===today.getFullYear()
-) {
-
+day===new Date().getDate()&&
+month===new Date().getMonth()&&
+year===new Date().getFullYear()
+){
 el.classList.add('today');
-
 }
 
-let number=document.createElement('strong');
-number.textContent=day;
+let date=document.createElement('strong');
+date.textContent=day;
 
 let hijri=document.createElement('div');
 hijri.className='hijri';
-hijri.textContent=hijriDates[key]||'';
+
+let data=hijriDates[calendarKey(year,month+1,day)];
+hijri.textContent=data?data.day+' '+data.monthName:'';
+
+el.appendChild(date);
+el.appendChild(hijri);
+grid.appendChild(el);
+}
+
+}
+
+function renderHijri(grid){
+
+let currentHijri=null;
+
+let keys=Object.keys(hijriDates);
+
+if(keys.length){
+let middle=keys[Math.floor(keys.length/2)];
+currentHijri=hijriDates[middle];
+}
+
+if(!currentHijri){
+document.getElementById('monthTitle').textContent='Hijri dates unavailable';
+return;
+}
+
+let month=currentHijri.month;
+let year=currentHijri.year;
+let monthName=currentHijri.monthName;
+
+document.getElementById('monthTitle').textContent=
+monthName+' '+year+' AH';
+
+addWeekDays(grid);
+
+let dates=[];
+
+Object.values(hijriDates).forEach(item=>{
+if(item.month===month&&item.year===year){
+dates.push(item);
+}
+});
+
+dates.sort((a,b)=>a.day-b.day);
+
+let firstDate=keys.find(k=>{
+let item=hijriDates[k];
+return item.month===month&&item.year===year&&item.day===1;
+});
+
+let offset=0;
+
+if(firstDate){
+let parts=firstDate.split('-');
+offset=new Date(Number(parts[0]),Number(parts[1])-1,Number(parts[2])).getDay();
+}
+
+for(let i=0;i<offset;i++){
+let empty=document.createElement('div');
+empty.className='calendar-day empty';
+grid.appendChild(empty);
+}
+
+dates.forEach(item=>{
+
+let el=document.createElement('div');
+el.className='calendar-day';
+
+let number=document.createElement('strong');
+number.textContent=item.day;
+
+let greg=document.createElement('div');
+greg.className='hijri';
+
+let matchingKey=keys.find(k=>{
+let d=hijriDates[k];
+return d.day===item.day&&d.month===item.month&&d.year===item.year;
+});
+
+if(matchingKey){
+let p=matchingKey.split('-');
+greg.textContent=p[2]+'/'+p[1];
+}
+
+if(matchingKey===calendarKey(
+new Date().getFullYear(),
+new Date().getMonth()+1,
+new Date().getDate()
+)){
+el.classList.add('today');
+}
 
 el.appendChild(number);
-el.appendChild(hijri);
-
+el.appendChild(greg);
 grid.appendChild(el);
 
-}
+});
 
 }
 
-function changeMonth(n) {
+function addWeekDays(grid){
 
+['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].forEach(day=>{
+let el=document.createElement('div');
+el.className='day-name';
+el.textContent=day;
+grid.appendChild(el);
+});
+
+}
+
+function changeCalendarMonth(n){
+
+if(calendarMode==='gregorian'){
 calendarDate.setMonth(calendarDate.getMonth()+n);
-
-loadHijriMonth();
+loadCalendarData();
+}else{
+calendarDate.setMonth(calendarDate.getMonth()+n);
+loadCalendarData();
+}
 
 }
 
-function goToday() {
-
+function goToday(){
 calendarDate=new Date();
-
-loadHijriMonth();
-
+loadCalendarData();
 }
 
 
@@ -1312,29 +1325,27 @@ loadHijriMonth();
 
 let prayerTimes={};
 let prayerDate='';
+let prayerDateKey='';
 
-async function getPrayerTimes() {
+async function getPrayerTimes(){
 
 let city=document.getElementById('city').value.trim();
-
 let box=document.getElementById('prayerContent');
 
 if(!city)return;
 
 box.textContent='Loading prayer times...';
 
-try {
+try{
 
 let r=await fetch(
 `https://api.aladhan.com/v1/timingsByCity?city=${encodeURIComponent(city)}&country=Nigeria&method=3`
 );
 
 let j=await r.json();
-
 if(j.code!==200)throw Error();
 
 prayerTimes=j.data.timings;
-
 prayerDate=j.data.date.gregorian.date;
 
 let names=['Fajr','Dhuhr','Asr','Maghrib','Isha'];
@@ -1344,35 +1355,101 @@ box.innerHTML='';
 names.forEach(name=>{
 
 let row=document.createElement('div');
-
 row.className='prayer-row';
 
-row.innerHTML=
-'<span>'+name+'</span><span>'+prayerTimes[name]+'</span>';
+let left=document.createElement('span');
+left.textContent=name;
 
+let right=document.createElement('span');
+right.textContent=prayerTimes[name];
+
+row.appendChild(left);
+row.appendChild(right);
 box.appendChild(row);
 
 });
 
 document.getElementById('adhanStatus').textContent=
-'Prayer timetable loaded. Enable automatic Adhan below.';
+'Prayer timetable loaded. Select your Adhan voice and enable alerts.';
 
 scheduleCheck();
 
-} catch(e) {
-
+}catch(e){
 box.textContent='Could not load prayer times. Check your location and internet connection.';
+}
+}
+
+
+/* BUILT-IN ADHAN VOICES */
+
+const adhanBase=
+'https://raw.githubusercontent.com/Kiwifu/adhan-mp3/main/';
+
+function adhanURLFor(filename){
+return adhanBase+encodeURIComponent(filename);
+}
+
+let selectedGeneralAdhan=
+document.getElementById('adhanVoice').value;
+
+let selectedFajrAdhan=
+document.getElementById('fajrVoice').value;
+
+let uploadedAdhanURL=null;
+
+function selectAdhanVoice(){
+
+selectedGeneralAdhan=
+document.getElementById('adhanVoice').value;
+
+uploadedAdhanURL=null;
+
+document.getElementById('voiceStatus').textContent=
+'Selected voice: '+document.getElementById('adhanVoice').selectedOptions[0].textContent;
 
 }
 
+function selectFajrVoice(){
+
+selectedFajrAdhan=
+document.getElementById('fajrVoice').value;
+
+document.getElementById('voiceStatus').textContent=
+'Selected Fajr voice: '+document.getElementById('fajrVoice').selectedOptions[0].textContent;
+
 }
 
+function previewAdhan(){
 
-/* ADHAN AUDIO */
+let audio=document.getElementById('adhanAudio');
 
-let adhanURL=null;
-let adhanEnabled=false;
-let alerted={};
+audio.src=uploadedAdhanURL||adhanURLFor(selectedGeneralAdhan);
+
+audio.load();
+
+audio.play().then(()=>{
+document.getElementById('voiceStatus').textContent=
+'Playing your selected Adhan recording.';
+}).catch(()=>{
+document.getElementById('voiceStatus').textContent=
+'Could not play this recording. Check your internet connection.';
+});
+
+}
+
+function previewFajr(){
+
+let audio=document.getElementById('adhanAudio');
+
+audio.src=adhanURLFor(selectedFajrAdhan);
+audio.load();
+
+audio.play().catch(()=>{
+document.getElementById('voiceStatus').textContent=
+'Could not play the Fajr recording. Check your internet connection.';
+});
+
+}
 
 document.getElementById('adhanFile').addEventListener('change',function(){
 
@@ -1380,83 +1457,86 @@ let file=this.files[0];
 
 if(!file)return;
 
-if(adhanURL)URL.revokeObjectURL(adhanURL);
+if(uploadedAdhanURL){
+URL.revokeObjectURL(uploadedAdhanURL);
+}
 
-adhanURL=URL.createObjectURL(file);
+uploadedAdhanURL=URL.createObjectURL(file);
 
-document.getElementById('adhanAudio').src=adhanURL;
+document.getElementById('adhanAudio').src=uploadedAdhanURL;
 
-document.getElementById('adhanStatus').textContent=
-'Adhan voice selected successfully.';
+document.getElementById('voiceStatus').textContent=
+'Your uploaded Adhan recording is selected.';
 
 });
 
 
-function testAdhan() {
+/* AUTOMATIC ADHAN */
 
-let audio=document.getElementById('adhanAudio');
+let adhanEnabled=false;
+let alerted={};
 
-if(!audio.src) {
+function enableAdhan(){
 
-alert('Please upload an Adhan audio recording first.');
-
-return;
-
-}
-
-audio.currentTime=0;
-
-audio.play().catch(()=>alert('Unable to play audio.'));
-
-}
-
-
-function enableAdhan() {
-
-if(!prayerTimes.Fajr) {
-
+if(!prayerTimes.Fajr){
 alert('Load your prayer times first.');
-
 return;
-
-}
-
-if(!adhanURL) {
-
-alert('Please select an Adhan audio file first.');
-
-return;
-
 }
 
 adhanEnabled=true;
 
-alert('Automatic Adhan alerts enabled. Keep this page open and your phone awake.');
-
 document.getElementById('adhanStatus').textContent=
-'🔔 Automatic Adhan is ON. Selected prayers will trigger your chosen recording.';
-
-scheduleCheck();
+'🔔 Automatic Adhan is ON. Your selected recordings will play at the enabled prayer times.';
 
 }
 
+function stopAdhan(){
 
-function scheduleCheck() {
+let audio=document.getElementById('adhanAudio');
+
+audio.pause();
+audio.currentTime=0;
+
+adhanEnabled=false;
+
+document.getElementById('adhanStatus').textContent=
+'Automatic Adhan has been stopped.';
+
+}
+
+function playAutomaticAdhan(prayer){
+
+let audio=document.getElementById('adhanAudio');
+
+if(prayer==='Fajr'){
+audio.src=adhanURLFor(selectedFajrAdhan);
+}else{
+audio.src=uploadedAdhanURL||adhanURLFor(selectedGeneralAdhan);
+}
+
+audio.load();
+
+audio.play().catch(()=>{
+document.getElementById('adhanStatus').textContent=
+'Prayer time reached. Tap the audio player to start the Adhan.';
+});
+
+document.getElementById('adhanStatus').textContent=
+'🕌 It is time for '+prayer+' prayer.';
+}
+
+function scheduleCheck(){
 
 if(!adhanEnabled)return;
 
 let now=new Date();
 
-let today=now.getFullYear()+'-'+
-(now.getMonth()+1)+'-'+now.getDate();
-
-if(prayerDate!==now.toLocaleDateString('en-GB')) {
-
-return;
-
-}
-
 let names=['Fajr','Dhuhr','Asr','Maghrib','Isha'];
+
+let today=
+now.getFullYear()+'-'+
+(now.getMonth()+1)+'-'+
+now.getDate();
 
 names.forEach(name=>{
 
@@ -1469,33 +1549,19 @@ let time=prayerTimes[name];
 if(!time)return;
 
 let parts=time.split(':');
-
-let prayerHour=Number(parts[0]);
-let prayerMinute=Number(parts[1]);
+let hour=Number(parts[0]);
+let minute=Number(parts[1]);
 
 let key=today+'-'+name;
 
 if(
-now.getHours()===prayerHour &&
-now.getMinutes()===prayerMinute &&
+now.getHours()===hour&&
+now.getMinutes()===minute&&
 !alerted[key]
-) {
+){
 
 alerted[key]=true;
-
-let audio=document.getElementById('adhanAudio');
-
-audio.currentTime=0;
-
-audio.play().catch(()=>{
-
-document.getElementById('adhanStatus').textContent=
-'Prayer time reached. Tap the play button to start Adhan.';
-
-});
-
-document.getElementById('adhanStatus').textContent=
-'🕌 It is time for '+name+' prayer.';
+playAutomaticAdhan(name);
 
 }
 
@@ -1508,7 +1574,7 @@ setInterval(scheduleCheck,5000);
 
 /* QIBLA */
 
-function findQibla() {
+function findQibla(){
 
 let status=document.getElementById('qiblaStatus');
 
@@ -1525,8 +1591,7 @@ let x=
 Math.cos(toRad(lat))*Math.tan(toRad(21.4225))-
 Math.sin(toRad(lat))*Math.cos(toRad(39.8262-lon));
 
-let bearing=
-(Math.atan2(y,x)*180/Math.PI+360)%360;
+let bearing=(Math.atan2(y,x)*180/Math.PI+360)%360;
 
 document.getElementById('qiblaDegree').textContent=
 bearing.toFixed(1)+'°';
@@ -1537,15 +1602,13 @@ document.getElementById('compassArrow').style.transform=
 status.textContent='Qibla bearing calculated successfully.';
 
 },()=>{
-
 status.textContent='Please allow location access.';
-
 });
 
 }
 
 
-/* NAMES OF ALLAH */
+/* 99 NAMES OF ALLAH */
 
 const names=[
 
@@ -1647,6 +1710,7 @@ const names=[
 ['الْوَارِثُ','Al-Warith','The Inheritor'],
 ['الرَّشِيدُ','Ar-Rashid','The Guide to the Right Path'],
 ['الصَّبُورُ','As-Sabur','The Patient']
+
 ];
 
 let namesBox=document.getElementById('namesContent');
@@ -1654,7 +1718,6 @@ let namesBox=document.getElementById('namesContent');
 names.forEach((n,i)=>{
 
 let div=document.createElement('div');
-
 div.className='card';
 
 let arabic=document.createElement('p');
@@ -1679,9 +1742,7 @@ namesBox.appendChild(div);
 /* START WEBSITE */
 
 initializeQuran();
-
-loadHijriMonth();
-
+loadCalendarData();
 updateTasbih();
 
 </script>
