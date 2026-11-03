@@ -244,17 +244,47 @@ label{
     text-align:center;
 }
 
-.counter-button{
-    width:170px;
-    height:170px;
+/* DIGITAL FINGERPRINT COUNTER */
+
+.fingerprint-button{
+    width:190px;
+    height:190px;
     border-radius:50%;
-    background:var(--green);
+    background:radial-gradient(circle,#0b7955,#043c2d);
     border:8px solid var(--gold);
     color:white;
-    font-size:27px;
-    font-weight:bold;
-    display:block;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
     margin:20px auto;
+    cursor:pointer;
+    box-shadow:0 8px 22px #064e3b35;
+    transition:transform .12s,box-shadow .12s;
+    -webkit-tap-highlight-color:transparent;
+    touch-action:manipulation;
+}
+
+.fingerprint-button:active{
+    transform:scale(.94);
+    box-shadow:0 3px 10px #064e3b35;
+}
+
+.fingerprint-button svg{
+    width:88px;
+    height:88px;
+    fill:none;
+    stroke:#fff;
+    stroke-width:2.4;
+    stroke-linecap:round;
+    stroke-linejoin:round;
+}
+
+.fingerprint-button span{
+    font-weight:bold;
+    font-size:14px;
+    margin-top:5px;
+    color:#ffe7a0;
 }
 
 .prayer-row{
@@ -360,7 +390,7 @@ footer{
     </div>
     <div class="card">
         <h3>📿 Tasbih</h3>
-        <p>Count your daily remembrance of Allah.</p>
+        <p>Count your daily remembrance of Allah using the fingerprint counter.</p>
         <button class="action" onclick="show('tasbih')">Open</button>
     </div>
     <div class="card">
@@ -402,7 +432,7 @@ footer{
 
 <div class="card">
     <h3>Choose Your Mudharasah System</h3>
-    <p>Select the method you want to use for your revision.</p>
+    <p>Select how you want to practise your recitation.</p>
 
     <label>1. Select your system</label>
     <select id="mudMode" onchange="changeMudMode()">
@@ -422,8 +452,18 @@ footer{
     <label>4. Ending verse</label>
     <input type="number" id="endAyah" value="7" min="1">
 
+    <!-- NEW CHANGE: GROUP SIZE -->
+    <label>5. How many verses should each person recite per turn?</label>
+    <select id="groupSize">
+        <option value="1">One verse at a time</option>
+        <option value="2">Two verses at a time</option>
+        <option value="3">Three verses at a time</option>
+        <option value="4">Four verses at a time</option>
+        <option value="5">Five verses at a time</option>
+    </select>
+
     <div id="modeDescription" class="status">
-        In Solo Recitation, you recite while the system listens and checks the recognised words.
+        Solo mode: You recite while the system listens and checks the recognised words.
     </div>
 
     <button class="action gold" onclick="beginMudharasah()">Start Mudharasah</button>
@@ -471,11 +511,12 @@ footer{
 <div class="card">
     <h3>How the Mudharasah works</h3>
     <ul>
-        <li>Select a recitation system.</li>
-        <li>Select the Surah and the verses you want to practise.</li>
-        <li>Read the displayed verse aloud.</li>
-        <li>The system compares the recognised speech with the selected verse.</li>
-        <li>Possible missing or different words are highlighted.</li>
+        <li>Select your preferred recitation system.</li>
+        <li>Choose a Surah and the verses you want to practise.</li>
+        <li>Choose 1, 2, 3, 4 or 5 verses per turn.</li>
+        <li>In alternating mode, the two people take turns after each selected group of verses.</li>
+        <li>Read the displayed verses aloud.</li>
+        <li>The system compares recognised words with the Qur'an text.</li>
         <li>Finish your session to see your achievement.</li>
     </ul>
     <p class="small">Speech recognition is only an aid. It cannot reliably assess Tajweed, makharij or every Arabic pronunciation. Ask a qualified Qur'an teacher to verify difficult corrections.</p>
@@ -541,10 +582,12 @@ footer{
 
 <!-- TASBIH -->
 <section id="tasbih" class="section">
-<h2>📿 Digital Tasbih</h2>
+<h2>📿 Digital Fingerprint Tasbih Counter</h2>
 
 <div class="card" style="text-align:center">
-    <label>Select Dhikr</label>
+
+    <h3>Choose Your Dhikr</h3>
+
     <select id="dhikrSelect" onchange="changeDhikr()">
         <option value="سُبْحَانَ اللَّهِ">SubhanAllah</option>
         <option value="الْحَمْدُ لِلَّهِ">Alhamdulillah</option>
@@ -553,11 +596,38 @@ footer{
         <option value="لَا إِلَٰهَ إِلَّا اللَّهُ">La ilaha illallah</option>
     </select>
 
-    <div id="selectedDhikr" class="arabic" style="text-align:center">سُبْحَانَ اللَّهِ</div>
-    <div class="big-number" id="counter">0</div>
-    <button class="counter-button" onclick="countTasbih()">TAP</button>
+    <div id="selectedDhikr" class="arabic" style="text-align:center">
+        سُبْحَانَ اللَّهِ
+    </div>
 
-    <label>Target</label>
+    <div class="big-number" id="counter">0</div>
+
+    <!-- FINGERPRINT-STYLE DIGITAL BUTTON -->
+    <button class="fingerprint-button" onclick="countTasbih()" aria-label="Tap fingerprint to count Tasbih">
+
+        <svg viewBox="0 0 100 100" aria-hidden="true">
+            <path d="M50 12 C28 12 16 29 16 49"/>
+            <path d="M50 22 C34 22 25 34 25 50"/>
+            <path d="M50 32 C40 32 34 40 34 51"/>
+            <path d="M50 42 C46 42 43 46 43 52"/>
+            <path d="M50 12 C72 12 84 29 84 49"/>
+            <path d="M50 22 C66 22 75 34 75 50"/>
+            <path d="M50 32 C60 32 66 40 66 51"/>
+            <path d="M50 42 C54 42 57 46 57 52"/>
+            <path d="M17 56 C17 76 28 89 39 94"/>
+            <path d="M27 57 C27 72 34 82 42 88"/>
+            <path d="M37 59 C37 69 42 77 47 82"/>
+            <path d="M83 56 C83 76 72 89 61 94"/>
+            <path d="M73 57 C73 72 66 82 58 88"/>
+            <path d="M63 59 C63 69 58 77 53 82"/>
+            <path d="M47 52 C47 65 49 76 50 88"/>
+            <path d="M53 52 C53 65 51 76 50 88"/>
+        </svg>
+
+        <span>TOUCH TO COUNT</span>
+    </button>
+
+    <label>Choose Your Target</label>
     <select id="targetSelect" onchange="updateCounter()">
         <option value="33">33</option>
         <option value="100">100</option>
@@ -566,7 +636,9 @@ footer{
     </select>
 
     <p id="targetMessage"></p>
-    <button class="action red" onclick="resetTasbih()">Reset</button>
+
+    <button class="action red" onclick="resetTasbih()">Reset Counter</button>
+
 </div>
 </section>
 
@@ -785,7 +857,7 @@ let mud={
     mistakes:0,
     completed:0,
     attempts:0,
-    partnerTurn:0,
+    groupSize:1,
     recognition:null,
     lastTranscript:"",
     listening:false
@@ -797,17 +869,17 @@ function changeMudMode(){
 
     if(mode==="solo"){
         description.textContent=
-        "Solo mode: You recite each verse. The system listens and compares the recognised Arabic words with the selected verse.";
+        "Solo mode: You recite the selected verses. The system listens and checks the recognised words.";
     }
 
     if(mode==="alternating"){
         description.textContent=
-        "Alternating mode: Two people take turns. The first person recites one verse, then the second person recites the next verse. The system checks each turn.";
+        "Alternating mode: Choose 1 to 5 verses per turn. Person 1 recites that number of verses, then Person 2 recites the next group of the same size.";
     }
 
     if(mode==="page"){
         description.textContent=
-        "Page-by-page mode: Choose your starting and ending verses. Practise each verse in order until you complete the selected passage.";
+        "Page-by-page mode: Practise your selected verses in groups of 1 to 5 at a time.";
     }
 }
 
@@ -816,6 +888,7 @@ async function beginMudharasah(){
     const start=Number(document.getElementById("startAyah").value);
     const end=Number(document.getElementById("endAyah").value);
     const mode=document.getElementById("mudMode").value;
+    const groupSize=Number(document.getElementById("groupSize").value);
 
     if(!surahNumber)return alert("Please select a Surah.");
     if(start<1||end<start)return alert("Please enter a valid verse range.");
@@ -846,7 +919,7 @@ async function beginMudharasah(){
             mistakes:0,
             completed:0,
             attempts:0,
-            partnerTurn:0,
+            groupSize:groupSize,
             recognition:null,
             lastTranscript:"",
             listening:false
@@ -865,10 +938,26 @@ async function beginMudharasah(){
     }
 }
 
+/* NEW: CALCULATE THE CURRENT GROUP AND SPEAKER */
+
+function getMudGroup(){
+    const groupNumber=Math.floor(mud.index/mud.groupSize);
+    const groupStart=groupNumber*mud.groupSize;
+    const groupEnd=Math.min(groupStart+mud.groupSize,mud.verses.length);
+
+    return {
+        number:groupNumber+1,
+        start:groupStart,
+        end:groupEnd,
+        speaker:groupNumber%2===0?"Person 1":"Person 2"
+    };
+}
+
 function displayMudVerse(){
     if(!mud.verses.length)return;
 
     const verse=mud.verses[mud.index];
+    const group=getMudGroup();
 
     document.getElementById("mudVerse").textContent=verse.text;
 
@@ -876,7 +965,8 @@ function displayMudVerse(){
         mud.translations[mud.index]?.text||"";
 
     document.getElementById("mudProgressText").textContent=
-        "Verse "+(mud.start+mud.index)+" of "+mud.end;
+        "Verse "+(mud.start+mud.index)+" of "+mud.end+
+        " | Group "+group.number;
 
     const percentage=(mud.index/mud.verses.length)*100;
 
@@ -884,16 +974,24 @@ function displayMudVerse(){
         percentage+"%";
 
     if(mud.mode==="alternating"){
-        const speaker=mud.partnerTurn%2===0?"Person 1":"Person 2";
+        const first=mud.start+group.start;
+        const last=mud.start+group.end-1;
 
         document.getElementById("speakerLabel").textContent=
-            speaker+" — your turn to recite.";
+            group.speaker+" — your turn. Recite verses "+
+            first+" to "+last+". ("+
+            (mud.index-group.start+1)+" of "+
+            (group.end-group.start)+")";
+
     }else if(mud.mode==="solo"){
         document.getElementById("speakerLabel").textContent=
-            "Solo mode: Your turn to recite.";
+            "Solo mode: Your turn to recite. Group "+
+            group.number+" of "+Math.ceil(mud.verses.length/mud.groupSize);
+
     }else{
         document.getElementById("speakerLabel").textContent=
-            "Page-by-page practice: Recite the displayed verse.";
+            "Page-by-page practice: Group "+group.number+
+            ". Recite this verse.";
     }
 
     document.getElementById("listeningStatus").textContent=
@@ -1105,12 +1203,6 @@ function checkMudRecitation(transcript){
 
     heard.append(title,transcriptText);
     area.appendChild(heard);
-
-    if(mud.mode==="alternating"){
-        mud.partnerTurn++;
-        document.getElementById("speakerLabel").textContent=
-            "Next turn: "+(mud.partnerTurn%2===0?"Person 1":"Person 2");
-    }
 }
 
 function previousMudVerse(){
@@ -1152,20 +1244,14 @@ function finishMudharasah(){
     stopMudListening();
 
     const total=mud.verses.length;
-
-    const percentage=Math.round(
-        (mud.index+1)/total*100
-    );
+    const percentage=Math.round((mud.index+1)/total*100);
+    const completedAll=mud.index===total-1;
 
     document.getElementById("mudProgressBar").style.width="100%";
-
     document.getElementById("mudWorkspace").style.display="none";
 
     const achievement=document.getElementById("achievementArea");
-
     achievement.style.display="block";
-
-    const completedAll=mud.index===total-1;
 
     const modeName={
         solo:"Solo Recitation",
@@ -1180,6 +1266,7 @@ function finishMudharasah(){
             <p>Alhamdulillah! You have finished your practice session.</p>
             <h3 style="color:#ffe7a0">${escapeHTML(mud.surahName)}</h3>
             <p>${modeName}</p>
+            <p>Verses per turn: ${mud.groupSize}</p>
         </div>
 
         <div class="grid">
@@ -1209,7 +1296,7 @@ function finishMudharasah(){
             <strong>Result:</strong> ${completedAll?"All selected verses reached.":"You ended before reaching the final selected verse."}
         </div>
 
-        <p class="small">The results are based on speech recognition and do not represent a certified Tajweed or Qur'an recitation assessment.</p>
+        <p class="small">Results are based on speech recognition and do not represent a certified Tajweed or Qur'an recitation assessment.</p>
 
         <button class="action" onclick="restartMudharasah()">Practise Again</button>
         <button class="action gold" onclick="show('home')">Return Home</button>
@@ -1226,14 +1313,13 @@ function restartMudharasah(){
     mud.mistakes=0;
     mud.completed=0;
     mud.attempts=0;
-    mud.partnerTurn=0;
 
     displayMudVerse();
 
     document.getElementById("mudWorkspace").scrollIntoView({behavior:"smooth"});
 }
 
-/* TASBIH */
+/* DIGITAL FINGERPRINT TASBIH */
 
 let tasbihCount=Number(localStorage.getItem("alnoorTasbih")||0);
 
@@ -1250,14 +1336,18 @@ function updateCounter(){
 
 function countTasbih(){
     tasbihCount++;
+
     localStorage.setItem("alnoorTasbih",tasbihCount);
+
     updateCounter();
 }
 
 function resetTasbih(){
     if(!confirm("Reset your Tasbih counter?"))return;
+
     tasbihCount=0;
     localStorage.setItem("alnoorTasbih",0);
+
     updateCounter();
 }
 
